@@ -50,67 +50,67 @@ $bucket->delete();
 $bucket->getObjects(array $query = []);
 $bucket->getObjectVersions(array $query = []);
 
-##### Versions
+// Versions
 $bucket->putVersions(array $body);
 $bucket->getVersions();
 
-##### ACL
+// ACL
 $bucket->putACL(array $body, array $headers = [])
 $bucket->getACL();
 
-##### CORS
+// CORS
 $bucket->putCORS(array $body);
 $bucket->getCORS();
 $bucket->deleteCORS();
 
-##### Lifecycle
+// Lifecycle
 $bucket->putLifecycle(array $body);
 $bucket->getLifecycle();
 $bucket->deleteLifecycle();
 
-##### Policy
+// Policy
 $bucket->putPolicy(array $body);
 $bucket->getPolicy();
 $bucket->deletePolicy();
 
-##### Referer
+// Referer
 $bucket->putReferer(array $body);
 $bucket->getReferer();
 
-##### Taging
+// Taging
 $bucket->putTaging(array $body);
 $bucket->getTaging();
 $bucket->deleteTaging();
 
-##### Website
+// Website
 $bucket->putWebsite(array $body);
 $bucket->getWebsite();
 $bucket->deleteWebsite();
 
-##### Inventory
+// Inventory
 $bucket->putInventory(string $id, array $body)
 $bucket->getInventory(string $id)
 $bucket->listInventoryConfigurations(?string $nextContinuationToken = null)
 $bucket->deleteInventory(string $id)
 
-##### Versioning
+// Versioning
 $bucket->putVersioning(array $body);
 $bucket->getVersioning();
 
-##### Replication
+// Replication
 $bucket->putReplication(array $body);
 $bucket->getReplication();
 $bucket->deleteReplication();
 
-##### Logging
+// Logging
 $bucket->putLogging(array $body);
 $bucket->getLogging();
 
-##### Accelerate
+// Accelerate
 $bucket->putAccelerate(array $body);
 $bucket->getAccelerate();
 
-##### Encryption
+// Encryption
 $bucket->putEncryption(array $body);
 $bucket->getEncryption();
 $bucket->deleteEncryption();
