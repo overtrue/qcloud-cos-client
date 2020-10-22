@@ -11,6 +11,8 @@ $ composer require overtrue/qcloud-cos-client -vvv
 
 ## Usage
 
+请仔细阅读官方文档：https://cloud.tencent.com/document/product/436/10111
+
 ## Client
 ```php
 use Overtrue\CosClient\Client;
