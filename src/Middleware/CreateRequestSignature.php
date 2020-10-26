@@ -30,7 +30,7 @@ class CreateRequestSignature
     public function __invoke(callable $handler)
     {
         return function (RequestInterface $request, array $options) use ($handler) {
-            $request->withHeader(
+            $request = $request->withHeader(
                 'Authorization',
                 (new Signature($this->secretId, $this->secretKey))
                     ->createAuthorizationHeader($request, $this->signatureExpires)
