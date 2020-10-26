@@ -44,7 +44,11 @@ $config = new Config([
 在使用前我们强烈建议您仔细阅读[官方 API 文档](https://cloud.tencent.com/document/product/436)，以减少不必要的时间浪费。
 
 ## Service
+
 ```php
+use Overtrue\CosClient\Config;
+use Overtrue\CosClient\Service;
+
 $config = new Config([
     // 请参考配置说明
 ]);
@@ -57,11 +61,15 @@ $service->buckets('ap-guangzhou');
 ## Bucket
 
 ```php
+use Overtrue\CosClient\Config;
+use Overtrue\CosClient\Bucket;
+
 $config = new Config([
     // 请参考配置说明
     'bucket' => 'example',
     'region' => 'ap-guangzhou',
 ]);
+
 $bucket = new Bucket($config);
 ```
 
@@ -161,6 +169,19 @@ $bucket->getObjectTagging($key, array $query = []);
 $bucket->deleteObjectTagging($key, array $query = []);
 ```
 
+## 测试
+
+你可以使用类提供的 `spy` 方法来创建一个测试对象：
+
+```php
+use Overtrue\CosClient\Service;
+
+$service = Service::spy();
+
+$service->shouldReceive('get')->with('https://service.cos.myqcloud.com')->once()->andReturn('all region buckets');
+
+$this->assertSame('all region buckets', $service->listBuckets());
+```
 
 ## Contributing
 

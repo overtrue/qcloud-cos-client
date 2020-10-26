@@ -2,25 +2,24 @@
 
 namespace Overtrue\CosClient;
 
-class Bucket
+class Bucket extends Client
 {
     protected Config $config;
-
-    protected Client $client;
 
     /**
      * @param  \Overtrue\CosClient\Config  $config
      */
     public function __construct(Config $config)
     {
-        $this->config = $config;
-        $this->client = new Client($config->extend([
-            'base_uri' => \sprintf(
-                'https://%s-%s.cos.%s.myqcloud.com/',
-                $config->get('bucket'),
-                $config->get('app_id'),
-                $config->get('region')
-            ),
+        parent::__construct($config->extend([
+            'guzzle' => [
+                'base_uri' => \sprintf(
+                    'https://%s-%s.cos.%s.myqcloud.com/',
+                    $config->get('bucket'),
+                    $config->get('app_id'),
+                    $config->get('region')
+                ),
+            ]
         ]));
     }
 
@@ -31,7 +30,7 @@ class Bucket
      */
     public function put(array $body)
     {
-        return $this->client->put('/', [
+        return parent::put('/', [
             'body' => XML::build($body),
         ]);
     }
@@ -43,7 +42,7 @@ class Bucket
      */
     public function getObjects(array $query = [])
     {
-        return $this->client->get('/', \compact('query'));
+        return $this->get('/', \compact('query'));
     }
 
     /**
@@ -51,7 +50,7 @@ class Bucket
      */
     public function head()
     {
-        return $this->client->head('/');
+        return parent::head('/');
     }
 
     /**
@@ -59,7 +58,7 @@ class Bucket
      */
     public function delete()
     {
-        return $this->client->delete('/');
+        return parent::delete('/');
     }
 
     /**
@@ -69,7 +68,7 @@ class Bucket
      */
     public function getObjectVersions(array $query = [])
     {
-        return $this->client->get('?versions', \compact('query'));
+        return $this->get('?versions', \compact('query'));
     }
 
     /**
@@ -80,7 +79,7 @@ class Bucket
      */
     public function putACL(array $body, array $headers = [])
     {
-        return $this->client->put('/?acl', [
+        return parent::put('/?acl', [
             'headers' => $headers,
             'body' => XML::build($body),
         ]);
@@ -91,7 +90,7 @@ class Bucket
      */
     public function getACL()
     {
-        return $this->client->get('/?acl');
+        return $this->get('/?acl');
     }
 
     /**
@@ -101,7 +100,7 @@ class Bucket
      */
     public function putCORS(array $body)
     {
-        return $this->client->put('/?cors', [
+        return parent::put('/?cors', [
             'body' => XML::build($body),
         ]);
     }
@@ -111,7 +110,7 @@ class Bucket
      */
     public function getCORS()
     {
-        return $this->client->get('/?cors');
+        return $this->get('/?cors');
     }
 
     /**
@@ -119,7 +118,7 @@ class Bucket
      */
     public function deleteCORS()
     {
-        return $this->client->delete('/?cors');
+        return parent::delete('/?cors');
     }
 
     /**
@@ -129,7 +128,7 @@ class Bucket
      */
     public function putLifecycle(array $body)
     {
-        return $this->client->put('/?lifecycle', [
+        return parent::put('/?lifecycle', [
             'body' => XML::build($body),
         ]);
     }
@@ -139,7 +138,7 @@ class Bucket
      */
     public function getLifecycle()
     {
-        return $this->client->get('/?lifecycle');
+        return $this->get('/?lifecycle');
     }
 
     /**
@@ -147,7 +146,7 @@ class Bucket
      */
     public function deleteLifecycle()
     {
-        return $this->client->delete('/?lifecycle');
+        return parent::delete('/?lifecycle');
     }
 
     /**
@@ -157,7 +156,7 @@ class Bucket
      */
     public function putPolicy(array $body)
     {
-        return $this->client->put('/?policy', ['json' => $body]);
+        return parent::put('/?policy', ['json' => $body]);
     }
 
     /**
@@ -165,7 +164,7 @@ class Bucket
      */
     public function getPolicy()
     {
-        return $this->client->get('/?policy');
+        return $this->get('/?policy');
     }
 
     /**
@@ -173,7 +172,7 @@ class Bucket
      */
     public function deletePolicy()
     {
-        return $this->client->delete('/?policy');
+        return parent::delete('/?policy');
     }
 
     /**
@@ -183,7 +182,7 @@ class Bucket
      */
     public function putReferer(array $body)
     {
-        return $this->client->put('/?referer', [
+        return parent::put('/?referer', [
             'body' => XML::build($body),
         ]);
     }
@@ -193,7 +192,7 @@ class Bucket
      */
     public function getReferer()
     {
-        return $this->client->get('/?referer');
+        return $this->get('/?referer');
     }
 
     /**
@@ -203,7 +202,7 @@ class Bucket
      */
     public function putTagging(array $body)
     {
-        return $this->client->put('/?tagging', [
+        return parent::put('/?tagging', [
             'body' => XML::build($body),
         ]);
     }
@@ -213,7 +212,7 @@ class Bucket
      */
     public function getTagging()
     {
-        return $this->client->get('/?tagging');
+        return $this->get('/?tagging');
     }
 
     /**
@@ -221,7 +220,7 @@ class Bucket
      */
     public function deleteTagging()
     {
-        return $this->client->delete('/?tagging');
+        return parent::delete('/?tagging');
     }
 
     /**
@@ -231,7 +230,7 @@ class Bucket
      */
     public function putWebsite(array $body)
     {
-        return $this->client->put('/?website', [
+        return parent::put('/?website', [
             'body' => XML::build($body),
         ]);
     }
@@ -241,7 +240,7 @@ class Bucket
      */
     public function getWebsite()
     {
-        return $this->client->get('/?website');
+        return $this->get('/?website');
     }
 
     /**
@@ -249,7 +248,7 @@ class Bucket
      */
     public function deleteWebsite()
     {
-        return $this->client->delete('/?website');
+        return parent::delete('/?website');
     }
 
     /**
@@ -260,7 +259,7 @@ class Bucket
      */
     public function putInventory(string $id, array $body)
     {
-        return $this->client->put('/?inventory', [
+        return parent::put('/?inventory', [
             'query' => \compact('id'),
             'body' => XML::build($body),
         ]);
@@ -273,7 +272,7 @@ class Bucket
      */
     public function getInventory(string $id)
     {
-        return $this->client->get('/?inventory', [
+        return $this->get('/?inventory', [
             'query' => \compact('id'),
         ]);
     }
@@ -285,7 +284,7 @@ class Bucket
      */
     public function listInventoryConfigurations(?string $nextContinuationToken = null)
     {
-        return $this->client->get('/?inventory', [
+        return $this->get('/?inventory', [
             'query' => ['continuation-token' => $nextContinuationToken],
         ]);
     }
@@ -297,7 +296,7 @@ class Bucket
      */
     public function deleteInventory(string $id)
     {
-        return $this->client->delete('/?inventory', [
+        return parent::delete('/?inventory', [
             'query' => \compact('id'),
         ]);
     }
@@ -309,7 +308,7 @@ class Bucket
      */
     public function putVersioning(array $body)
     {
-        return $this->client->put('/?versioning', [
+        return parent::put('/?versioning', [
             'body' => XML::build($body),
         ]);
     }
@@ -319,7 +318,7 @@ class Bucket
      */
     public function getVersioning()
     {
-        return $this->client->get('/?versioning');
+        return $this->get('/?versioning');
     }
 
     /**
@@ -329,7 +328,7 @@ class Bucket
      */
     public function putReplication(array $body)
     {
-        return $this->client->put('/?replication', [
+        return parent::put('/?replication', [
             'body' => XML::build($body),
         ]);
     }
@@ -339,7 +338,7 @@ class Bucket
      */
     public function getReplication()
     {
-        return $this->client->get('/?replication');
+        return $this->get('/?replication');
     }
 
     /**
@@ -347,7 +346,7 @@ class Bucket
      */
     public function deleteReplication()
     {
-        return $this->client->delete('/?replication');
+        return parent::delete('/?replication');
     }
 
     /**
@@ -357,7 +356,7 @@ class Bucket
      */
     public function putLogging(array $body)
     {
-        return $this->client->put('/?logging', [
+        return parent::put('/?logging', [
             'body' => XML::build($body),
         ]);
     }
@@ -367,7 +366,7 @@ class Bucket
      */
     public function getLogging()
     {
-        return $this->client->get('/?logging');
+        return $this->get('/?logging');
     }
 
     /**
@@ -377,7 +376,7 @@ class Bucket
      */
     public function putAccelerate(array $body)
     {
-        return $this->client->put('/?accelerate', [
+        return parent::put('/?accelerate', [
             'body' => XML::build($body),
         ]);
     }
@@ -387,7 +386,7 @@ class Bucket
      */
     public function getAccelerate()
     {
-        return $this->client->get('/?accelerate');
+        return $this->get('/?accelerate');
     }
 
     /**
@@ -397,7 +396,7 @@ class Bucket
      */
     public function putEncryption(array $body)
     {
-        return $this->client->put('/?encryption', [
+        return parent::put('/?encryption', [
             'body' => XML::build($body),
         ]);
     }
@@ -407,7 +406,7 @@ class Bucket
      */
     public function getEncryption()
     {
-        return $this->client->get('/?encryption');
+        return $this->get('/?encryption');
     }
 
     /**
@@ -415,6 +414,6 @@ class Bucket
      */
     public function deleteEncryption()
     {
-        return $this->client->delete('/?encryption');
+        return parent::delete('/?encryption');
     }
 }

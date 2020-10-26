@@ -2,18 +2,8 @@
 
 namespace Overtrue\CosClient;
 
-class Service
+class Service extends Client
 {
-    protected Client $client;
-
-    /**
-     * @param  Client  $client
-     */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
-
     /**
      * @param  string|null  $region
      *
@@ -21,8 +11,8 @@ class Service
      */
     public function listBuckets(?string $region = null)
     {
-        $uri = $region ? \sprintf('cos.%s.myqcloud.com', $region) : 'service.cos.myqcloud.com';
+        $uri = $region ? \sprintf('https://cos.%s.myqcloud.com', $region) : 'https://service.cos.myqcloud.com';
 
-        return $this->client->get($uri);
+        return $this->get($uri);
     }
 }
