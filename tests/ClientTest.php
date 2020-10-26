@@ -2,6 +2,11 @@
 
 namespace Overtrue\CosClient\Tests;
 
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Overtrue\CosClient\Client;
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\Middleware\TransformResponseToArray;
@@ -50,9 +55,8 @@ class ClientTest extends TestCase
             'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
         ]));
 
-        $this->assertCount(2, $client->getMiddlewares());
+        $this->assertCount(1, $client->getMiddlewares());
         $this->assertInstanceOf(CreateRequestSignature::class, $client->getMiddlewares()[0]);
-        $this->assertInstanceOf(TransformResponseToArray::class, $client->getMiddlewares()[1]);
     }
 
     public function testGetConfig()
@@ -89,5 +93,22 @@ class ClientTest extends TestCase
             ],
         ]));
         $this->assertSame('custom-user-agent', $client->getHttpClientOptions()['headers']['User-Agent']);
+    }
+
+    public function testTransformResponseXMLToArray()
+    {
+        $mock = new MockHandler([
+            new Response(200, ['X-Foo' => 'Bar'], '<foo>bar</foo>'),
+            new Response(202, ['Content-Length' => 0]),
+            new RequestException('Error Communicating with Server', new Request('GET', 'test'))
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $httpClient = new \GuzzleHttp\Client(['handler' => $handlerStack]);
+
+        $client = Client::spy();
+        $client->shouldReceive('getHttpClient')->andReturn($httpClient);
+
+        $this->assertSame(['foo' => 'bar'], $client->get('/test'));
     }
 }

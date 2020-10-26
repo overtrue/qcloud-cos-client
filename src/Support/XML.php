@@ -1,6 +1,6 @@
 <?php
 
-namespace Overtrue\CosClient;
+namespace Overtrue\CosClient\Support;
 
 use SimpleXMLElement;
 

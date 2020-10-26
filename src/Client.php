@@ -2,7 +2,6 @@
 
 namespace Overtrue\CosClient;
 
-use Overtrue\CosClient\Middleware\TransformResponseToArray;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
 use Overtrue\CosClient\Traits\CreatesHttpClient;
 
@@ -46,8 +45,6 @@ class Client
                 $this->config->get('signature_expires')
             )
         );
-
-        $this->pushMiddleware(new TransformResponseToArray());
     }
 
     public function getAppId(): int
@@ -77,7 +74,7 @@ class Client
 
     public function __call($method, $arguments)
     {
-        return \call_user_func_array([$this->getHttpClient(), $method], $arguments);
+        return new Response(\call_user_func_array([$this->getHttpClient(), $method], $arguments));
     }
 
     public static function spy()
