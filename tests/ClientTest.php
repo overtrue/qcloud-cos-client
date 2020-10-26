@@ -4,6 +4,8 @@ namespace Overtrue\CosClient\Tests;
 
 use Overtrue\CosClient\Client;
 use Overtrue\CosClient\Config;
+use Overtrue\CosClient\Middleware\TransformResponseToArray;
+use Overtrue\CosClient\Middleware\CreateRequestSignature;
 
 class ClientTest extends TestCase
 {
@@ -42,12 +44,15 @@ class ClientTest extends TestCase
 
     public function testGetSignatureMiddleware()
     {
-        $client = new Client(new Config([]));
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
 
-        $this->assertIsCallable($client->getSignatureMiddleware());
-        $this->assertCount(1, $client->getMiddlewares());
-        $this->assertArrayHasKey('request_signature', $client->getMiddlewares());
-        $this->assertIsCallable($client->getMiddlewares()['request_signature']);
+        $this->assertCount(2, $client->getMiddlewares());
+        $this->assertInstanceOf(CreateRequestSignature::class, $client->getMiddlewares()[0]);
+        $this->assertInstanceOf(TransformResponseToArray::class, $client->getMiddlewares()[1]);
     }
 
     public function testGetConfig()
