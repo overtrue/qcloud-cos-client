@@ -2,41 +2,69 @@
 
 <p align="center">Client of QCloud.com COS.</p>
 
+对象存储（Cloud Object Storage，COS）是腾讯云提供的一种存储海量文件的分布式存储服务，具有高扩展性、低成本、可靠安全等优点。通过控制台、API、SDK 和工具等多样化方式，用户可简单、快速地接入 COS，进行多格式文件的上传、下载和管理，实现海量数据存储和管理。
 
-## Installing
+> :star: 官方文档：https://cloud.tencent.com/document/product/436
+
+## 安装
 
 ```shell
 $ composer require overtrue/qcloud-cos-client -vvv
 ```
 
-## Usage
+## 配置
 
-请仔细阅读官方文档：https://cloud.tencent.com/document/product/436/10111
+配置前请了解官方名词解释：[文档中心 > 对象存储 > API 文档 > 简介：术语信息](https://cloud.tencent.com/document/product/436/7751#.E6.9C.AF.E8.AF.AD.E4.BF.A1.E6.81.AF)
 
-## Client
 ```php
-use Overtrue\CosClient\Client;
+use Overtrue\CosClient\Config;
 
-$appId = 1250000000;
-$secretId = 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxx';
-$secretKey = 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxx';
+$config = new Config([
+    // 必填，app_id、secret_id、secret_key 可在个人秘钥管理页查看：https://console.cloud.tencent.com/capi
+    'app_id' => 10020201024, 
+    'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx', 
+    'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+    
+    // 可选，地域列表请查看 https://cloud.tencent.com/document/product/436/6224
+    'region' => 'ap-guangzhou', 
 
-$client = new Client($appId, $secretId, $secretKey);
+    // 可选，仅在调用不同的接口时按场景必填
+    'bucket' => 'example', // 使用 Bucket 接口时必填
+    
+    // 可选，签名有效期，默认 60 分钟
+    'signature_expires' => '+60 minutes', 
+]);
 ```
+
+## 使用
+
+您可以分两种方式使用此 SDK：
+
+- **Service、Bucket** - 封装了具体 API 的类调用指定业务的 API。
+- **Client** - 基于最基础的 HTTP 类封装调用 COS 全部 API。
+
+在使用前我们强烈建议您仔细阅读[官方 API 文档](https://cloud.tencent.com/document/product/436)，以减少不必要的时间浪费。
 
 ## Service
 ```php
-$client->service->buckets();
-$client->service->buckets('ap-guangzhou');
+$config = new Config([
+    // 请参考配置说明
+]);
+$service = new Service($config);
+
+$service->buckets();
+$service->buckets('ap-guangzhou');
 ```
 
 ## Bucket
 
 ```php
-$name = 'example';
-$region = 'ap-guangzhou';
-
-$bucket = $client->bucket($name, $region);
+$config = new Config([
+    // 请参考配置说明
+    'bucket' => 'example',
+    'region' => 'ap-guangzhou',
+]);
+$bucket = new Bucket($config);
 ```
 
 ### API

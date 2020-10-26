@@ -4,31 +4,30 @@ namespace Overtrue\CosClient;
 
 class Bucket
 {
-    protected string $name;
+    protected Config $config;
 
-    protected string $region;
-
-    protected \GuzzleHttp\Client $client;
+    protected Client $client;
 
     /**
-     * @param  string  $name
-     * @param  string  $region
-     * @param  Client  $client
+     * @param  \Overtrue\CosClient\Config  $config
      */
-    public function __construct(string $name, string $region, Client $client)
+    public function __construct(Config $config)
     {
-        $this->name = $name;
-        $this->region = $region;
-        $this->client = $client->createHttpClient([
-            'base_uri' => \sprintf('https://%s-%s.cos.%s.myqcloud.com/', $name, $client->getAppId(), $region),
-        ]);
+        $this->config = $config;
+        $this->client = new Client($config->extend([
+            'base_uri' => \sprintf(
+                'https://%s-%s.cos.%s.myqcloud.com/',
+                $config->get('bucket'),
+                $config->get('app_id'),
+                $config->get('region')
+            ),
+        ]));
     }
 
     /**
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function put(array $body)
     {
@@ -41,7 +40,6 @@ class Bucket
      * @param  array  $query
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getObjects(array $query = [])
     {
@@ -50,7 +48,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function head()
     {
@@ -59,7 +56,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete()
     {
@@ -70,7 +66,6 @@ class Bucket
      * @param  array  $query
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getObjectVersions(array $query = [])
     {
@@ -82,7 +77,6 @@ class Bucket
      * @param  array  $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putACL(array $body, array $headers = [])
     {
@@ -94,7 +88,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getACL()
     {
@@ -105,7 +98,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putCORS(array $body)
     {
@@ -116,7 +108,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getCORS()
     {
@@ -125,7 +116,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteCORS()
     {
@@ -136,7 +126,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putLifecycle(array $body)
     {
@@ -147,7 +136,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getLifecycle()
     {
@@ -156,7 +144,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteLifecycle()
     {
@@ -167,7 +154,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putPolicy(array $body)
     {
@@ -176,7 +162,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getPolicy()
     {
@@ -185,7 +170,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deletePolicy()
     {
@@ -196,7 +180,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putReferer(array $body)
     {
@@ -207,7 +190,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getReferer()
     {
@@ -218,7 +200,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putTagging(array $body)
     {
@@ -229,7 +210,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getTagging()
     {
@@ -238,7 +218,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteTagging()
     {
@@ -249,7 +228,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putWebsite(array $body)
     {
@@ -260,7 +238,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getWebsite()
     {
@@ -269,7 +246,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteWebsite()
     {
@@ -281,7 +257,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putInventory(string $id, array $body)
     {
@@ -295,7 +270,6 @@ class Bucket
      * @param  string  $id
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getInventory(string $id)
     {
@@ -308,12 +282,11 @@ class Bucket
      * @param  string|null  $nextContinuationToken
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function listInventoryConfigurations(?string $nextContinuationToken = null)
     {
         return $this->client->get('/?inventory', [
-           'query' => ['continuation-token' => $nextContinuationToken]
+            'query' => ['continuation-token' => $nextContinuationToken],
         ]);
     }
 
@@ -321,7 +294,6 @@ class Bucket
      * @param  string  $id
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteInventory(string $id)
     {
@@ -334,7 +306,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putVersioning(array $body)
     {
@@ -345,7 +316,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getVersioning()
     {
@@ -356,7 +326,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putReplication(array $body)
     {
@@ -367,7 +336,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getReplication()
     {
@@ -376,7 +344,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteReplication()
     {
@@ -387,7 +354,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putLogging(array $body)
     {
@@ -398,7 +364,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getLogging()
     {
@@ -409,7 +374,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putAccelerate(array $body)
     {
@@ -420,7 +384,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getAccelerate()
     {
@@ -431,7 +394,6 @@ class Bucket
      * @param  array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function putEncryption(array $body)
     {
@@ -442,7 +404,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getEncryption()
     {
@@ -451,7 +412,6 @@ class Bucket
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteEncryption()
     {

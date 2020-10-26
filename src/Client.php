@@ -25,61 +25,52 @@ class Client
 {
     use CreatesHttpClient;
 
-    protected int $appId;
-
-    protected string $secretId;
-
-    protected string $secretKey;
-
-    protected ?string $signatureExpires = null;
+    protected Config $config;
 
     protected \GuzzleHttp\Client $client;
 
     protected string $userAgent = 'overtrue/cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION;
 
     /**
-     * @param  int  $appId
-     * @param  string  $secretId
-     * @param  string  $secretKey
-     * @param  array  $httpClientOptions
+     * @param  \Overtrue\CosClient\Config  $config
      */
-    public function __construct(int $appId, string $secretId, string $secretKey, array $httpClientOptions = [])
+    public function __construct(Config $config)
     {
-        $this->appId = $appId;
-        $this->secretId = $secretId;
-        $this->secretKey = $secretKey;
+        $this->config = $config;
 
-        $this->setHttpClientOptions($httpClientOptions);
+        $this->setHttpClientOptions($config->get('guzzle'));
 
         $this->pushMiddleware($this->getSignatureMiddleware());
     }
 
     public function getClient(): \GuzzleHttp\Client
     {
-        return $this->client ?? $this->client = $this->createHttpClient($this->httpClientOptions);
+        return $this->client ?? $this->client = $this->createHttpClient();
     }
 
     public function getAppId(): int
     {
-        return $this->appId;
+        return $this->config->get('app_id');
     }
 
     public function getSecretId(): string
     {
-        return $this->secretId;
+        return $this->config->get('secret_id');
     }
 
     public function getSecretKey(): string
     {
-        return $this->secretKey;
+        return $this->config->get('secret');
     }
 
     public function getSignatureMiddleware()
     {
         return Middleware::mapRequest(function (RequestInterface $request) {
-            $signature = new Signature($this->secretId, $this->secretKey);
-
-            return $request->withHeader('Authorization', $signature->createAuthorizationHeader($request, $this->signatureExpires));
+            return $request->withHeader(
+                'Authorization',
+                (new Signature($this->getSecretId(), $this->getSecretKey()))
+                    ->createAuthorizationHeader($request, $this->get('signature_expires'))
+            );
         });
     }
 
