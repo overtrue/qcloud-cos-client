@@ -4,8 +4,6 @@ namespace Overtrue\CosClient;
 
 class Bucket extends Client
 {
-    protected Config $config;
-
     /**
      * @param  \Overtrue\CosClient\Config  $config
      */
@@ -28,11 +26,27 @@ class Bucket extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function put(array $body)
+    public function create(array $body)
     {
-        return parent::put('/', [
+        return $this->put('/', [
             'body' => XML::build($body),
         ]);
+    }
+
+    /**
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function ping()
+    {
+        return $this->head('/');
+    }
+
+    /**
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function destroy()
+    {
+        return $this->delete('/');
     }
 
     /**
@@ -43,22 +57,6 @@ class Bucket extends Client
     public function getObjects(array $query = [])
     {
         return $this->get('/', \compact('query'));
-    }
-
-    /**
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function head()
-    {
-        return parent::head('/');
-    }
-
-    /**
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function delete()
-    {
-        return parent::delete('/');
     }
 
     /**
@@ -79,7 +77,7 @@ class Bucket extends Client
      */
     public function putACL(array $body, array $headers = [])
     {
-        return parent::put('/?acl', [
+        return $this->put('/?acl', [
             'headers' => $headers,
             'body' => XML::build($body),
         ]);
@@ -100,7 +98,7 @@ class Bucket extends Client
      */
     public function putCORS(array $body)
     {
-        return parent::put('/?cors', [
+        return $this->put('/?cors', [
             'body' => XML::build($body),
         ]);
     }
@@ -118,7 +116,7 @@ class Bucket extends Client
      */
     public function deleteCORS()
     {
-        return parent::delete('/?cors');
+        return $this->delete('/?cors');
     }
 
     /**
@@ -128,7 +126,7 @@ class Bucket extends Client
      */
     public function putLifecycle(array $body)
     {
-        return parent::put('/?lifecycle', [
+        return $this->put('/?lifecycle', [
             'body' => XML::build($body),
         ]);
     }
@@ -146,7 +144,7 @@ class Bucket extends Client
      */
     public function deleteLifecycle()
     {
-        return parent::delete('/?lifecycle');
+        return $this->delete('/?lifecycle');
     }
 
     /**
@@ -156,7 +154,7 @@ class Bucket extends Client
      */
     public function putPolicy(array $body)
     {
-        return parent::put('/?policy', ['json' => $body]);
+        return $this->put('/?policy', ['json' => $body]);
     }
 
     /**
@@ -172,7 +170,7 @@ class Bucket extends Client
      */
     public function deletePolicy()
     {
-        return parent::delete('/?policy');
+        return $this->delete('/?policy');
     }
 
     /**
@@ -182,7 +180,7 @@ class Bucket extends Client
      */
     public function putReferer(array $body)
     {
-        return parent::put('/?referer', [
+        return $this->put('/?referer', [
             'body' => XML::build($body),
         ]);
     }
@@ -202,7 +200,7 @@ class Bucket extends Client
      */
     public function putTagging(array $body)
     {
-        return parent::put('/?tagging', [
+        return $this->put('/?tagging', [
             'body' => XML::build($body),
         ]);
     }
@@ -220,7 +218,7 @@ class Bucket extends Client
      */
     public function deleteTagging()
     {
-        return parent::delete('/?tagging');
+        return $this->delete('/?tagging');
     }
 
     /**
@@ -230,7 +228,7 @@ class Bucket extends Client
      */
     public function putWebsite(array $body)
     {
-        return parent::put('/?website', [
+        return $this->put('/?website', [
             'body' => XML::build($body),
         ]);
     }
@@ -248,7 +246,7 @@ class Bucket extends Client
      */
     public function deleteWebsite()
     {
-        return parent::delete('/?website');
+        return $this->delete('/?website');
     }
 
     /**
@@ -259,7 +257,7 @@ class Bucket extends Client
      */
     public function putInventory(string $id, array $body)
     {
-        return parent::put('/?inventory', [
+        return $this->put('/?inventory', [
             'query' => \compact('id'),
             'body' => XML::build($body),
         ]);
@@ -296,7 +294,7 @@ class Bucket extends Client
      */
     public function deleteInventory(string $id)
     {
-        return parent::delete('/?inventory', [
+        return $this->delete('/?inventory', [
             'query' => \compact('id'),
         ]);
     }
@@ -308,7 +306,7 @@ class Bucket extends Client
      */
     public function putVersioning(array $body)
     {
-        return parent::put('/?versioning', [
+        return $this->put('/?versioning', [
             'body' => XML::build($body),
         ]);
     }
@@ -328,7 +326,7 @@ class Bucket extends Client
      */
     public function putReplication(array $body)
     {
-        return parent::put('/?replication', [
+        return $this->put('/?replication', [
             'body' => XML::build($body),
         ]);
     }
@@ -346,7 +344,7 @@ class Bucket extends Client
      */
     public function deleteReplication()
     {
-        return parent::delete('/?replication');
+        return $this->delete('/?replication');
     }
 
     /**
@@ -356,7 +354,7 @@ class Bucket extends Client
      */
     public function putLogging(array $body)
     {
-        return parent::put('/?logging', [
+        return $this->put('/?logging', [
             'body' => XML::build($body),
         ]);
     }
@@ -376,7 +374,7 @@ class Bucket extends Client
      */
     public function putAccelerate(array $body)
     {
-        return parent::put('/?accelerate', [
+        return $this->put('/?accelerate', [
             'body' => XML::build($body),
         ]);
     }
@@ -396,7 +394,7 @@ class Bucket extends Client
      */
     public function putEncryption(array $body)
     {
-        return parent::put('/?encryption', [
+        return $this->put('/?encryption', [
             'body' => XML::build($body),
         ]);
     }
@@ -414,6 +412,6 @@ class Bucket extends Client
      */
     public function deleteEncryption()
     {
-        return parent::delete('/?encryption');
+        return $this->delete('/?encryption');
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Overtrue\CosClient;
 
-use GuzzleHttp\Middleware;
+use Overtrue\CosClient\Middleware\TransformResponseToArray;
+use Overtrue\CosClient\Middleware\CreateRequestSignature;
 use Overtrue\CosClient\Traits\CreatesHttpClient;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * @method \Psr\Http\Message\ResponseInterface get($uri, array $options = [])
@@ -39,7 +39,15 @@ class Client
 
         $this->configureUserAgent($config);
 
-        $this->pushMiddleware($this->getSignatureMiddleware(), 'request_signature');
+        $this->pushMiddleware(
+            new CreateRequestSignature(
+                $this->getSecretId(),
+                $this->getSecretKey(),
+                $this->config->get('signature_expires')
+            )
+        );
+
+        $this->pushMiddleware(new TransformResponseToArray());
     }
 
     public function getAppId(): int
@@ -67,17 +75,6 @@ class Client
         return $this->client ?? $this->client = $this->createHttpClient();
     }
 
-    public function getSignatureMiddleware()
-    {
-        return Middleware::mapRequest(function (RequestInterface $request) {
-            return $request->withHeader(
-                'Authorization',
-                (new Signature($this->getSecretId(), $this->getSecretKey()))
-                    ->createAuthorizationHeader($request, $this->get('signature_expires'))
-            );
-        });
-    }
-
     public function __call($method, $arguments)
     {
         return \call_user_func_array([$this->getHttpClient(), $method], $arguments);
@@ -96,7 +93,7 @@ class Client
         $this->setHttpClientOptions(\array_replace_recursive([
             'headers' => [
                 'User-Agent' => 'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
-            ]
+            ],
         ], $config->get('guzzle', [])));
     }
 }
