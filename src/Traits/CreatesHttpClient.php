@@ -1,6 +1,6 @@
 <?php
 
-namespace Overtrue\CosClient;
+namespace Overtrue\CosClient\Traits;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -72,7 +72,7 @@ trait CreatesHttpClient
     /**
      * @param  array  $middlewares
      *
-     * @return \Overtrue\CosClient\CreatesHttpClient
+     * @return \Overtrue\CosClient\Traits\CreatesHttpClient
      */
     public function setMiddlewares(array $middlewares)
     {
