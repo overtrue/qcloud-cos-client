@@ -13,7 +13,8 @@
     "psr/http-message": "^1.0",
     "guzzlehttp/guzzle": "^7.2",
     "ext-libxml": "*",
-    "ext-simplexml": "*"
+    "ext-simplexml": "*",
+    "ext-json": "*"
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.7",
@@ -25,6 +26,11 @@
   "autoload": {
     "psr-4": {
       "Overtrue\\CosClient\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Overtrue\\CosClient\\Tests\\": "tests"
     }
   },
   "extra": {

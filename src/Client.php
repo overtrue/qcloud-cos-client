@@ -3,6 +3,7 @@
 namespace Overtrue\CosClient;
 
 use GuzzleHttp\Middleware;
+use Overtrue\CosClient\Traits\CreatesHttpClient;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -29,8 +30,6 @@ class Client
 
     protected \GuzzleHttp\Client $client;
 
-    protected string $userAgent = 'overtrue/cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION;
-
     /**
      * @param  \Overtrue\CosClient\Config  $config
      */
@@ -38,29 +37,34 @@ class Client
     {
         $this->config = $config;
 
-        $this->setHttpClientOptions($config->get('guzzle'));
+        $this->configureUserAgent($config);
 
-        $this->pushMiddleware($this->getSignatureMiddleware());
-    }
-
-    public function getClient(): \GuzzleHttp\Client
-    {
-        return $this->client ?? $this->client = $this->createHttpClient();
+        $this->pushMiddleware($this->getSignatureMiddleware(), 'request_signature');
     }
 
     public function getAppId(): int
     {
-        return $this->config->get('app_id');
+        return $this->config->get('app_id', 0);
     }
 
     public function getSecretId(): string
     {
-        return $this->config->get('secret_id');
+        return $this->config->get('secret_id', '');
     }
 
     public function getSecretKey(): string
     {
-        return $this->config->get('secret');
+        return $this->config->get('secret_key', '');
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    public function getHttpClient(): \GuzzleHttp\Client
+    {
+        return $this->client ?? $this->client = $this->createHttpClient();
     }
 
     public function getSignatureMiddleware()
@@ -76,6 +80,23 @@ class Client
 
     public function __call($method, $arguments)
     {
-        return \call_user_func_array([$this->getClient(), $method], $arguments);
+        return \call_user_func_array([$this->getHttpClient(), $method], $arguments);
+    }
+
+    public static function spy()
+    {
+        return \Mockery::mock(static::class)->shouldAllowMockingProtectedMethods()->makePartial();
+    }
+
+    /**
+     * @param  \Overtrue\CosClient\Config  $config
+     */
+    protected function configureUserAgent(Config $config): void
+    {
+        $this->setHttpClientOptions(\array_replace_recursive([
+            'headers' => [
+                'User-Agent' => 'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
+            ]
+        ], $config->get('guzzle', [])));
     }
 }
