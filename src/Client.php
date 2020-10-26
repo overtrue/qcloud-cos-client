@@ -2,6 +2,7 @@
 
 namespace Overtrue\CosClient;
 
+use Overtrue\CosClient\Http\Response;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
 use Overtrue\CosClient\Traits\CreatesHttpClient;
 

@@ -13,12 +13,19 @@ class XML
      *
      * @return array
      */
-    public static function parse(string $xml)
+    public static function toArray(string $xml)
     {
         $backup = libxml_disable_entity_loader(true);
 
-        $result =
-            self::normalize(simplexml_load_string(self::sanitize($xml), 'SimpleXMLElement', LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS));
+        $xml = simplexml_load_string(
+            self::sanitize($xml),
+            'SimpleXMLElement',
+            LIBXML_NSCLEAN | LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS
+        );
+
+        $result = [
+            $xml->getName() => self::objectToArray($xml),
+        ];
 
         libxml_disable_entity_loader($backup);
 
@@ -36,102 +43,28 @@ class XML
      *
      * @return string
      */
-    public static function build($data, $root = 'xml', $item = 'item', $attr = '', $id = 'id')
+    public static function fromArray($data, $root = 'xml', $item = 'item', $attr = '', $id = 'id')
     {
-        if (is_array($attr)) {
-            $_attr = [];
-
-            foreach ($attr as $key => $value) {
-                $_attr[] = "{$key}=\"{$value}\"";
-            }
-
-            $attr = implode(' ', $_attr);
+        if (\count(\array_keys($data)) == 1 && \is_string(\array_key_first($data))) {
+            $root = \array_key_first($data);
         }
 
-        $attr = trim($attr);
-        $attr = empty($attr) ? '' : " {$attr}";
-        $xml = "<{$root}{$attr}>";
-        $xml .= self::data2Xml($data, $item, $id);
-        $xml .= "</{$root}>";
+        $xml = new SimpleXMLElement(\sprintf("<%s/>", $root));
 
-        return $xml;
+        array_walk_recursive($data, [$xml, 'addChild']);
+
+        return $xml->asXML();
     }
 
-    /**
-     * Build CDATA.
-     *
-     * @param  string  $string
-     *
-     * @return string
-     */
-    public static function cdata(string $string)
+    public static function objectToArray($xmlObject, array $out = [])
     {
-        return sprintf('<![CDATA[%s]]>', $string);
-    }
-
-    /**
-     * Object to array.
-     *
-     *
-     * @param  SimpleXMLElement  $obj
-     *
-     * @return array
-     */
-    protected static function normalize($obj)
-    {
-        $result = null;
-
-        if (is_object($obj)) {
-            $obj = (array) $obj;
+        foreach ((array) $xmlObject as $index => $node) {
+            $out[$index] = (is_object($node) || is_array($node))
+                ? self::objectToArray($node)
+                : $node;
         }
 
-        if (is_array($obj)) {
-            foreach ($obj as $key => $value) {
-                $res = self::normalize($value);
-                if (('@attributes' === $key) && ($key)) {
-                    $result = $res; // @codeCoverageIgnore
-                } else {
-                    $result[$key] = $res;
-                }
-            }
-        } else {
-            $result = $obj;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Array to XML.
-     *
-     * @param  array  $data
-     * @param  string  $item
-     * @param  string  $id
-     *
-     * @return string
-     */
-    protected static function data2Xml(array $data, $item = 'item', $id = 'id')
-    {
-        $xml = $attr = '';
-
-        foreach ($data as $key => $val) {
-            if (is_numeric($key)) {
-                $id && $attr = " {$id}=\"{$key}\"";
-                $key = $item;
-            }
-
-            $xml .= "<{$key}{$attr}>";
-
-            if ((is_array($val) || is_object($val))) {
-                $xml .= self::data2Xml((array) $val, $item, $id);
-            } else {
-                $xml .= is_numeric($val) ? $val : self::cdata($val);
-            }
-
-            $xml .= "</{$key}>";
-        }
-
-        return $xml;
+        return $out;
     }
 
     /**

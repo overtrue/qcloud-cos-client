@@ -95,7 +95,7 @@ class Signature
                 } else {
                     $value = "";
                 }
-                $item[$key] = $key . '=' . $value;
+                $query[$key] = $key . '=' . $value;
             }
         }
         ksort($query);

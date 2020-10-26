@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Overtrue\CosClient\Client;
 use Overtrue\CosClient\Config;
-use Overtrue\CosClient\Middleware\TransformResponseToArray;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
 
 class ClientTest extends TestCase
@@ -98,9 +97,17 @@ class ClientTest extends TestCase
     public function testTransformResponseXMLToArray()
     {
         $mock = new MockHandler([
-            new Response(200, ['X-Foo' => 'Bar'], '<foo>bar</foo>'),
+            new Response(
+                200,
+                ['X-Foo' => 'Bar'],
+                '
+                <Owner>
+                    <ID>string</ID>
+                    <DisplayName>string</DisplayName>
+                </Owner>'
+            ),
             new Response(202, ['Content-Length' => 0]),
-            new RequestException('Error Communicating with Server', new Request('GET', 'test'))
+            new RequestException('Error Communicating with Server', new Request('GET', 'test')),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -109,6 +116,6 @@ class ClientTest extends TestCase
         $client = Client::spy();
         $client->shouldReceive('getHttpClient')->andReturn($httpClient);
 
-        $this->assertSame(['foo' => 'bar'], $client->get('/test'));
+        $this->assertSame(['Owner' => ['ID' => 'string', 'DisplayName' => 'string']], $client->get('/test')->toArray());
     }
 }
