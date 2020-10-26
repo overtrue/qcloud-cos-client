@@ -178,10 +178,15 @@ use Overtrue\CosClient\Service;
 
 $service = Service::spy();
 
-$service->shouldReceive('get')->with('https://service.cos.myqcloud.com')->once()->andReturn('all region buckets');
+$service->shouldReceive('get')
+        ->with('https://service.cos.myqcloud.com')
+        ->once()
+        ->andReturn('all region buckets');
 
 $this->assertSame('all region buckets', $service->listBuckets());
 ```
+
+更多测试写法请阅读：[Mockery 官方文档](http://docs.mockery.io/en/latest/index.html)
 
 ## Contributing
 
