@@ -5,7 +5,7 @@ namespace Overtrue\CosClient;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
-class Bucket extends Client
+class BucketClient extends Client
 {
     public const DEFAULT_REGION = 'ap-guangzhou';
 

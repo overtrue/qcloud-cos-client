@@ -2,7 +2,7 @@
 
 namespace Overtrue\CosClient;
 
-class Service extends Client
+class ServiceClient extends Client
 {
     /**
      * @param  string|null  $region

@@ -2,13 +2,13 @@
 
 namespace Overtrue\CosClient\Tests;
 
-use Overtrue\CosClient\Service;
+use Overtrue\CosClient\ServiceClient;
 
-class ServiceTest extends TestCase
+class ServiceClientTest extends TestCase
 {
     public function testListBuckets()
     {
-        $service = Service::partialMock();
+        $service = ServiceClient::partialMock();
 
         $service->shouldReceive('get')->with('https://service.cos.myqcloud.com')->once()->andReturn('all region buckets');
 
