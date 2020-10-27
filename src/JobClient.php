@@ -56,15 +56,12 @@ class JobClient extends Client
 
     /**
      * @param string $id
-     * @param array  $body
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function describe(string $id, array $body)
+    public function describe(string $id)
     {
-        return $this->post(\sprintf('/jobs/%s', $id), [
-            'body' => XML::fromArray($body),
-        ]);
+        return $this->get(\sprintf('/jobs/%s', $id));
     }
 
     /**
