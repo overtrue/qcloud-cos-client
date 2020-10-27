@@ -41,12 +41,12 @@ $config = new Config([
 
 您可以分两种方式使用此 SDK：
 
-- **Service、Bucket** - 封装了具体 API 的类调用指定业务的 API。
+- **ServiceClient、BucketClient、JobClient** - 封装了具体 API 的类调用指定业务的 API。
 - **Client** - 基于最基础的 HTTP 类封装调用 COS 全部 API。
 
 在使用前我们强烈建议您仔细阅读[官方 API 文档](https://cloud.tencent.com/document/product/436)，以减少不必要的时间浪费。
 
-## Service
+## ServiceClient
 
 ```php
 use Overtrue\CosClient\Config;
@@ -61,11 +61,9 @@ $service->buckets();
 $service->buckets('ap-guangzhou');
 ```
 
-## Job
+## JobClient
 
 ```php
-# 批量处理接口
-
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\JobClient;
 
@@ -82,7 +80,7 @@ $job->updatePriority(string $id, int $priority);
 $job->updateStatus(string $id, array $query);
 ```
 
-## Bucket
+## BucketClient
 
 ```php
 use Overtrue\CosClient\Config;
