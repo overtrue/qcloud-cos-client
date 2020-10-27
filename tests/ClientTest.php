@@ -130,7 +130,6 @@ class ClientTest extends TestCase
 
         $client = Client::partialMock();
         $client->shouldReceive('getHttpClient')->andReturn($httpClient);
-        $client->shouldReceive('get')->passthru();
 
         $this->assertSame(['Owner' => ['ID' => 'string', 'DisplayName' => 'string']], $client->get('/test')->toArray());
     }
