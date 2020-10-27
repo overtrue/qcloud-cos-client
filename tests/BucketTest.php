@@ -1012,8 +1012,10 @@ class BucketTest extends TestCase
         $response = $bucket->getEncryption();
 
         $this->assertArrayHasKey('ServerSideEncryptionConfiguration', $response->toArray());
-        $this->assertSame('AES256',
-            $response->toArray()['ServerSideEncryptionConfiguration']['Rule']['ApplySideEncryptionConfiguration']['SSEAlgorithm']);
+        $this->assertSame(
+            'AES256',
+            $response->toArray()['ServerSideEncryptionConfiguration']['Rule']['ApplySideEncryptionConfiguration']['SSEAlgorithm']
+        );
     }
 
     public function testDeleteEncryption()

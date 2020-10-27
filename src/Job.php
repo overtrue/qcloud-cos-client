@@ -2,16 +2,19 @@
 
 namespace Overtrue\CosClient;
 
-use InvalidArgumentException;
+use Overtrue\CosClient\Exceptions\InvalidConfigException;
+use Overtrue\CosClient\Support\XML;
 
 class Job extends Client
 {
     /**
      * @param  \Overtrue\CosClient\Config  $config
+     *
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     public function __construct(Config $config)
     {
-        $this->validate($config);
+        $this->validateConfig($config);
 
         parent::__construct($config->extend([
             'guzzle' => [
@@ -47,7 +50,7 @@ class Job extends Client
     public function create(array $body)
     {
         return $this->post('/jobs', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -60,7 +63,7 @@ class Job extends Client
     public function describe(string $id, array $body)
     {
         return $this->post(\sprintf('/jobs/%s', $id), [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -81,30 +84,29 @@ class Job extends Client
 
     /**
      * @param string $id
-     * @param array  $body
+     * @param array  $query
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function updateStatus(string $id, array $body)
+    public function updateStatus(string $id, array $query)
     {
-        return $this->post(\sprintf('/jobs/%s/status', $id), [
-            'query' => $body,
-        ]);
+        return $this->post(\sprintf('/jobs/%s/status', $id), \compact('query'));
     }
 
     /**
-     * @param \Overtrue\CosClient\Config $config
+     * @param  \Overtrue\CosClient\Config  $config
      *
      * @return bool
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    protected function validate(Config $config)
+    protected function validateConfig(Config $config)
     {
-        if (!$config->get('uin')) {
-            throw new InvalidArgumentException('Invalid config uin.');
+        if (!$config->has('uin')) {
+            throw new InvalidConfigException('Invalid config uin.');
         }
 
-        if (!$config->get('region')) {
-            throw new InvalidArgumentException('Invalid config region.');
+        if (!$config->has('region')) {
+            throw new InvalidConfigException('Invalid config region.');
         }
 
         return true;

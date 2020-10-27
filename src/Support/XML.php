@@ -2,8 +2,6 @@
 
 namespace Overtrue\CosClient\Support;
 
-use SimpleXMLElement;
-
 class XML
 {
     /**
