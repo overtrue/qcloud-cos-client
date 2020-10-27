@@ -23,6 +23,9 @@ $config = new Config([
     'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx', 
     'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
     
+    // 可选(批量处理接口必填)，腾讯云账号 ID，可在腾讯云控制台账号信息中查看：https://console.cloud.tencent.com/developer
+    'uin' => '10000*******', 
+    
     // 可选，地域列表请查看 https://cloud.tencent.com/document/product/436/6224
     'region' => 'ap-guangzhou', 
 
@@ -56,6 +59,27 @@ $service = new Service($config);
 
 $service->buckets();
 $service->buckets('ap-guangzhou');
+```
+
+## Job
+
+```php
+# 批量处理接口
+
+use Overtrue\CosClient\Config;
+use Overtrue\CosClient\Job;
+
+$config = new Config([
+    // 请参考配置说明
+]);
+
+$job = new Job($config);
+
+$job->lists(array $query = []);
+$job->create(array $body);
+$job->describe(string $id, array $body);
+$job->updatePriority(string $id, int $priority);
+$job->updateStatus(string $id, array $body);
 ```
 
 ## Bucket
@@ -157,7 +181,7 @@ $bucket->getObject($key, array $query = [], array $headers = []);
 $bucket->headObject($key, array $query = [], array $headers = []);
 $bucket->optionsObject($key, array $query = [], array $headers = []);
 $bucket->restoreObject($key, array $body, array $query = []);
-* $bucket->selectObjectContents($key, array $body);
+$bucket->selectObjectContents($key, array $body);
 $bucket->deleteObject($key, array $query = [], array $headers = []);
 $bucket->deleteObjects(array $body);
 
