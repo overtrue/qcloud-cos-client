@@ -57,8 +57,8 @@ $config = new Config([
 ]);
 $service = new ServiceClient($config);
 
-$service->buckets();
-$service->buckets('ap-guangzhou');
+$service->listBuckets();
+$service->listBuckets('ap-guangzhou');
 ```
 
 ## JobClient
@@ -100,8 +100,8 @@ $bucket = new BucketClient($config);
 ##### 基本操作
 
 ```php
-$bucket->put(array $body);
-$bucket->head();
+$bucket->create(array $body); // put bucket
+$bucket->ping(); // head bucket
 $bucket->delete();
 $bucket->getObjects(array $query = []);
 $bucket->getObjectVersions(array $query = []);
