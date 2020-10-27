@@ -5,7 +5,7 @@ namespace Overtrue\CosClient;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
-class Job extends Client
+class JobClient extends Client
 {
     /**
      * @param  \Overtrue\CosClient\Config  $config

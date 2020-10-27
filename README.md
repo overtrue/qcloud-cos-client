@@ -50,12 +50,12 @@ $config = new Config([
 
 ```php
 use Overtrue\CosClient\Config;
-use Overtrue\CosClient\Service;
+use Overtrue\CosClient\ServiceClient;
 
 $config = new Config([
     // 请参考配置说明
 ]);
-$service = new Service($config);
+$service = new ServiceClient($config);
 
 $service->buckets();
 $service->buckets('ap-guangzhou');
@@ -67,26 +67,26 @@ $service->buckets('ap-guangzhou');
 # 批量处理接口
 
 use Overtrue\CosClient\Config;
-use Overtrue\CosClient\Job;
+use Overtrue\CosClient\JobClient;
 
 $config = new Config([
     // 请参考配置说明
 ]);
 
-$job = new Job($config);
+$job = new JobClient($config);
 
 $job->lists(array $query = []);
 $job->create(array $body);
-$job->describe(string $id, array $body);
+$job->describe(string $id, array $query);
 $job->updatePriority(string $id, int $priority);
-$job->updateStatus(string $id, array $body);
+$job->updateStatus(string $id, array $query);
 ```
 
 ## Bucket
 
 ```php
 use Overtrue\CosClient\Config;
-use Overtrue\CosClient\Bucket;
+use Overtrue\CosClient\BucketClient;
 
 $config = new Config([
     // 请参考配置说明
@@ -94,7 +94,7 @@ $config = new Config([
     'region' => 'ap-guangzhou',
 ]);
 
-$bucket = new Bucket($config);
+$bucket = new BucketClient($config);
 ```
 
 ### API
@@ -198,9 +198,9 @@ $bucket->deleteObjectTagging($key, array $query = []);
 你可以使用类提供的 `spy` 方法来创建一个测试对象：
 
 ```php
-use Overtrue\CosClient\Service;
+use Overtrue\CosClient\ServiceClient;
 
-$service = Service::spy();
+$service = ServiceClient::spy();
 
 $service->shouldReceive('get')
         ->with('https://service.cos.myqcloud.com')

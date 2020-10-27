@@ -2,15 +2,15 @@
 
 namespace Overtrue\CosClient\Tests;
 
-use Overtrue\CosClient\Bucket;
+use Overtrue\CosClient\BucketClient;
 use Overtrue\CosClient\Http\Response;
 use Overtrue\CosClient\Support\XML;
 
-class BucketTest extends TestCase
+class BucketClientTest extends TestCase
 {
     public function testCreate()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'CreateBucketConfiguration' => [
@@ -22,7 +22,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->create($body);
 
         $this->assertEmpty($response->toArray());
@@ -30,14 +30,14 @@ class BucketTest extends TestCase
 
     public function testDestroy()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->destroy();
 
         $this->assertEmpty($response->toArray());
@@ -45,14 +45,14 @@ class BucketTest extends TestCase
 
     public function testPing()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('head')
             ->with('/')
             ->andReturn(Response::create(200, ['x-cos-bucket-az-type' => 'MAZ']));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->ping();
 
         $this->assertEmpty($response->toArray());
@@ -61,7 +61,7 @@ class BucketTest extends TestCase
 
     public function testGetObjects()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/', ['query' => ['prefix' => 'images']])
             ->andReturn(Response::create(
@@ -74,7 +74,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getObjects(['prefix' => 'images']);
 
         $this->assertArrayHasKey('ListBucketResult', $response->toArray());
@@ -83,7 +83,7 @@ class BucketTest extends TestCase
 
     public function testGetObjectVersions()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?versions', ['query' => ['prefix' => 'images']])
             ->andReturn(Response::create(
@@ -96,7 +96,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getObjectVersions(['prefix' => 'images']);
 
         $this->assertArrayHasKey('ListVersionsResult', $response->toArray());
@@ -105,7 +105,7 @@ class BucketTest extends TestCase
 
     public function testPutACL()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'AccessControlPolicy' => [
@@ -123,7 +123,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putACL($body);
 
         $this->assertEmpty($response->toArray());
@@ -131,7 +131,7 @@ class BucketTest extends TestCase
 
     public function testGetACL()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?acl')
             ->andReturn(Response::create(
@@ -154,7 +154,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getACL();
 
         $this->assertArrayHasKey('AccessControlPolicy', $response->toArray());
@@ -163,7 +163,7 @@ class BucketTest extends TestCase
 
     public function testPutCORS()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'CORSConfiguration' => [
@@ -180,7 +180,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putCORS($body);
 
         $this->assertEmpty($response->toArray());
@@ -188,7 +188,7 @@ class BucketTest extends TestCase
 
     public function testGetCORS()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?cors')
             ->andReturn(Response::create(
@@ -212,7 +212,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getCORS();
 
         $this->assertArrayHasKey('CORSConfiguration', $response->toArray());
@@ -223,14 +223,14 @@ class BucketTest extends TestCase
 
     public function testDeleteCORS()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?cors')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteCORS();
 
         $this->assertEmpty($response->toArray());
@@ -238,7 +238,7 @@ class BucketTest extends TestCase
 
     public function testPutLifecycle()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'LifecycleConfiguration' => [
@@ -258,7 +258,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putLifecycle($body);
 
         $this->assertEmpty($response->toArray());
@@ -266,7 +266,7 @@ class BucketTest extends TestCase
 
     public function testGetLifecycle()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?lifecycle')
             ->andReturn(Response::create(
@@ -288,7 +288,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getLifecycle();
 
         $this->assertArrayHasKey('LifecycleConfiguration', $response->toArray());
@@ -297,14 +297,14 @@ class BucketTest extends TestCase
 
     public function testDeleteLifecycle()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?lifecycle')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteLifecycle();
 
         $this->assertEmpty($response->toArray());
@@ -312,7 +312,7 @@ class BucketTest extends TestCase
 
     public function testPutPolicy()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'Statement' => [
@@ -335,7 +335,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putPolicy($body);
 
         $this->assertEmpty($response->toArray());
@@ -343,7 +343,7 @@ class BucketTest extends TestCase
 
     public function testGetPolicy()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?policy')
             ->andReturn(Response::create(
@@ -371,7 +371,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getPolicy();
 
         $this->assertArrayHasKey('Statement', $response->toArray());
@@ -393,14 +393,14 @@ class BucketTest extends TestCase
 
     public function testDeletePolicy()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?policy')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deletePolicy();
 
         $this->assertEmpty($response->toArray());
@@ -408,7 +408,7 @@ class BucketTest extends TestCase
 
     public function testPutReferer()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'RefererConfiguration' => [
@@ -423,7 +423,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putReferer($body);
 
         $this->assertEmpty($response->toArray());
@@ -431,7 +431,7 @@ class BucketTest extends TestCase
 
     public function testGetReferer()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?referer')
             ->andReturn(Response::create(
@@ -449,7 +449,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getReferer();
 
         $this->assertArrayHasKey('RefererConfiguration', $response->toArray());
@@ -458,7 +458,7 @@ class BucketTest extends TestCase
 
     public function testPutTagging()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'Tagging' => [
@@ -475,7 +475,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putTagging($body);
 
         $this->assertEmpty($response->toArray());
@@ -483,7 +483,7 @@ class BucketTest extends TestCase
 
     public function testGetTagging()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?tagging')
             ->andReturn(Response::create(
@@ -504,7 +504,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getTagging();
 
         $this->assertArrayHasKey('Tagging', $response->toArray());
@@ -513,14 +513,14 @@ class BucketTest extends TestCase
 
     public function testDeleteTagging()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?tagging')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteTagging();
 
         $this->assertEmpty($response->toArray());
@@ -528,7 +528,7 @@ class BucketTest extends TestCase
 
     public function testPutWebsite()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'WebsiteConfiguration' =>
@@ -582,7 +582,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putWebsite($body);
 
         $this->assertEmpty($response->toArray());
@@ -590,7 +590,7 @@ class BucketTest extends TestCase
 
     public function testGetWebsite()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?website')
             ->andReturn(Response::create(
@@ -646,7 +646,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getWebsite();
 
         $this->assertArrayHasKey('WebsiteConfiguration', $response->toArray());
@@ -655,14 +655,14 @@ class BucketTest extends TestCase
 
     public function testDeleteWebsite()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?website')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteWebsite();
 
         $this->assertEmpty($response->toArray());
@@ -670,7 +670,7 @@ class BucketTest extends TestCase
 
     public function testPutInventory()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'InventoryConfiguration' =>
@@ -703,7 +703,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putInventory('inventory-configuration-ID', $body);
 
         $this->assertEmpty($response->toArray());
@@ -711,7 +711,7 @@ class BucketTest extends TestCase
 
     public function testGetInventory()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?inventory&id=demo-id')
             ->andReturn(Response::create(
@@ -750,7 +750,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getInventory('demo-id');
 
         $this->assertArrayHasKey('InventoryConfiguration', $response->toArray());
@@ -759,14 +759,14 @@ class BucketTest extends TestCase
 
     public function testDeleteInventory()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?inventory&id=demo-id')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteInventory('demo-id');
 
         $this->assertEmpty($response->toArray());
@@ -774,7 +774,7 @@ class BucketTest extends TestCase
 
     public function testPutVersioning()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'VersioningConfiguration' =>
@@ -787,7 +787,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putVersioning($body);
 
         $this->assertEmpty($response->toArray());
@@ -795,7 +795,7 @@ class BucketTest extends TestCase
 
     public function testGetVersioning()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?versioning')
             ->andReturn(Response::create(
@@ -807,7 +807,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getVersioning();
 
         $this->assertArrayHasKey('VersioningConfiguration', $response->toArray());
@@ -816,7 +816,7 @@ class BucketTest extends TestCase
 
     public function testPutReplication()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'ReplicationConfiguration' =>
@@ -829,7 +829,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putReplication($body);
 
         $this->assertEmpty($response->toArray());
@@ -837,7 +837,7 @@ class BucketTest extends TestCase
 
     public function testGetReplication()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?replication')
             ->andReturn(Response::create(
@@ -849,7 +849,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getReplication();
 
         $this->assertArrayHasKey('ReplicationConfiguration', $response->toArray());
@@ -858,14 +858,14 @@ class BucketTest extends TestCase
 
     public function testDeleteReplication()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?replication')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteReplication();
 
         $this->assertEmpty($response->toArray());
@@ -873,7 +873,7 @@ class BucketTest extends TestCase
 
     public function testPutLogging()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'BucketLoggingStatus' =>
@@ -890,7 +890,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putLogging($body);
 
         $this->assertEmpty($response->toArray());
@@ -898,7 +898,7 @@ class BucketTest extends TestCase
 
     public function testGetLogging()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?logging')
             ->andReturn(Response::create(
@@ -913,7 +913,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getLogging();
 
         $this->assertArrayHasKey('BucketLoggingStatus', $response->toArray());
@@ -922,7 +922,7 @@ class BucketTest extends TestCase
 
     public function testPutAccelerate()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'AccelerateConfiguration' =>
@@ -935,7 +935,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putAccelerate($body);
 
         $this->assertEmpty($response->toArray());
@@ -943,7 +943,7 @@ class BucketTest extends TestCase
 
     public function testGetAccelerate()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?accelerate')
             ->andReturn(Response::create(
@@ -956,7 +956,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getAccelerate();
 
         $this->assertArrayHasKey('AccelerateConfiguration', $response->toArray());
@@ -965,7 +965,7 @@ class BucketTest extends TestCase
 
     public function testPutEncryption()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $body = [
             'ServerSideEncryptionConfiguration' =>
@@ -984,7 +984,7 @@ class BucketTest extends TestCase
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->putEncryption($body);
 
         $this->assertEmpty($response->toArray());
@@ -992,7 +992,7 @@ class BucketTest extends TestCase
 
     public function testGetEncryption()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
             ->with('/?encryption')
             ->andReturn(Response::create(
@@ -1008,7 +1008,7 @@ class BucketTest extends TestCase
             ));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->getEncryption();
 
         $this->assertArrayHasKey('ServerSideEncryptionConfiguration', $response->toArray());
@@ -1020,14 +1020,14 @@ class BucketTest extends TestCase
 
     public function testDeleteEncryption()
     {
-        $bucket = Bucket::partialMock();
+        $bucket = BucketClient::partialMock();
 
         $bucket->shouldReceive('delete')
             ->with('/?encryption')
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
-        /* @var Bucket $bucket */
+        /* @var BucketClient $bucket */
         $response = $bucket->deleteEncryption();
 
         $this->assertEmpty($response->toArray());
