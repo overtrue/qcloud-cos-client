@@ -2,20 +2,31 @@
 
 namespace Overtrue\CosClient;
 
+use Overtrue\CosClient\Exceptions\InvalidConfigException;
+use Overtrue\CosClient\Support\XML;
+
 class Bucket extends Client
 {
+    public const DEFAULT_REGION = 'ap-guangzhou';
+
     /**
      * @param  \Overtrue\CosClient\Config  $config
+     *
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     public function __construct(Config $config)
     {
+        if (!$config->has('bucket')) {
+            throw new InvalidConfigException('No bucket configured.');
+        }
+
         parent::__construct($config->extend([
             'guzzle' => [
                 'base_uri' => \sprintf(
                     'https://%s-%s.cos.%s.myqcloud.com/',
                     $config->get('bucket'),
                     $config->get('app_id'),
-                    $config->get('region')
+                    $config->get('region', self::DEFAULT_REGION)
                 ),
             ]
         ]));
@@ -29,7 +40,7 @@ class Bucket extends Client
     public function create(array $body)
     {
         return $this->put('/', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -66,7 +77,7 @@ class Bucket extends Client
      */
     public function getObjectVersions(array $query = [])
     {
-        return $this->get('?versions', \compact('query'));
+        return $this->get('/?versions', \compact('query'));
     }
 
     /**
@@ -77,10 +88,10 @@ class Bucket extends Client
      */
     public function putACL(array $body, array $headers = [])
     {
-        return $this->put('/?acl', [
+        return $this->put('/?acl', \array_filter([
             'headers' => $headers,
-            'body' => XML::build($body),
-        ]);
+            'body' => XML::fromArray($body),
+        ]));
     }
 
     /**
@@ -99,7 +110,7 @@ class Bucket extends Client
     public function putCORS(array $body)
     {
         return $this->put('/?cors', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -127,7 +138,7 @@ class Bucket extends Client
     public function putLifecycle(array $body)
     {
         return $this->put('/?lifecycle', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -181,7 +192,7 @@ class Bucket extends Client
     public function putReferer(array $body)
     {
         return $this->put('/?referer', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -201,7 +212,7 @@ class Bucket extends Client
     public function putTagging(array $body)
     {
         return $this->put('/?tagging', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -229,7 +240,7 @@ class Bucket extends Client
     public function putWebsite(array $body)
     {
         return $this->put('/?website', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -257,9 +268,8 @@ class Bucket extends Client
      */
     public function putInventory(string $id, array $body)
     {
-        return $this->put('/?inventory', [
-            'query' => \compact('id'),
-            'body' => XML::build($body),
+        return $this->put(\sprintf('/?inventory&id=%s', $id), [
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -270,9 +280,7 @@ class Bucket extends Client
      */
     public function getInventory(string $id)
     {
-        return $this->get('/?inventory', [
-            'query' => \compact('id'),
-        ]);
+        return $this->get(\sprintf('/?inventory&id=%s', $id));
     }
 
     /**
@@ -282,9 +290,7 @@ class Bucket extends Client
      */
     public function listInventoryConfigurations(?string $nextContinuationToken = null)
     {
-        return $this->get('/?inventory', [
-            'query' => ['continuation-token' => $nextContinuationToken],
-        ]);
+        return $this->get(\sprintf('/?inventory&continuation-token=%s', $nextContinuationToken));
     }
 
     /**
@@ -294,9 +300,7 @@ class Bucket extends Client
      */
     public function deleteInventory(string $id)
     {
-        return $this->delete('/?inventory', [
-            'query' => \compact('id'),
-        ]);
+        return $this->delete(\sprintf('/?inventory&id=%s', $id));
     }
 
     /**
@@ -307,7 +311,7 @@ class Bucket extends Client
     public function putVersioning(array $body)
     {
         return $this->put('/?versioning', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -327,7 +331,7 @@ class Bucket extends Client
     public function putReplication(array $body)
     {
         return $this->put('/?replication', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -355,7 +359,7 @@ class Bucket extends Client
     public function putLogging(array $body)
     {
         return $this->put('/?logging', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -375,7 +379,7 @@ class Bucket extends Client
     public function putAccelerate(array $body)
     {
         return $this->put('/?accelerate', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -395,7 +399,7 @@ class Bucket extends Client
     public function putEncryption(array $body)
     {
         return $this->put('/?encryption', [
-            'body' => XML::build($body),
+            'body' => XML::fromArray($body),
         ]);
     }
 

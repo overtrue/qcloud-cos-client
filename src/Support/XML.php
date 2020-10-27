@@ -36,27 +36,43 @@ class XML
      * XML encode.
      *
      * @param  mixed  $data
-     * @param  string  $root
-     * @param  string  $item
-     * @param  string  $attr
-     * @param  string  $id
+     * @param  null  $rootElement
+     * @param  bool  $xml
      *
      * @return string
      */
-    public static function fromArray($data, $root = 'xml', $item = 'item', $attr = '', $id = 'id')
+    public static function fromArray($data, $rootElement = null, $xml = false)
     {
-        if (\count(\array_keys($data)) == 1 && \is_string(\array_key_first($data))) {
-            $root = \array_key_first($data);
-        }
+        $xml = new \DomDocument('1.0', 'utf-8');
 
-        $xml = new SimpleXMLElement(\sprintf("<%s/>", $root));
+        $xml->appendChild($node = self::convertToXml(\key($data), \reset($data), $xml));
 
-        array_walk_recursive($data, [$xml, 'addChild']);
-
-        return $xml->asXML();
+        return $xml->saveXML();
     }
 
-    public static function objectToArray($xmlObject, array $out = [])
+    protected static function convertToXml($root, $data = [], $xml = null): \DOMElement
+    {
+        $node = $xml->createElement($root);
+
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (is_array($value) && is_numeric(key($value))) {
+                    foreach ($value as $k => $v) {
+                        $node->appendChild(self::convertToXml($key, $v, $xml));
+                    }
+                } else {
+                    $node->appendChild(self::convertToXml($key, $value, $xml));
+                }
+                unset($data[$key]);
+            }
+        } else {
+            $node->appendChild($xml->createTextNode($data));
+        }
+
+        return $node;
+    }
+
+    protected static function objectToArray($xmlObject, array $out = [])
     {
         foreach ((array) $xmlObject as $index => $node) {
             $out[$index] = (is_object($node) || is_array($node))
@@ -77,7 +93,7 @@ class XML
      *
      * @return string
      */
-    public static function sanitize(string $xml)
+    protected static function sanitize(string $xml)
     {
         return preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]+/u', '', $xml);
     }

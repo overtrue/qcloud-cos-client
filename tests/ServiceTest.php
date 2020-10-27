@@ -8,7 +8,7 @@ class ServiceTest extends TestCase
 {
     public function testListBuckets()
     {
-        $service = Service::spy();
+        $service = Service::partialMock();
 
         $service->shouldReceive('get')->with('https://service.cos.myqcloud.com')->once()->andReturn('all region buckets');
 

@@ -26,15 +26,18 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
             return $this->arrayResult;
         }
 
-        $this->getBody()->rewind();
-
-        $contents = $this->getBody()->getContents();
+        $contents = $this->getContents();
 
         if (empty($contents)) {
-            throw new \Exception('Empty Response.');
+            return $this->arrayResult = [];
         }
 
-        return XML::toArray($contents);
+        return $this->arrayResult = $this->isXML() ? XML::toArray($contents) : \json_decode($contents, true);
+    }
+
+    public function isXML()
+    {
+        return \strpos($this->getHeaderLine('content-type'), 'xml') > 0;
     }
 
     public function jsonSerialize()
@@ -64,5 +67,25 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
     public function offsetUnset($offset)
     {
         return null;
+    }
+
+    public static function create(
+        $status = 200,
+        array $headers = [],
+        $body = null,
+        $version = '1.1',
+        $reason = null
+    ) {
+        return new self(new \GuzzleHttp\Psr7\Response($status, $headers, $body, $version, $reason));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getContents(): string
+    {
+        $this->getBody()->rewind();
+
+        return $this->getBody()->getContents();
     }
 }
