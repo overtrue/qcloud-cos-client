@@ -60,7 +60,11 @@ class ClientTest extends TestCase
 
     public function testGetConfig()
     {
-        $config = new Config([]);
+        $config = new Config([
+            'app_id' => 10020201024,
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]);
         $client = new Client($config);
 
         $this->assertSame($config, $client->getConfig());
@@ -68,7 +72,11 @@ class ClientTest extends TestCase
 
     public function testGetHttpClient()
     {
-        $client = new Client(new Config([]));
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
 
         $httpClient = $client->getHttpClient();
 
@@ -78,13 +86,20 @@ class ClientTest extends TestCase
 
     public function testConfigureUserAgent()
     {
-        $client = new Client(new Config([]));
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
         $this->assertSame(
             'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
             $client->getHttpClientOptions()['headers']['User-Agent']
         );
 
         $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
             'guzzle' => [
                 'headers' => [
                     'User-Agent' => 'custom-user-agent',
@@ -99,7 +114,7 @@ class ClientTest extends TestCase
         $mock = new MockHandler([
             new Response(
                 200,
-                ['X-Foo' => 'Bar'],
+                ['Content-Type' => 'application/xml'],
                 '
                 <Owner>
                     <ID>string</ID>
@@ -107,13 +122,13 @@ class ClientTest extends TestCase
                 </Owner>'
             ),
             new Response(202, ['Content-Length' => 0]),
-            new RequestException('Error Communicating with Server', new Request('GET', 'test')),
+            new RequestException('Error Communicating with Server', new Request('GET', '/test')),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
         $httpClient = new \GuzzleHttp\Client(['handler' => $handlerStack]);
 
-        $client = Client::spy();
+        $client = Client::partialMock();
         $client->shouldReceive('getHttpClient')->andReturn($httpClient);
 
         $this->assertSame(['Owner' => ['ID' => 'string', 'DisplayName' => 'string']], $client->get('/test')->toArray());

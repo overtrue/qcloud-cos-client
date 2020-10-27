@@ -2,6 +2,7 @@
 
 namespace Overtrue\CosClient;
 
+use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Http\Response;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
 use Overtrue\CosClient\Traits\CreatesHttpClient;
@@ -32,9 +33,15 @@ class Client
 
     /**
      * @param  \Overtrue\CosClient\Config  $config
+     *
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     public function __construct(Config $config)
     {
+        if (!$config->has('app_id') || !$config->has('secret_id') || !$config->has('secret_key')) {
+            throw new InvalidConfigException('app_id, secret_id and secret_key was required.');
+        }
+
         $this->config = $config;
 
         $this->configureUserAgent($config);
@@ -80,18 +87,32 @@ class Client
 
     public static function spy()
     {
-        return \Mockery::mock(static::class)->shouldAllowMockingProtectedMethods()->makePartial();
+        return \Mockery::mock(static::class);
+    }
+
+    public static function partialMock()
+    {
+        return \Mockery::mock(static::class)->makePartial();
+    }
+
+    public static function partialMockWithConfig(Config $config, array $methods)
+    {
+        return \Mockery::mock(static::class.\sprintf('[%s]', \join(',', $methods)), [$config]);
     }
 
     /**
      * @param  \Overtrue\CosClient\Config  $config
+     *
+     * @return \Overtrue\CosClient\Client
      */
-    protected function configureUserAgent(Config $config): void
+    protected function configureUserAgent(Config $config): Client
     {
         $this->setHttpClientOptions(\array_replace_recursive([
             'headers' => [
                 'User-Agent' => 'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
             ],
         ], $config->get('guzzle', [])));
+
+        return $this;
     }
 }
