@@ -15,13 +15,13 @@ class ServiceClientTest extends TestCase
             ->once()
             ->andReturn('all region buckets');
 
-        $this->assertSame('all region buckets', $service->listBuckets());
+        $this->assertSame('all region buckets', $service->getBuckets());
 
         $service->shouldReceive('get')
             ->with('https://cos.ap-guangzhou.myqcloud.com')
             ->once()
             ->andReturn('all guangzhou buckets');
 
-        $this->assertSame('all guangzhou buckets', $service->listBuckets('ap-guangzhou'));
+        $this->assertSame('all guangzhou buckets', $service->getBuckets('ap-guangzhou'));
     }
 }
