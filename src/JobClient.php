@@ -8,12 +8,16 @@ use Overtrue\CosClient\Support\XML;
 class JobClient extends Client
 {
     /**
-     * @param  \Overtrue\CosClient\Config  $config
+     * @param  \Overtrue\CosClient\Config|array  $config
      *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct(Config $config)
+    public function __construct($config)
     {
+        if (!($config instanceof Config)) {
+            $config = new Config($config);
+        }
+
         $this->validateConfig($config);
 
         parent::__construct($config->extend([

@@ -10,12 +10,16 @@ class BucketClient extends Client
     public const DEFAULT_REGION = 'ap-guangzhou';
 
     /**
-     * @param  \Overtrue\CosClient\Config  $config
+     * @param  \Overtrue\CosClient\Config|array  $config
      *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct(Config $config)
+    public function __construct($config)
     {
+        if (!($config instanceof Config)) {
+            $config = new Config($config);
+        }
+
         if (!$config->has('bucket')) {
             throw new InvalidConfigException('No bucket configured.');
         }

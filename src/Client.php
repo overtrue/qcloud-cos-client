@@ -32,12 +32,16 @@ class Client
     protected \GuzzleHttp\Client $client;
 
     /**
-     * @param  \Overtrue\CosClient\Config  $config
+     * @param  \Overtrue\CosClient\Config|array  $config
      *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct(Config $config)
+    public function __construct($config)
     {
+        if (!($config instanceof Config)) {
+            $config = new Config($config);
+        }
+
         if (!$config->has('app_id') || !$config->has('secret_id') || !$config->has('secret_key')) {
             throw new InvalidConfigException('app_id, secret_id and secret_key was required.');
         }
