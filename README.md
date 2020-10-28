@@ -217,21 +217,25 @@ $bucket->deleteObjectTagging($key, array $query = []);
 你可以使用类提供的 `spy` 方法来创建一个测试对象：
 
 ```php
-use Overtrue\CosClient\Http\Response;use Overtrue\CosClient\ServiceClient;
+
+use Overtrue\CosClient\Http\Response;
+use Overtrue\CosClient\ServiceClient;
 
 $service = ServiceClient::spy();
+
+$mockResponse = Response::create(200, [], '<ListAllMyBucketsResult>
+                                               <Buckets>
+                                                       <Bucket>
+                                                           <Name>examplebucket1-1250000000</Name>
+                                                           <Location>ap-beijing</Location>
+                                                           <CreationDate>2019-05-24T11:49:50Z</CreationDate>
+                                                       </Bucket>
+                                            </ListAllMyBucketsResult>');
 
 $service->shouldReceive('listBuckets')
         ->with('zp-guangzhou')
         ->once()
-        ->andReturn(Response::create(200, [], '<ListAllMyBucketsResult>
-                                                   <Buckets>
-                                                           <Bucket>
-                                                               <Name>examplebucket1-1250000000</Name>
-                                                               <Location>ap-beijing</Location>
-                                                               <CreationDate>2019-05-24T11:49:50Z</CreationDate>
-                                                           </Bucket>
-                                                </ListAllMyBucketsResult>'));
+        ->andReturn($mockResponse);
 ```
 
 更多测试写法请阅读：[Mockery 官方文档](http://docs.mockery.io/en/latest/index.html)
