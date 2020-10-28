@@ -4,6 +4,8 @@
 
 > :star: 官方文档：https://cloud.tencent.com/document/product/436
 
+![Test](https://github.com/overtrue/qcloud-cos-client/workflows/Test/badge.svg)
+
 ## 安装
 
 环境要求：
