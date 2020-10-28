@@ -6,6 +6,14 @@
 
 ## 安装
 
+环境要求：
+
+- PHP >= 7.4
+- ext-libxml
+- ext-simplexml
+- ext-json
+- ext-dom
+
 ```shell
 $ composer require overtrue/qcloud-cos-client -vvv
 ```
