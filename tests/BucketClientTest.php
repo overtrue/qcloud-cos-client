@@ -8,7 +8,7 @@ use Overtrue\CosClient\Support\XML;
 
 class BucketClientTest extends TestCase
 {
-    public function testCreate()
+    public function testPutBucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -23,12 +23,12 @@ class BucketClientTest extends TestCase
 
         /* @var Response $response */
         /* @var BucketClient $bucket */
-        $response = $bucket->create($body);
+        $response = $bucket->putBucket($body);
 
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDestroy()
+    public function testDeleteBucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -38,12 +38,12 @@ class BucketClientTest extends TestCase
 
         /* @var Response $response */
         /* @var BucketClient $bucket */
-        $response = $bucket->destroy();
+        $response = $bucket->deleteBucket();
 
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPing()
+    public function testHeadBucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -53,7 +53,7 @@ class BucketClientTest extends TestCase
 
         /* @var Response $response */
         /* @var BucketClient $bucket */
-        $response = $bucket->ping();
+        $response = $bucket->headBucket();
 
         $this->assertEmpty($response->toArray());
         $this->assertArrayHasKey('x-cos-bucket-az-type', $response->getHeaders());
@@ -103,7 +103,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('demo', $response->toArray()['ListVersionsResult']['Name']);
     }
 
-    public function testPutACL()
+    public function testPutAcl()
     {
         $bucket = BucketClient::partialMock();
 
@@ -129,7 +129,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetACL()
+    public function testGetAcl()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -161,7 +161,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('qcs::cam::uin/100000000001:uin/100000000001', $response->toArray()['AccessControlPolicy']['Owner']['ID']);
     }
 
-    public function testPutCORS()
+    public function testPutCors()
     {
         $bucket = BucketClient::partialMock();
 
@@ -186,7 +186,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetCORS()
+    public function testGetCors()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -221,7 +221,7 @@ class BucketClientTest extends TestCase
         ], $response->toArray()['CORSConfiguration']['CORSRule']['AllowedMethod']);
     }
 
-    public function testDeleteCORS()
+    public function testDeleteCors()
     {
         $bucket = BucketClient::partialMock();
 

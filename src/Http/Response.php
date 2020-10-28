@@ -35,6 +35,11 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         return $this->arrayResult = $this->isXML() ? XML::toArray($contents) : \json_decode($contents, true);
     }
 
+    public function toObject()
+    {
+        return \json_decode(\json_encode($this->toArray()));
+    }
+
     public function isXML()
     {
         return \strpos($this->getHeaderLine('content-type'), 'xml') > 0;

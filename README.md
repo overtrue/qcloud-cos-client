@@ -57,6 +57,19 @@ $config = new Config([
 
 在使用前我们强烈建议您仔细阅读[官方 API 文档](https://cloud.tencent.com/document/product/436)，以减少不必要的时间浪费。
 
+### 返回值
+
+所有的接口调用都会返回 [`Overtrue\CosClient\Http\Response`](https://github.com/overtrue/qcloud-cos-client/blob/master/src/Http/Response.php) 对象，改对象提供了以下便捷方法：
+
+```php
+array|null $response->toArray(); // 获取响应内容数组转换结果                                                
+object $response->toObject(); // 获取对象格式的返回值
+bool $response->isXML(); // 检测返回内容是否为 XML
+string $response->getContents(); // 获取原始返回内容
+```
+
+你也可以直接把 `$response` 当成数组访问：`$response['ListBucketResult']`
+
 ## ServiceClient
 
 ```php
@@ -76,13 +89,14 @@ $service->listBuckets('ap-guangzhou');
 
 ```php
 use Overtrue\CosClient\Config;
-use Overtrue\CosClient\JobClient;
 
 $config = new Config([
     // 请参考配置说明
 ]);
 
 $job = new JobClient($config);
+
+## API
 
 $job->lists(array $query = []);
 $job->create(array $body);
@@ -104,16 +118,12 @@ $config = new Config([
 ]);
 
 $bucket = new BucketClient($config);
-```
 
-### API
+## API
 
-##### 基本操作
-
-```php
-$bucket->create(array $body); // put bucket
-$bucket->ping(); // head bucket
-$bucket->delete();
+$bucket->putBucket(array $body); 
+$bucket->headBucket(); 
+$bucket->deleteBucket();
 $bucket->getObjects(array $query = []);
 $bucket->getObjectVersions(array $query = []);
 
