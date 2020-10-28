@@ -11,14 +11,14 @@ class ServiceClientTest extends TestCase
         $service = ServiceClient::partialMock();
 
         $service->shouldReceive('get')
-            ->with('https://service.cos.myqcloud.com')
+            ->with('https://service.cos.myqcloud.com/')
             ->once()
             ->andReturn('all region buckets');
 
         $this->assertSame('all region buckets', $service->getBuckets());
 
         $service->shouldReceive('get')
-            ->with('https://cos.ap-guangzhou.myqcloud.com')
+            ->with('https://cos.ap-guangzhou.myqcloud.com/')
             ->once()
             ->andReturn('all guangzhou buckets');
 
