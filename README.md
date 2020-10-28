@@ -1,10 +1,11 @@
+<img src="https://github.com/overtrue/qcloud-cos-client/workflows/Test/badge.svg" align="right" />
+
 <h1 align="center">QCloud COS Client</h1>
 
 对象存储（Cloud Object Storage，COS）是腾讯云提供的一种存储海量文件的分布式存储服务，具有高扩展性、低成本、可靠安全等优点。通过控制台、API、SDK 和工具等多样化方式，用户可简单、快速地接入 COS，进行多格式文件的上传、下载和管理，实现海量数据存储和管理。
 
 > :star: 官方文档：https://cloud.tencent.com/document/product/436
 
-![Test](https://github.com/overtrue/qcloud-cos-client/workflows/Test/badge.svg)
 
 ## 安装
 
