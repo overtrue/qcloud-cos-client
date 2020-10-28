@@ -81,8 +81,8 @@ $config = [
 ]);
 $service = new ServiceClient($config);
 
-$service->listBuckets();
-$service->listBuckets('ap-guangzhou');
+$service->getBuckets();
+$service->getBuckets('ap-guangzhou');
 ```
 
 ## JobClient

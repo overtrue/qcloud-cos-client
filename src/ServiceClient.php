@@ -9,7 +9,7 @@ class ServiceClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function listBuckets(?string $region = null)
+    public function getBuckets(?string $region = null)
     {
         $uri = $region ? \sprintf('https://cos.%s.myqcloud.com', $region) : 'https://service.cos.myqcloud.com';
 
