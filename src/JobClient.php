@@ -39,7 +39,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function getJobs(array $query)
+    public function getJobs(array $query = [])
     {
         return $this->get('/jobs', [
             'query' => $query,
