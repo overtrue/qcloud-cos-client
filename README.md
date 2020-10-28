@@ -45,7 +45,7 @@ $config = [
     
     // 可选，签名有效期，默认 60 分钟
     'signature_expires' => '+60 minutes', 
-]);
+];
 ```
 
 ## 使用
@@ -73,12 +73,11 @@ string $response->getContents(); // 获取原始返回内容
 ## ServiceClient
 
 ```php
-use Overtrue\CosClient\Config;
 use Overtrue\CosClient\ServiceClient;
 
 $config = [
     // 请参考配置说明
-]);
+];
 $service = new ServiceClient($config);
 
 $service->listBuckets();
@@ -88,11 +87,11 @@ $service->listBuckets('ap-guangzhou');
 ## JobClient
 
 ```php
-use Overtrue\CosClient\Config;
+use Overtrue\CosClient\JobClient;
 
 $config = [
     // 请参考配置说明
-]);
+];
 
 $job = new JobClient($config);
 
@@ -100,7 +99,7 @@ $job = new JobClient($config);
 
 $job->lists(array $query = []);
 $job->create(array $body);
-$job->describe(string $id, array $query);
+$job->describe(string $id);
 $job->updatePriority(string $id, int $priority);
 $job->updateStatus(string $id, array $query);
 ```
@@ -115,7 +114,7 @@ $config = [
     // 请参考配置说明
     'bucket' => 'example',
     'region' => 'ap-guangzhou',
-]);
+];
 
 $bucket = new BucketClient($config);
 
