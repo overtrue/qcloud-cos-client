@@ -39,7 +39,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function lists(array $query)
+    public function getJobs(array $query)
     {
         return $this->get('/jobs', [
             'query' => $query,
@@ -51,7 +51,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function create(array $body)
+    public function createJob(array $body)
     {
         return $this->post('/jobs', [
             'body' => XML::fromArray($body),
@@ -63,7 +63,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function describe(string $id)
+    public function describeJob(string $id)
     {
         return $this->get(\sprintf('/jobs/%s', $id));
     }
@@ -74,7 +74,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function updatePriority(string $id, int $priority)
+    public function updateJobPriority(string $id, int $priority)
     {
         return $this->post(\sprintf('/jobs/%s/priority', $id), [
             'query' => [
@@ -89,7 +89,7 @@ class JobClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function updateStatus(string $id, array $query)
+    public function updateJobStatus(string $id, array $query)
     {
         return $this->post(\sprintf('/jobs/%s/status', $id), \compact('query'));
     }
@@ -97,7 +97,6 @@ class JobClient extends Client
     /**
      * @param  \Overtrue\CosClient\Config  $config
      *
-     * @return bool
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     protected function validateConfig(Config $config)
@@ -109,7 +108,5 @@ class JobClient extends Client
         if (!$config->has('region')) {
             throw new InvalidConfigException('Invalid config region.');
         }
-
-        return true;
     }
 }

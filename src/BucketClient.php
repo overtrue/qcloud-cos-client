@@ -7,8 +7,6 @@ use Overtrue\CosClient\Support\XML;
 
 class BucketClient extends Client
 {
-    public const DEFAULT_REGION = 'ap-guangzhou';
-
     /**
      * @param  \Overtrue\CosClient\Config|array  $config
      *

@@ -29,7 +29,7 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         $contents = $this->getContents();
 
         if (empty($contents)) {
-            return $this->arrayResult = [];
+            return $this->arrayResult = null;
         }
 
         return $this->arrayResult = $this->isXML() ? XML::toArray($contents) : \json_decode($contents, true);
@@ -87,7 +87,7 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
     /**
      * @return string
      */
-    protected function getContents(): string
+    public function getContents(): string
     {
         $this->getBody()->rewind();
 
