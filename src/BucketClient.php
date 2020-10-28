@@ -290,7 +290,7 @@ class BucketClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function listInventoryConfigurations(?string $nextContinuationToken = null)
+    public function getInventoryConfigurations(?string $nextContinuationToken = null)
     {
         return $this->get(\sprintf('/?inventory&continuation-token=%s', $nextContinuationToken));
     }

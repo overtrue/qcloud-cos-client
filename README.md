@@ -165,7 +165,7 @@ $bucket->deleteWebsite();
 // Inventory
 $bucket->putInventory(string $id, array $body)
 $bucket->getInventory(string $id)
-$bucket->listInventoryConfigurations(?string $nextContinuationToken = null)
+$bucket->getInventoryConfigurations(?string $nextContinuationToken = null)
 $bucket->deleteInventory(string $id)
 
 // Versioning
