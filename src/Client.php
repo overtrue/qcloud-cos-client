@@ -10,6 +10,7 @@ use Overtrue\CosClient\Traits\CreatesHttpClient;
 /**
  * @method \Psr\Http\Message\ResponseInterface get($uri, array $options = [])
  * @method \Psr\Http\Message\ResponseInterface head($uri, array $options = [])
+ * @method \Psr\Http\Message\ResponseInterface options($uri, array $options = [])
  * @method \Psr\Http\Message\ResponseInterface put($uri, array $options = [])
  * @method \Psr\Http\Message\ResponseInterface post($uri, array $options = [])
  * @method \Psr\Http\Message\ResponseInterface patch($uri, array $options = [])
@@ -17,6 +18,7 @@ use Overtrue\CosClient\Traits\CreatesHttpClient;
  * @method \Psr\Http\Message\ResponseInterface request(string $method, $uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface getAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface headAsync($uri, array $options = [])
+ * @method \GuzzleHttp\Promise\PromiseInterface optionsAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface putAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface postAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface patchAsync($uri, array $options = [])
@@ -26,6 +28,8 @@ use Overtrue\CosClient\Traits\CreatesHttpClient;
 class Client
 {
     use CreatesHttpClient;
+
+    public const DEFAULT_REGION = 'ap-guangzhou';
 
     protected Config $config;
 

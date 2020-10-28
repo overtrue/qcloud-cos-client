@@ -52,7 +52,7 @@ $config = [
 
 您可以分两种方式使用此 SDK：
 
-- **ServiceClient、BucketClient、JobClient** - 封装了具体 API 的类调用指定业务的 API。
+- **ServiceClient、BucketClient、ObjectClient、JobClient** - 封装了具体 API 的类调用指定业务的 API。
 - **Client** - 基于最基础的 HTTP 类封装调用 COS 全部 API。
 
 在使用前我们强烈建议您仔细阅读[官方 API 文档](https://cloud.tencent.com/document/product/436)，以减少不必要的时间浪费。
@@ -89,6 +89,7 @@ $service->listBuckets('ap-guangzhou');
 
 ```php
 use Overtrue\CosClient\Config;
+use Overtrue\CosClient\JobClient;
 
 $config = [
     // 请参考配置说明
@@ -98,11 +99,11 @@ $job = new JobClient($config);
 
 ## API
 
-$job->lists(array $query = []);
-$job->create(array $body);
-$job->describe(string $id, array $query);
-$job->updatePriority(string $id, int $priority);
-$job->updateStatus(string $id, array $query);
+$job->getJobs(array $query = []);
+$job->createJob(array $body);
+$job->describeJob(string $id, array $query);
+$job->updateJobPriority(string $id, int $priority);
+$job->updateJobStatus(string $id, array $query);
 ```
 
 ## BucketClient
@@ -191,25 +192,46 @@ $bucket->getAccelerate();
 $bucket->putEncryption(array $body);
 $bucket->getEncryption();
 $bucket->deleteEncryption();
+```
 
-#### Object
+## ObjectClient
 
-$bucket->putObject(string $key, string $contents, array $headers = []);
+```php
+use Overtrue\CosClient\Config;
+use Overtrue\CosClient\ObjectClient;
+
+$config = [
+    // 请参考配置说明
+    'bucket' => 'example',
+    'region' => 'ap-guangzhou',
+]);
+
+$bucket = new ObjectClient($config);
+
+$bucket->putObject(string $key, string $body, array $headers = []);
 $bucket->copyObject(string $key, array $headers = []);
-$bucket->getObject($key, array $query = [], array $headers = []);
-$bucket->headObject($key, array $query = [], array $headers = []);
-$bucket->optionsObject($key, array $query = [], array $headers = []);
-$bucket->restoreObject($key, array $body, array $query = []);
-$bucket->selectObjectContents($key, array $body);
-$bucket->deleteObject($key, array $query = [], array $headers = []);
+$bucket->getObject(string $key, array $query = [], array $headers = []);
+$bucket->headObject(string $key, string $versionId, array $headers = []);
+$bucket->optionsObject(string $key);
+$bucket->restoreObject(string $key, string $versionId, array $body);
+$bucket->selectObjectContents(string $key, array $body);
+$bucket->deleteObject(string $key, string $versionId);
 $bucket->deleteObjects(array $body);
 
-$bucket->putObjectACL($key, array $body, array $headers = []);
-$bucket->getObjectACL($key);
+$bucket->putObjectACL(string $key, array $body, array $headers = []);
+$bucket->getObjectACL(string $key);
 
-$bucket->putObjectTagging($key, array $body, array $query = []);
-$bucket->getObjectTagging($key, array $query = []);
-$bucket->deleteObjectTagging($key, array $query = []);
+$bucket->putObjectTagging(string $key, string $versionId, array $body);
+$bucket->getObjectTagging(string $key, string $versionId);
+$bucket->deleteObjectTagging(string $key, string $versionId);
+
+$bucket->createUploadId(string $key, array $headers = []);
+$bucket->uploadPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = []);
+$bucket->copyPart(string $key, int $partNumber, string $uploadId, array $headers = []);
+$bucket->markUploadAsCompleted(string $key, string $uploadId, array $body);
+$bucket->markUploadAsAborted(string $key, string $uploadId);
+$bucket->getUploadJobs(array $query = []);
+$bucket->getUploadedParts(string $key, string $uploadId, array $query = []);
 ```
 
 ## 测试

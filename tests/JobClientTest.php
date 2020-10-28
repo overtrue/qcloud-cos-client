@@ -60,7 +60,7 @@ class JobClientTest extends TestCase
 
         /* @var Response $response */
         /* @var JobClient $job */
-        $response = $job->lists([
+        $response = $job->getJobs([
             'jobStatuses' => 'Active',
             'maxResults' => 1,
             'nextToken' => '086711ca-15da-4e89-7676-03f1a1346623',
@@ -119,7 +119,7 @@ class JobClientTest extends TestCase
 
         /* @var Response $response */
         /* @var JobClient $job */
-        $response = $job->create($body);
+        $response = $job->createJob($body);
 
         $this->assertSame('086711ca-15da-4e89-7676-03f1a1346623', $response->toArray()['CreateJobResult']['JobId']);
     }
@@ -164,7 +164,7 @@ class JobClientTest extends TestCase
 
         /* @var Response $response */
         /* @var JobClient $job */
-        $response = $job->describe('086711ca-15da-4e89-7676-03f1a1346623');
+        $response = $job->describeJob('086711ca-15da-4e89-7676-03f1a1346623');
 
         $this->assertArrayHasKey('DescribeJobResult', $response->toArray());
         $this->assertSame('086711ca-15da-4e89-7676-03f1a1346623', $response->toArray()['DescribeJobResult']['Job']['JobId']);
@@ -191,7 +191,7 @@ class JobClientTest extends TestCase
 
         /* @var Response $response */
         /* @var JobClient $job */
-        $response = $job->updatePriority('086711ca-15da-4e89-7676-03f1a1346623', 1);
+        $response = $job->updateJobPriority('086711ca-15da-4e89-7676-03f1a1346623', 1);
 
         $this->assertSame(1, \intval($response->toArray()['UpdateJobPriorityResult']['Priority']));
     }
@@ -219,7 +219,7 @@ class JobClientTest extends TestCase
 
         /* @var Response $response */
         /* @var JobClient $job */
-        $response = $job->updateStatus('086711ca-15da-4e89-7676-03f1a1346623', [
+        $response = $job->updateJobStatus('086711ca-15da-4e89-7676-03f1a1346623', [
             'requestedJobStatus' => 'Cancelled',
             'statusUpdateReason' => '取消操作',
         ]);
