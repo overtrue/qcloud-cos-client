@@ -338,7 +338,7 @@ class ObjectClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function getUploadTasks(array $query = [])
+    public function getUploadJobs(array $query = [])
     {
         return $this->get('/?uploads', \compact('query'));
     }
