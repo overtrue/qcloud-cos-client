@@ -26,9 +26,7 @@ $ composer require overtrue/qcloud-cos-client -vvv
 配置前请了解官方名词解释：[文档中心 > 对象存储 > API 文档 > 简介：术语信息](https://cloud.tencent.com/document/product/436/7751#.E6.9C.AF.E8.AF.AD.E4.BF.A1.E6.81.AF)
 
 ```php
-use Overtrue\CosClient\Config;
-
-$config = new Config([
+$config = [
     // 必填，app_id、secret_id、secret_key 
     // 可在个人秘钥管理页查看：https://console.cloud.tencent.com/capi
     'app_id' => 10020201024, 
@@ -78,7 +76,7 @@ string $response->getContents(); // 获取原始返回内容
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\ServiceClient;
 
-$config = new Config([
+$config = [
     // 请参考配置说明
 ]);
 $service = new ServiceClient($config);
@@ -92,7 +90,7 @@ $service->listBuckets('ap-guangzhou');
 ```php
 use Overtrue\CosClient\Config;
 
-$config = new Config([
+$config = [
     // 请参考配置说明
 ]);
 
@@ -113,7 +111,7 @@ $job->updateStatus(string $id, array $query);
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\BucketClient;
 
-$config = new Config([
+$config = [
     // 请参考配置说明
     'bucket' => 'example',
     'region' => 'ap-guangzhou',
