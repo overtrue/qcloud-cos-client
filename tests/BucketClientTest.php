@@ -531,51 +531,39 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'WebsiteConfiguration' =>
-                [
-                    'IndexDocument' =>
-                        [
-                            'Suffix' => 'string',
-                        ],
-                    'RedirectAllRequestsTo' =>
-                        [
-                            'Protocol' => 'string',
-                        ],
-                    'ErrorDocument' =>
-                        [
-                            'Key' => 'string',
-                        ],
-                    'RoutingRules' =>
-                        [
-                            'RoutingRule' =>
-                                [
-                                    0 =>
-                                        [
-                                            'Condition' =>
-                                                [
-                                                    'HttpErrorCodeReturnedEquals' => 'integer',
-                                                ],
-                                            'Redirect' =>
-                                                [
-                                                    'Protocol' => 'string',
-                                                    'ReplaceKeyWith' => 'string',
-                                                ],
-                                        ],
-                                    1 =>
-                                        [
-                                            'Condition' =>
-                                                [
-                                                    'KeyPrefixEquals' => 'string',
-                                                ],
-                                            'Redirect' =>
-                                                [
-                                                    'Protocol' => 'string',
-                                                    'ReplaceKeyPrefixWith' => 'string',
-                                                ],
-                                        ],
-                                ],
-                        ],
+            'WebsiteConfiguration' => [
+                'IndexDocument' => [
+                    'Suffix' => 'string',
                 ],
+                'RedirectAllRequestsTo' => [
+                    'Protocol' => 'string',
+                ],
+                'ErrorDocument' => [
+                    'Key' => 'string',
+                ],
+                'RoutingRules' => [
+                    'RoutingRule' => [
+                        [
+                            'Condition' => [
+                                'HttpErrorCodeReturnedEquals' => 'integer',
+                            ],
+                            'Redirect' => [
+                                'Protocol' => 'string',
+                                'ReplaceKeyWith' => 'string',
+                            ],
+                        ],
+                        [
+                            'Condition' => [
+                                'KeyPrefixEquals' => 'string',
+                            ],
+                            'Redirect' => [
+                                'Protocol' => 'string',
+                                'ReplaceKeyPrefixWith' => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?website', ['body' => XML::fromArray($body)])

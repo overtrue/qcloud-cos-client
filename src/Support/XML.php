@@ -42,18 +42,33 @@ class XML
     public static function fromArray($data, $rootElement = null, $xml = false)
     {
         $xml = new \DomDocument('1.0', 'utf-8');
-
         $xml->appendChild($node = self::convertToXml(\key($data), \reset($data), $xml));
+        $xml->formatOutput = true;
 
         return $xml->saveXML();
     }
 
-    protected static function convertToXml($root, $data = [], $xml = null): \DOMElement
+    /**
+     * @param $root
+     * @param  array  $data
+     * @param  \DOMDocument|null  $xml
+     *
+     * @return \DOMElement
+     */
+    protected static function convertToXml($root, $data = [], ?\DOMDocument $xml = null): \DOMElement
     {
         $node = $xml->createElement($root);
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
+                if ($key === '@attributes') {
+                    foreach ($value as $k => $v) {
+                        $node->setAttribute(\sprintf('xsi:%s', $k), $v);
+                        $node->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+                    }
+                    continue;
+                }
+
                 if (is_array($value) && is_numeric(key($value))) {
                     foreach ($value as $k => $v) {
                         $node->appendChild(self::convertToXml($key, $v, $xml));
@@ -79,6 +94,11 @@ class XML
         }
 
         return $out;
+    }
+
+    public static function removeSpace(string $xmlContents)
+    {
+        return trim(\preg_replace('/>\s*</', '><', $xmlContents));
     }
 
     /**

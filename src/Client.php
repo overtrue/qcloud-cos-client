@@ -100,12 +100,18 @@ class Client
 
     public static function partialMock()
     {
-        return \Mockery::mock(static::class)->makePartial();
+        $mock = \Mockery::mock(static::class)->makePartial();
+        $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
+
+        return $mock;
     }
 
     public static function partialMockWithConfig(Config $config, array $methods)
     {
-        return \Mockery::mock(static::class.\sprintf('[%s]', \join(',', $methods)), [$config]);
+        $mock = \Mockery::mock(static::class.\sprintf('[%s]', \join(',', $methods)), [$config]);
+        $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
+
+        return $mock;
     }
 
     /**
