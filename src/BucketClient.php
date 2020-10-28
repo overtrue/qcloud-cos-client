@@ -37,7 +37,7 @@ class BucketClient extends Client
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function create(array $body)
+    public function putBucket(array $body)
     {
         return $this->put('/', [
             'body' => XML::fromArray($body),
@@ -47,7 +47,7 @@ class BucketClient extends Client
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function ping()
+    public function headBucket()
     {
         return $this->head('/');
     }
@@ -55,7 +55,7 @@ class BucketClient extends Client
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function destroy()
+    public function deleteBucket()
     {
         return $this->delete('/');
     }
