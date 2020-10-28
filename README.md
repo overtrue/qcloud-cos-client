@@ -225,12 +225,13 @@ $service = ServiceClient::spy();
 
 $mockResponse = Response::create(200, [], '<ListAllMyBucketsResult>
                                                <Buckets>
-                                                       <Bucket>
-                                                           <Name>examplebucket1-1250000000</Name>
-                                                           <Location>ap-beijing</Location>
-                                                           <CreationDate>2019-05-24T11:49:50Z</CreationDate>
-                                                       </Bucket>
-                                            </ListAllMyBucketsResult>');
+                                                   <Bucket>
+                                                       <Name>examplebucket1-1250000000</Name>
+                                                       <Location>ap-beijing</Location>
+                                                       <CreationDate>2019-05-24T11:49:50Z</CreationDate>
+                                                   </Bucket>
+                                               </Buckets>
+                                          </ListAllMyBucketsResult>');
 
 $service->shouldReceive('listBuckets')
         ->with('zp-guangzhou')
