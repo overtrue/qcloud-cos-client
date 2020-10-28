@@ -29,12 +29,14 @@ $ composer require overtrue/qcloud-cos-client -vvv
 use Overtrue\CosClient\Config;
 
 $config = new Config([
-    // 必填，app_id、secret_id、secret_key 可在个人秘钥管理页查看：https://console.cloud.tencent.com/capi
+    // 必填，app_id、secret_id、secret_key 
+    // 可在个人秘钥管理页查看：https://console.cloud.tencent.com/capi
     'app_id' => 10020201024, 
     'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx', 
     'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
     
-    // 可选(批量处理接口必填)，腾讯云账号 ID，可在腾讯云控制台账号信息中查看：https://console.cloud.tencent.com/developer
+    // 可选(批量处理接口必填)，腾讯云账号 ID
+    // 可在腾讯云控制台账号信息中查看：https://console.cloud.tencent.com/developer
     'uin' => '10000*******', 
     
     // 可选，地域列表请查看 https://cloud.tencent.com/document/product/436/6224
