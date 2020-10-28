@@ -54,28 +54,43 @@ class ObjectClient extends Client
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \Overtrue\CosClient\Exceptions\InvalidArgumentException
      */
-    public function copyObject(string $key, array $headers = [])
+    public function copyObject(string $key, array $headers)
     {
         if (empty($headers['x-cos-copy-source'])) {
             throw new InvalidArgumentException('Missing required header: x-cos-copy-source');
         }
 
-        return $this->put($key, \compact('body', 'headers'));
+        return $this->put($key, \compact('headers'));
     }
 
     /**
      * @see https://docs.guzzlephp.org/en/stable/request-options.html#multipart
      *
      * @param  array  $multipart
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Overtrue\CosClient\Exceptions\InvalidArgumentException
+     */
+    public function postObject(array $multipart)
+    {
+        if (empty($multipart['key'])) {
+            throw new InvalidArgumentException('Missing required keys: key');
+        }
+
+        if (empty($multipart['file'])) {
+            throw new InvalidArgumentException('Missing required keys: file');
+        }
+
+        return $this->post('/', \compact('multipart'));
+    }
+
+    /**
+     * @param  string  $key
+     * @param  array  $query
      * @param  array  $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function postObject(array $multipart, array $headers = [])
-    {
-        return $this->post('/', \compact('multipart', 'headers'));
-    }
-
     public function getObject(string $key, array $query = [], array $headers = [])
     {
         return $this->get($key, \compact('query', 'headers'));
@@ -90,7 +105,7 @@ class ObjectClient extends Client
      */
     public function headObject(string $key, string $versionId, array $headers = [])
     {
-        return $this->get($key, [
+        return $this->head($key, [
             'query' => \compact('versionId'),
             'headers' => $headers,
         ]);
@@ -116,7 +131,7 @@ class ObjectClient extends Client
      */
     public function deleteObjects(array $body)
     {
-        return $this->delete('/?delete', ['body' => XML::fromArray($body)]);
+        return $this->post('/?delete', ['body' => XML::fromArray($body)]);
     }
 
     /**

@@ -61,33 +61,28 @@ class XMLTest extends TestCase
     public function testFromArray()
     {
         $this->assertSame(
-            \join('', [
-                '<?xml version="1.0" encoding="utf-8"?>',
-                '<DomainConfiguration>',
-                '<DomainRule>',
-                '<Status>ENABLED</Status>',
-                '<Name>cos.cloud.tencent.com</Name>',
-                '<Type>REST</Type>',
-                '</DomainRule>',
-                '<DomainRule>',
-                '<Status>ENABLED</Status>',
-                '<Name>www.cos.cloud.tencent.com</Name>',
-                '<Type>WEBSITE</Type>',
-                '</DomainRule>',
-                '<OptionalFields>',
-                '<Field>Size</Field>',
-                '<Field>LastModifiedDate</Field>',
-                '<Field>ETag</Field>',
-                '<Field>StorageClass</Field>',
-                '<Field>IsMultipartUploaded</Field>',
-                '<Field>ReplicationStatus</Field>',
-                '</OptionalFields>',
-                '</DomainConfiguration>',
-            ]),
-            \preg_replace(
-                "/>\n/",
-                '>',
-                XML::fromArray([
+            XML::removeSpace('<?xml version="1.0" encoding="utf-8"?>
+   <DomainConfiguration>
+       <DomainRule>
+       <Status>ENABLED</Status>
+       <Name>cos.cloud.tencent.com</Name>
+       <Type>REST</Type>
+       </DomainRule>
+       <DomainRule>
+       <Status>ENABLED</Status>
+       <Name>www.cos.cloud.tencent.com</Name>
+       <Type>WEBSITE</Type>
+       </DomainRule>
+       <OptionalFields>
+       <Field>Size</Field>
+       <Field>LastModifiedDate</Field>
+       <Field>ETag</Field>
+       <Field>StorageClass</Field>
+       <Field>IsMultipartUploaded</Field>
+       <Field>ReplicationStatus</Field>
+       </OptionalFields>
+       </DomainConfiguration>'),
+            XML::removeSpace(XML::fromArray([
                 'DomainConfiguration' =>
                     [
                         'DomainRule' => [
@@ -113,8 +108,7 @@ class XMLTest extends TestCase
                             ],
                         ],
                     ],
-            ])
-            )
+            ]))
         );
     }
 }

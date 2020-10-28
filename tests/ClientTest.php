@@ -2,11 +2,6 @@
 
 namespace Overtrue\CosClient\Tests;
 
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use Overtrue\CosClient\Client;
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
@@ -107,30 +102,5 @@ class ClientTest extends TestCase
             ],
         ]));
         $this->assertSame('custom-user-agent', $client->getHttpClientOptions()['headers']['User-Agent']);
-    }
-
-    public function testTransformResponseXMLToArray()
-    {
-        $mock = new MockHandler([
-            new Response(
-                200,
-                ['Content-Type' => 'application/xml'],
-                '
-                <Owner>
-                    <ID>string</ID>
-                    <DisplayName>string</DisplayName>
-                </Owner>'
-            ),
-            new Response(202, ['Content-Length' => 0]),
-            new RequestException('Error Communicating with Server', new Request('GET', '/test')),
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $httpClient = new \GuzzleHttp\Client(['handler' => $handlerStack]);
-
-        $client = Client::partialMock();
-        $client->shouldReceive('getHttpClient')->andReturn($httpClient);
-
-        $this->assertSame(['Owner' => ['ID' => 'string', 'DisplayName' => 'string']], $client->get('/test')->toArray());
     }
 }
