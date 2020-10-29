@@ -266,9 +266,14 @@ class ObjectClient extends Client
      * @param  array  $headers
      *
      * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Overtrue\CosClient\Exceptions\InvalidArgumentException
      */
-    public function createUploadId(string $key, array $headers = [])
+    public function createUploadId(string $key, array $headers)
     {
+        if (empty($headers['Content-Type'])) {
+            throw new InvalidArgumentException('Missing required headers: Content-Type');
+        }
+
         return $this->post($key, [
             'query' => [
                 'uploads' => '',
@@ -288,7 +293,21 @@ class ObjectClient extends Client
      */
     public function uploadPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = [])
     {
-        return $this->post($key, [
+        return $this->putPart(...\func_get_args());
+    }
+
+    /**
+     * @param  string  $key
+     * @param  int  $partNumber
+     * @param  string  $uploadId
+     * @param  string  $body
+     * @param  array  $headers
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function putPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = [])
+    {
+        return $this->put($key, [
             'query' => \compact('partNumber', 'uploadId'),
             'headers' => $headers,
             'body' => $body,
@@ -329,7 +348,7 @@ class ObjectClient extends Client
             'query' => [
                 'uploadId' => $uploadId,
             ],
-            'body' => $body,
+            'body' => XML::fromArray($body),
         ]);
     }
 
@@ -369,6 +388,6 @@ class ObjectClient extends Client
     {
         $query['uploadId'] = $uploadId;
 
-        return $this->get($key, $query);
+        return $this->get($key, compact('query'));
     }
 }
