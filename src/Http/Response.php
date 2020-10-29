@@ -98,4 +98,94 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
 
         return $this->getBody()->getContents();
     }
+
+    /**
+     * Is response informative?
+     *
+     * @final
+     */
+    public function isInformational(): bool
+    {
+        return $this->getStatusCode() >= 100 && $this->getStatusCode() < 200;
+    }
+
+    /**
+     * Is response successful?
+     *
+     * @final
+     */
+    public function isSuccessful(): bool
+    {
+        return $this->getStatusCode() >= 200 && $this->getStatusCode() < 300;
+    }
+
+    /**
+     * Is the response a redirect?
+     *
+     * @final
+     */
+    public function isRedirection(): bool
+    {
+        return $this->getStatusCode() >= 300 && $this->getStatusCode() < 400;
+    }
+
+    /**
+     * Is there a client error?
+     *
+     * @final
+     */
+    public function isClientError(): bool
+    {
+        return $this->getStatusCode() >= 400 && $this->getStatusCode() < 500;
+    }
+
+    /**
+     * Was there a server side error?
+     *
+     * @final
+     */
+    public function isServerError(): bool
+    {
+        return $this->getStatusCode() >= 500 && $this->getStatusCode() < 600;
+    }
+
+    /**
+     * Is the response OK?
+     *
+     * @final
+     */
+    public function isOk(): bool
+    {
+        return 200 === $this->getStatusCode();
+    }
+
+    /**
+     * Is the response forbidden?
+     *
+     * @final
+     */
+    public function isForbidden(): bool
+    {
+        return 403 === $this->getStatusCode();
+    }
+
+    /**
+     * Is the response a not found error?
+     *
+     * @final
+     */
+    public function isNotFound(): bool
+    {
+        return 404 === $this->getStatusCode();
+    }
+
+    /**
+     * Is the response empty?
+     *
+     * @final
+     */
+    public function isEmpty(): bool
+    {
+        return \in_array($this->getStatusCode(), [204, 304]) || empty($this->getContents());
+    }
 }
