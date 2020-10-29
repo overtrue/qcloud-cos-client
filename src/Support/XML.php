@@ -34,13 +34,15 @@ class XML
      * XML encode.
      *
      * @param  mixed  $data
-     * @param  null  $rootElement
-     * @param  bool  $xml
      *
      * @return string
      */
-    public static function fromArray($data, $rootElement = null, $xml = false)
+    public static function fromArray(array $data)
     {
+        if (empty($data)) {
+            return '';
+        }
+
         $xml = new \DomDocument('1.0', 'utf-8');
         $xml->appendChild($node = self::convertToXml(\key($data), \reset($data), $xml));
         $xml->formatOutput = true;
@@ -63,8 +65,7 @@ class XML
             foreach ($data as $key => $value) {
                 if ($key === '@attributes') {
                     foreach ($value as $k => $v) {
-                        $node->setAttribute(\sprintf('xsi:%s', $k), $v);
-                        $node->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+                        $node->setAttribute($k, $v);
                     }
                     continue;
                 }

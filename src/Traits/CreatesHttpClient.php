@@ -107,7 +107,7 @@ trait CreatesHttpClient
         $this->handlerStack = HandlerStack::create();
 
         foreach ($this->middlewares as $name => $middleware) {
-            $this->handlerStack->push($middleware, $name);
+            $this->handlerStack->unshift($middleware, $name);
         }
 
         return $this->handlerStack;

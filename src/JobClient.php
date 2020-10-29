@@ -37,7 +37,7 @@ class JobClient extends Client
     /**
      * @param array $query
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getJobs(array $query = [])
     {
@@ -49,7 +49,7 @@ class JobClient extends Client
     /**
      * @param array $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function createJob(array $body)
     {
@@ -61,7 +61,7 @@ class JobClient extends Client
     /**
      * @param string $id
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function describeJob(string $id)
     {
@@ -72,7 +72,7 @@ class JobClient extends Client
      * @param string $id
      * @param int    $priority
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function updateJobPriority(string $id, int $priority)
     {
@@ -87,7 +87,7 @@ class JobClient extends Client
      * @param string $id
      * @param array  $query
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function updateJobStatus(string $id, array $query)
     {

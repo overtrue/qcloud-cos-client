@@ -5,6 +5,7 @@ namespace Overtrue\CosClient\Tests;
 use Overtrue\CosClient\Client;
 use Overtrue\CosClient\Config;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
+use Overtrue\CosClient\Middleware\SetContentMd5;
 
 class ClientTest extends TestCase
 {
@@ -49,8 +50,9 @@ class ClientTest extends TestCase
             'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
         ]));
 
-        $this->assertCount(1, $client->getMiddlewares());
+        $this->assertCount(2, $client->getMiddlewares());
         $this->assertInstanceOf(CreateRequestSignature::class, $client->getMiddlewares()[0]);
+        $this->assertInstanceOf(SetContentMd5::class, $client->getMiddlewares()[1]);
     }
 
     public function testGetConfig()

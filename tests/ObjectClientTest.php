@@ -32,12 +32,12 @@ class ObjectClientTest extends TestCase
 
         $source = 'sourcebucket-1250000001.cos.ap-shanghai.myqcloud.com/example-%E8%85%BE%E8%AE%AF%E4%BA%91.jpg';
         $object->shouldReceive('put')
-            ->with('example-key', ['headers' => ['x-cos-copy-source' => $source]])
+            ->with('example-key', ['headers' => ['Content-Type' => 'image/jpeg', 'x-cos-copy-source' => $source]])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
         /* @var ObjectClient $object */
-        $response = $object->copyObject('example-key', ['x-cos-copy-source' => $source]);
+        $response = $object->copyObject('example-key', ['Content-Type' => 'image/jpeg', 'x-cos-copy-source' => $source]);
         $this->assertEmpty($response->toArray());
 
         // invalid arguments
@@ -51,8 +51,15 @@ class ObjectClientTest extends TestCase
         $object = ObjectClient::partialMock();
 
         $form = [
-            'key' => 'example-file',
-            'file' => 'fopen-resource',
+            [
+                'name' => 'key',
+                'contents' => 'composer.json',
+            ],
+            [
+                'name' => 'file',
+                'filename' => 'composer.json',
+                'contents' => fopen(__DIR__.'/../composer.json', 'r+'),
+            ],
         ];
         $object->shouldReceive('post')
             ->with('/', ['multipart' => $form])
@@ -63,16 +70,6 @@ class ObjectClientTest extends TestCase
         $response = $object->postObject($form);
 
         $this->assertEmpty($response->toArray());
-
-        // missing key
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Missing required keys: key');
-        $object->postObject(['file' => 'fopen-resource']);
-
-        // missing file
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Missing required keys: key');
-        $object->postObject(['key' => 'example-file']);
     }
 
     public function testGetObject()
@@ -142,20 +139,6 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testOptionsObject()
-    {
-        $object = ObjectClient::partialMock();
-        $object->shouldReceive('options')
-            ->with('example-key')
-            ->andReturn(Response::create(200));
-
-        /* @var Response $response */
-        /* @var ObjectClient $object */
-        $response = $object->optionsObject('example-key');
-
-        $this->assertEmpty($response->toArray());
-    }
-
     public function testRestoreObject()
     {
         $object = ObjectClient::partialMock();
@@ -173,7 +156,7 @@ class ObjectClientTest extends TestCase
 
         /* @var Response $response */
         /* @var ObjectClient $object */
-        $response = $object->restoreObject('example-key', 'example-version-id', $body);
+        $response = $object->restoreObject('example-key', $body, 'example-version-id');
 
         $this->assertEmpty($response->toArray());
     }
@@ -299,7 +282,7 @@ class ObjectClientTest extends TestCase
 
         /* @var Response $response */
         /* @var ObjectClient $object */
-        $response = $object->putObjectTagging('example-key', 'example-version-id', $body);
+        $response = $object->putObjectTagging('example-key', $body, 'example-version-id');
 
         $this->assertEmpty($response->toArray());
     }

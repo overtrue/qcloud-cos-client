@@ -37,17 +37,17 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
-    public function putBucket(array $body)
+    public function putBucket(array $body = [])
     {
-        return $this->put('/', [
+        return $this->put('/', empty($body) ? [] : [
             'body' => XML::fromArray($body),
         ]);
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function headBucket()
     {
@@ -55,7 +55,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteBucket()
     {
@@ -65,7 +65,7 @@ class BucketClient extends Client
     /**
      * @param  array  $query
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getObjects(array $query = [])
     {
@@ -75,7 +75,7 @@ class BucketClient extends Client
     /**
      * @param  array  $query
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getObjectVersions(array $query = [])
     {
@@ -86,9 +86,9 @@ class BucketClient extends Client
      * @param  array  $body
      * @param  array  $headers
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
-    public function putACL(array $body, array $headers = [])
+    public function putACL(array $body = [], array $headers = [])
     {
         return $this->put('/?acl', \array_filter([
             'headers' => $headers,
@@ -97,7 +97,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getACL()
     {
@@ -107,7 +107,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putCORS(array $body)
     {
@@ -117,7 +117,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getCORS()
     {
@@ -125,7 +125,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteCORS()
     {
@@ -135,7 +135,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putLifecycle(array $body)
     {
@@ -145,7 +145,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getLifecycle()
     {
@@ -153,7 +153,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteLifecycle()
     {
@@ -163,7 +163,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putPolicy(array $body)
     {
@@ -171,7 +171,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getPolicy()
     {
@@ -179,7 +179,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deletePolicy()
     {
@@ -189,7 +189,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putReferer(array $body)
     {
@@ -199,7 +199,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getReferer()
     {
@@ -209,7 +209,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putTagging(array $body)
     {
@@ -219,7 +219,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getTagging()
     {
@@ -227,7 +227,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteTagging()
     {
@@ -237,7 +237,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putWebsite(array $body)
     {
@@ -247,7 +247,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getWebsite()
     {
@@ -255,7 +255,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteWebsite()
     {
@@ -266,7 +266,7 @@ class BucketClient extends Client
      * @param  string  $id
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putInventory(string $id, array $body)
     {
@@ -278,7 +278,7 @@ class BucketClient extends Client
     /**
      * @param  string  $id
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getInventory(string $id)
     {
@@ -288,7 +288,7 @@ class BucketClient extends Client
     /**
      * @param  string|null  $nextContinuationToken
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getInventoryConfigurations(?string $nextContinuationToken = null)
     {
@@ -298,7 +298,7 @@ class BucketClient extends Client
     /**
      * @param  string  $id
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteInventory(string $id)
     {
@@ -308,7 +308,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putVersioning(array $body)
     {
@@ -318,7 +318,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getVersioning()
     {
@@ -328,7 +328,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putReplication(array $body)
     {
@@ -338,7 +338,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getReplication()
     {
@@ -346,7 +346,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteReplication()
     {
@@ -356,7 +356,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putLogging(array $body)
     {
@@ -366,7 +366,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getLogging()
     {
@@ -376,7 +376,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putAccelerate(array $body)
     {
@@ -386,7 +386,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getAccelerate()
     {
@@ -396,7 +396,7 @@ class BucketClient extends Client
     /**
      * @param  array  $body
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function putEncryption(array $body)
     {
@@ -406,7 +406,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function getEncryption()
     {
@@ -414,7 +414,7 @@ class BucketClient extends Client
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Overtrue\CosClient\Http\Response
      */
     public function deleteEncryption()
     {

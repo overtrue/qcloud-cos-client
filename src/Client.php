@@ -2,20 +2,24 @@
 
 namespace Overtrue\CosClient;
 
+use Overtrue\CosClient\Exceptions\ClientException;
+use Overtrue\CosClient\Exceptions\Exception;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
+use Overtrue\CosClient\Exceptions\ServerException;
 use Overtrue\CosClient\Http\Response;
 use Overtrue\CosClient\Middleware\CreateRequestSignature;
+use Overtrue\CosClient\Middleware\SetContentMd5;
 use Overtrue\CosClient\Traits\CreatesHttpClient;
 
 /**
- * @method \Psr\Http\Message\ResponseInterface get($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface head($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface options($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface put($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface post($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface patch($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface delete($uri, array $options = [])
- * @method \Psr\Http\Message\ResponseInterface request(string $method, $uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response get($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response head($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response options($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response put($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response post($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response patch($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response delete($uri, array $options = [])
+ * @method \Overtrue\CosClient\Http\Response request(string $method, $uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface getAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface headAsync($uri, array $options = [])
  * @method \GuzzleHttp\Promise\PromiseInterface optionsAsync($uri, array $options = [])
@@ -61,6 +65,7 @@ class Client
                 $this->config->get('signature_expires')
             )
         );
+        $this->pushMiddleware(new SetContentMd5());
     }
 
     public function getAppId(): int
@@ -90,7 +95,15 @@ class Client
 
     public function __call($method, $arguments)
     {
-        return new Response(\call_user_func_array([$this->getHttpClient(), $method], $arguments));
+        try {
+            return new Response(\call_user_func_array([$this->getHttpClient(), $method], $arguments));
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            throw new ClientException($e);
+        } catch (\GuzzleHttp\Exception\ServerException $e) {
+            throw new ServerException($e);
+        } catch (\Throwable $e) {
+            throw new Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
     }
 
     public static function spy()

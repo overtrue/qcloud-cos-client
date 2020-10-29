@@ -18,6 +18,7 @@ class Signature
     ];
 
     public string $accessKey;
+
     public string $secretKey;
 
     public function __construct(string $accessKey, string $secretKey)
@@ -27,8 +28,8 @@ class Signature
     }
 
     /**
-     * @param \Psr\Http\Message\RequestInterface $request
-     * @param string|null                        $expires
+     * @param  \Psr\Http\Message\RequestInterface  $request
+     * @param  string|null  $expires
      *
      * @return string
      */
@@ -39,10 +40,11 @@ class Signature
         $headersToBeSigned = self::getHeadersToBeSigned($request);
 
         $httpStringHashed = sha1(
-            strtolower($request->getMethod()) . "\n" . urldecode($request->getUri()->getPath()) . "\n" .
-            join('&', array_values($queryToBeSigned)) .
-            "\n" . \http_build_query($headersToBeSigned) . "\n"
+            strtolower($request->getMethod())."\n".urldecode($request->getUri()->getPath())."\n".
+            join('&', array_values($queryToBeSigned)).
+            "\n".\http_build_query($headersToBeSigned)."\n"
         );
+
         $stringToSign = \sprintf("sha1\n%s\n%s\n", $signTime, $httpStringHashed);
         $signature = hash_hmac('sha1', $stringToSign, hash_hmac('sha1', $signTime, $this->secretKey));
 
@@ -58,7 +60,7 @@ class Signature
     }
 
     /**
-     * @param \Psr\Http\Message\RequestInterface $request
+     * @param  \Psr\Http\Message\RequestInterface  $request
      *
      * @return array
      */
@@ -69,7 +71,7 @@ class Signature
             $header = strtolower(urlencode($header));
 
             if (false !== \strpos($header, 'x-cos-') || \in_array($header, self::SIGN_HEADERS)) {
-                $headers[$header] = urlencode($value[0]);
+                $headers[$header] = $value[0];
             }
         }
 
@@ -79,7 +81,7 @@ class Signature
     }
 
     /**
-     * @param \Psr\Http\Message\RequestInterface $request
+     * @param  \Psr\Http\Message\RequestInterface  $request
      *
      * @return array
      */
@@ -95,7 +97,7 @@ class Signature
                 } else {
                     $value = "";
                 }
-                $query[$key] = $key . '=' . $value;
+                $query[$key] = $key.'='.$value;
             }
         }
         ksort($query);
@@ -104,7 +106,7 @@ class Signature
     }
 
     /**
-     * @param string|null $expires
+     * @param  string|null  $expires
      *
      * @return string
      */

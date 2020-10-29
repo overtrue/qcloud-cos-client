@@ -84,6 +84,11 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         return new self(new \GuzzleHttp\Psr7\Response($status, $headers, $body, $version, $reason));
     }
 
+    public function toString()
+    {
+        return $this->getContents();
+    }
+
     /**
      * @return string
      */
