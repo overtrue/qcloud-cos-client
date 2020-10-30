@@ -394,11 +394,11 @@ class ObjectClient extends Client
 
     /**
      * @param  string  $key
-     * @param  string  $expires
+     * @param  string|null  $expires
      *
      * @return string
      */
-    public function getObjectSignedUrl(string $key, string $expires = '+60 minutes')
+    public function getObjectSignedUrl(string $key, ?string $expires = '+60 minutes')
     {
         $baseUri = \sprintf('%s/%s', \rtrim($this->baseUri, '/'), \ltrim($key, '/'));
         $signature = new Signature($this->config['secret_id'], $this->config['secret_key']);
