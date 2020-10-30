@@ -228,6 +228,7 @@ $object->markUploadAsAborted(string $key, string $uploadId);
 $object->getUploadJobs(array $query = []);
 $object->getUploadedParts(string $key, string $uploadId, array $query = []);
 
+$object->getObjectUrl(string $key)
 $object->getObjectSignedUrl(string $key, string $expires = '+60 minutes')
 ```
 
