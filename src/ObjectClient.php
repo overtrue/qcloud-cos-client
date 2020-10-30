@@ -2,12 +2,16 @@
 
 namespace Overtrue\CosClient;
 
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
 use Overtrue\CosClient\Exceptions\InvalidArgumentException;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
 class ObjectClient extends Client
 {
+    public ?string $baseUri = null;
+
     /**
      * @param  \Overtrue\CosClient\Config|array  $config
      *
@@ -23,14 +27,16 @@ class ObjectClient extends Client
             throw new InvalidConfigException('No bucket configured.');
         }
 
+        $this->baseUri = \sprintf(
+            'https://%s-%s.cos.%s.myqcloud.com/',
+            $config->get('bucket'),
+            $config->get('app_id'),
+            $config->get('region', self::DEFAULT_REGION)
+        );
+
         parent::__construct($config->extend([
             'guzzle' => [
-                'base_uri' => \sprintf(
-                    'https://%s-%s.cos.%s.myqcloud.com/',
-                    $config->get('bucket'),
-                    $config->get('app_id'),
-                    $config->get('region', self::DEFAULT_REGION)
-                ),
+                'base_uri' => $this->baseUri,
             ],
         ]));
     }
@@ -384,5 +390,20 @@ class ObjectClient extends Client
         $query['uploadId'] = $uploadId;
 
         return $this->get(\urlencode($key), compact('query'));
+    }
+
+    /**
+     * @param  string  $key
+     * @param  string  $expires
+     *
+     * @return string
+     */
+    public function getObjectSignedUrl(string $key, string $expires = '+60 minutes')
+    {
+        $baseUri = \sprintf('%s/%s', \rtrim($this->baseUri, '/'), \ltrim($key, '/'));
+        $signature = new Signature($this->config['secret_id'], $this->config['secret_key']);
+        $request = new Request('GET', $baseUri);
+
+        return \strval((new Uri($baseUri))->withQuery(\http_build_query(['sign' => $signature->createAuthorizationHeader($request, $expires)])));
     }
 }

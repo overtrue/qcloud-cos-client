@@ -202,31 +202,33 @@ $config = [
     'region' => 'ap-guangzhou',
 ]);
 
-$bucket = new ObjectClient($config);
+$object = new ObjectClient($config);
 
-$bucket->putObject(string $key, string $body, array $headers = []);
-$bucket->copyObject(string $key, array $headers = []);
-$bucket->getObject(string $key, array $query = [], array $headers = []);
-$bucket->headObject(string $key, string $versionId, array $headers = []);
-$bucket->restoreObject(string $key, string $versionId, array $body);
-$bucket->selectObjectContents(string $key, array $body);
-$bucket->deleteObject(string $key, string $versionId);
-$bucket->deleteObjects(array $body);
+$object->putObject(string $key, string $body, array $headers = []);
+$object->copyObject(string $key, array $headers = []);
+$object->getObject(string $key, array $query = [], array $headers = []);
+$object->headObject(string $key, string $versionId, array $headers = []);
+$object->restoreObject(string $key, string $versionId, array $body);
+$object->selectObjectContents(string $key, array $body);
+$object->deleteObject(string $key, string $versionId);
+$object->deleteObjects(array $body);
 
-$bucket->putObjectACL(string $key, array $body, array $headers = []);
-$bucket->getObjectACL(string $key);
+$object->putObjectACL(string $key, array $body, array $headers = []);
+$object->getObjectACL(string $key);
 
-$bucket->putObjectTagging(string $key, string $versionId, array $body);
-$bucket->getObjectTagging(string $key, string $versionId);
-$bucket->deleteObjectTagging(string $key, string $versionId);
+$object->putObjectTagging(string $key, string $versionId, array $body);
+$object->getObjectTagging(string $key, string $versionId);
+$object->deleteObjectTagging(string $key, string $versionId);
 
-$bucket->createUploadId(string $key, array $headers = []);
-$bucket->putPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = []);
-$bucket->copyPart(string $key, int $partNumber, string $uploadId, array $headers = []);
-$bucket->markUploadAsCompleted(string $key, string $uploadId, array $body);
-$bucket->markUploadAsAborted(string $key, string $uploadId);
-$bucket->getUploadJobs(array $query = []);
-$bucket->getUploadedParts(string $key, string $uploadId, array $query = []);
+$object->createUploadId(string $key, array $headers = []);
+$object->putPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = []);
+$object->copyPart(string $key, int $partNumber, string $uploadId, array $headers = []);
+$object->markUploadAsCompleted(string $key, string $uploadId, array $body);
+$object->markUploadAsAborted(string $key, string $uploadId);
+$object->getUploadJobs(array $query = []);
+$object->getUploadedParts(string $key, string $uploadId, array $query = []);
+
+$object->getObjectSignedUrl(string $key, string $expires = '+60 minutes')
 ```
 
 ## 异常处理
