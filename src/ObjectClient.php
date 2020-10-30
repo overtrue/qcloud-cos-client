@@ -66,7 +66,7 @@ class ObjectClient extends Client
             throw new InvalidArgumentException('Missing required header: x-cos-copy-source');
         }
 
-        if (empty($headers['Content-Type'])) {
+        if (($headers['x-cos-metadata-directive'] ?? 'Copy') === 'Replaced' && empty($headers['Content-Type'])) {
             throw new InvalidArgumentException('Missing required header: Content-Type');
         }
 
