@@ -410,9 +410,10 @@ class ObjectClient extends Client
      */
     public function getObjectSignedUrl(string $key, ?string $expires = '+60 minutes')
     {
+        $objectUrl = $this->getObjectUrl($key);
         $signature = new Signature($this->config['secret_id'], $this->config['secret_key']);
-        $request = new Request('GET', $this->getObjectUrl($key));
+        $request = new Request('GET', $objectUrl);
 
-        return \strval((new Uri($baseUri))->withQuery(\http_build_query(['sign' => $signature->createAuthorizationHeader($request, $expires)])));
+        return \strval((new Uri($objectUrl))->withQuery(\http_build_query(['sign' => $signature->createAuthorizationHeader($request, $expires)])));
     }
 }
