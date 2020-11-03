@@ -45,6 +45,12 @@ $config = [
     
     // 可选，签名有效期，默认 60 分钟
     'signature_expires' => '+60 minutes', 
+    
+    // guzzle 配置
+    // 参考：https://docs.guzzlephp.org/en/7.0/request-options.html
+    'guzzle' => [
+        // ...
+    ],
 ];
 ```
 
