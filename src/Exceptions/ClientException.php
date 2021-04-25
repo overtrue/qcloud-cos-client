@@ -23,9 +23,4 @@ class ClientException extends Exception
     {
         return new Response($this->guzzleClientException->getResponse());
     }
-
-    public function __call($method, $arguments)
-    {
-        return \call_user_func_array([$this->guzzleClientException, $method], $arguments);
-    }
 }

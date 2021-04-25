@@ -23,9 +23,4 @@ class ServerException extends Exception
     {
         return new Response($this->guzzleServerException->getResponse());
     }
-
-    public function __call($method, $arguments)
-    {
-        return \call_user_func_array([$this->guzzleServerException, $method], $arguments);
-    }
 }
