@@ -13,7 +13,7 @@ class XML
      */
     public static function toArray(string $xml)
     {
-        $backup = libxml_disable_entity_loader(true);
+        PHP_MAJOR_VERSION < 8 && $backup = libxml_disable_entity_loader(true);
 
         $xml = simplexml_load_string(
             self::sanitize($xml),
@@ -25,7 +25,7 @@ class XML
             $xml->getName() => self::objectToArray($xml),
         ];
 
-        libxml_disable_entity_loader($backup);
+        PHP_MAJOR_VERSION < 8 && libxml_disable_entity_loader($backup);
 
         return $result;
     }
