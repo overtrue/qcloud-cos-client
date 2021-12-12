@@ -12,7 +12,7 @@
 
 环境要求：
 
-- PHP >= 7.4
+- PHP >= 8.0
 - ext-libxml
 - ext-simplexml
 - ext-json
