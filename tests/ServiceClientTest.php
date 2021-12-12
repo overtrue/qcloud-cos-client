@@ -2,6 +2,7 @@
 
 namespace Overtrue\CosClient\Tests;
 
+use Overtrue\CosClient\Http\Response;
 use Overtrue\CosClient\ServiceClient;
 
 class ServiceClientTest extends TestCase
@@ -13,15 +14,27 @@ class ServiceClientTest extends TestCase
         $service->shouldReceive('get')
             ->with('https://service.cos.myqcloud.com/')
             ->once()
-            ->andReturn('all region buckets');
+            ->andReturn(new Response(new \GuzzleHttp\Psr7\Response(200, [], '{"Buckets": [{"Name": "test"}]}')));
 
-        $this->assertSame('all region buckets', $service->getBuckets());
+        $this->assertSame([
+            'Buckets' => [
+                [
+                    'Name' => 'test',
+                ],
+            ],
+        ], $service->getBuckets()->toArray());
 
         $service->shouldReceive('get')
             ->with('https://cos.ap-guangzhou.myqcloud.com/')
             ->once()
-            ->andReturn('all guangzhou buckets');
+            ->andReturn(new Response(new \GuzzleHttp\Psr7\Response(200, [], '{"Buckets": [{"Name": "test"}]}')));
 
-        $this->assertSame('all guangzhou buckets', $service->getBuckets('ap-guangzhou'));
+        $this->assertSame([
+            'Buckets' => [
+                [
+                    'Name' => 'test',
+                ],
+            ],
+        ], $service->getBuckets('ap-guangzhou')->toArray());
     }
 }

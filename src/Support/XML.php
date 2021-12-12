@@ -4,40 +4,18 @@ namespace Overtrue\CosClient\Support;
 
 class XML
 {
-    /**
-     * XML to array.
-     *
-     * @param  string  $xml  XML string
-     *
-     * @return array
-     */
-    public static function toArray(string $xml)
+    public static function toArray(string $xml): array
     {
-        PHP_MAJOR_VERSION < 8 && $backup = libxml_disable_entity_loader(true);
-
         $xml = simplexml_load_string(
             self::sanitize($xml),
             'SimpleXMLElement',
             LIBXML_NSCLEAN | LIBXML_COMPACT | LIBXML_NOCDATA | LIBXML_NOBLANKS
         );
 
-        $result = [
-            $xml->getName() => self::objectToArray($xml),
-        ];
-
-        PHP_MAJOR_VERSION < 8 && libxml_disable_entity_loader($backup);
-
-        return $result;
+        return [$xml->getName() => self::objectToArray($xml)];
     }
 
-    /**
-     * XML encode.
-     *
-     * @param  mixed  $data
-     *
-     * @return string
-     */
-    public static function fromArray(array $data)
+    public static function fromArray(array $data): string
     {
         if (empty($data)) {
             return '';
@@ -51,13 +29,9 @@ class XML
     }
 
     /**
-     * @param $root
-     * @param  array  $data
-     * @param  \DOMDocument|null  $xml
-     *
-     * @return \DOMElement
+     * @throws \DOMException
      */
-    protected static function convertToXml($root, $data = [], ?\DOMDocument $xml = null): \DOMElement
+    protected static function convertToXml($root, string|array$data = [], ?\DOMDocument $xml = null): \DOMElement
     {
         $node = $xml->createElement($root);
 
@@ -86,7 +60,7 @@ class XML
         return $node;
     }
 
-    protected static function objectToArray($xmlObject, array $out = [])
+    protected static function objectToArray($xmlObject, array $out = []): array
     {
         foreach ((array) $xmlObject as $index => $node) {
             $out[$index] = (is_object($node) || is_array($node))
@@ -97,22 +71,16 @@ class XML
         return $out;
     }
 
-    public static function removeSpace(string $xmlContents)
+    public static function removeSpace(string $xmlContents): string
     {
         return trim(\preg_replace('/>\s*</', '><', $xmlContents));
     }
 
     /**
-     * Delete invalid characters in XML.
-     *
      * @see https://www.w3.org/TR/2008/REC-xml-20081126/#charsets - XML charset range
      * @see http://php.net/manual/en/regexp.reference.escape.php - escape in UTF-8 mode
-     *
-     * @param  string  $xml
-     *
-     * @return string
      */
-    protected static function sanitize(string $xml)
+    protected static function sanitize(string $xml): string
     {
         return preg_replace('/[^\x{9}\x{A}\x{D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]+/u', '', $xml);
     }

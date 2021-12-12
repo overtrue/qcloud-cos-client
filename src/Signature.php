@@ -17,22 +17,10 @@ class Signature
         'range',
     ];
 
-    public string $accessKey;
-
-    public string $secretKey;
-
-    public function __construct(string $accessKey, string $secretKey)
+    public function __construct(public string $accessKey, public  string $secretKey)
     {
-        $this->accessKey = $accessKey;
-        $this->secretKey = $secretKey;
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     * @param  string|null  $expires
-     *
-     * @return string
-     */
     public function createAuthorizationHeader(RequestInterface $request, ?string $expires = null): string
     {
         $signTime = self::getTimeSegments($expires);
@@ -59,11 +47,6 @@ class Signature
         );
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     *
-     * @return array
-     */
     protected static function getHeadersToBeSigned(RequestInterface $request): array
     {
         $headers = [];
@@ -80,11 +63,6 @@ class Signature
         return $headers;
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     *
-     * @return array
-     */
     protected static function getQueryToBeSigned(RequestInterface $request): array
     {
         $query = [];
@@ -105,11 +83,6 @@ class Signature
         return $query;
     }
 
-    /**
-     * @param  string|null  $expires
-     *
-     * @return string
-     */
     protected static function getTimeSegments(?string $expires): string
     {
         $timezone = \date_default_timezone_get();

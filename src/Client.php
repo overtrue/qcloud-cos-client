@@ -40,11 +40,9 @@ class Client
     protected \GuzzleHttp\Client $client;
 
     /**
-     * @param  \Overtrue\CosClient\Config|array  $config
-     *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct($config)
+    public function __construct(Config|array$config)
     {
         if (!($config instanceof Config)) {
             $config = new Config($config);
@@ -83,7 +81,7 @@ class Client
         return $this->config->get('secret_key', '');
     }
 
-    public function getConfig()
+    public function getConfig(): Config
     {
         return $this->config;
     }
@@ -93,6 +91,11 @@ class Client
         return $this->client ?? $this->client = $this->createHttpClient();
     }
 
+    /**
+     * @throws \Overtrue\CosClient\Exceptions\ServerException
+     * @throws \Overtrue\CosClient\Exceptions\Exception
+     * @throws \Overtrue\CosClient\Exceptions\ClientException
+     */
     public function __call($method, $arguments)
     {
         try {
@@ -106,7 +109,7 @@ class Client
         }
     }
 
-    public static function spy()
+    public static function spy(): Client|\Mockery\MockInterface|\Mockery\LegacyMockInterface
     {
         return \Mockery::mock(static::class);
     }
@@ -127,11 +130,6 @@ class Client
         return $mock;
     }
 
-    /**
-     * @param  \Overtrue\CosClient\Config  $config
-     *
-     * @return \Overtrue\CosClient\Client
-     */
     protected function configureUserAgent(Config $config): Client
     {
         $this->setHttpClientOptions(\array_replace_recursive([
