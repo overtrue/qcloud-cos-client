@@ -27,12 +27,6 @@ class Signature
         $this->secretKey = $secretKey;
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     * @param  string|null  $expires
-     *
-     * @return string
-     */
     public function createAuthorizationHeader(RequestInterface $request, ?string $expires = null): string
     {
         $signTime = self::getTimeSegments($expires);
@@ -59,18 +53,13 @@ class Signature
         );
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     *
-     * @return array
-     */
     protected static function getHeadersToBeSigned(RequestInterface $request): array
     {
         $headers = [];
         foreach ($request->getHeaders() as $header => $value) {
             $header = strtolower(urlencode($header));
 
-            if (false !== \strpos($header, 'x-cos-') || \in_array($header, self::SIGN_HEADERS)) {
+            if (str_contains($header, 'x-cos-') || \in_array($header, self::SIGN_HEADERS)) {
                 $headers[$header] = $value[0];
             }
         }
@@ -80,11 +69,6 @@ class Signature
         return $headers;
     }
 
-    /**
-     * @param  \Psr\Http\Message\RequestInterface  $request
-     *
-     * @return array
-     */
     protected static function getQueryToBeSigned(RequestInterface $request): array
     {
         $query = [];
@@ -105,11 +89,6 @@ class Signature
         return $query;
     }
 
-    /**
-     * @param  string|null  $expires
-     *
-     * @return string
-     */
     protected static function getTimeSegments(?string $expires): string
     {
         $timezone = \date_default_timezone_get();

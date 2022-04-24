@@ -10,6 +10,39 @@ use PHPUnit\Framework\TestCase;
 
 class ObjectClientTest extends TestCase
 {
+    public function testCustomDomain()
+    {
+        $object = ObjectClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+        ]);
+
+        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $object->getConfig()['guzzle']['base_uri']);
+
+        $object = ObjectClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'domain' => 'example-12345600.abc.cos.test.com',
+        ]);
+
+        $this->assertSame('https://example-12345600.abc.cos.test.com/', $object->getConfig()['guzzle']['base_uri']);
+
+        $object = ObjectClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'use_https' => false,
+            'domain' => 'example-12345600.abc.cos.test.com',
+        ]);
+
+        $this->assertSame('http://example-12345600.abc.cos.test.com/', $object->getConfig()['guzzle']['base_uri']);
+    }
+
     public function testPutObject()
     {
         $object = ObjectClient::partialMock();

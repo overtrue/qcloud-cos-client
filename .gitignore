@@ -7,5 +7,5 @@ index.php
 sftp-config.json
 composer.lock
 .subsplit
-.php_cs.cache
-/.phpunit.result.cache
+.php-cs-fixer.cache
+.phpunit.result.cache

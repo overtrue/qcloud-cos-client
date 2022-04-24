@@ -8,6 +8,40 @@ use Overtrue\CosClient\Support\XML;
 
 class BucketClientTest extends TestCase
 {
+    public function testCustomDomain()
+    {
+        $bucket = BucketClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+        ]);
+
+        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $bucket->getConfig()['guzzle']['base_uri']);
+
+        $bucket = BucketClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'use_https' => false,
+            'domain' => 'example-12345600.abc.cos.test.com',
+        ]);
+
+        $this->assertSame('http://example-12345600.abc.cos.test.com/', $bucket->getConfig()['guzzle']['base_uri']);
+
+        $bucket = BucketClient::partialMockWithConfig([
+            'app_id' => '12345600',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'use_https' => true,
+            'domain' => 'example-12345600.abc.cos.test.com',
+        ]);
+
+        $this->assertSame('https://example-12345600.abc.cos.test.com/', $bucket->getConfig()['guzzle']['base_uri']);
+    }
+
     public function testPutBucket()
     {
         $bucket = BucketClient::partialMock();

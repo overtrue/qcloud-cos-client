@@ -6,7 +6,7 @@ use Psr\Http\Message\RequestInterface;
 
 class SetContentMd5
 {
-    public function __invoke(callable $handler)
+    public function __invoke(callable $handler): \Closure
     {
         return function (RequestInterface $request, array $options) use ($handler) {
             $request = $request->withHeader(

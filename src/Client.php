@@ -40,11 +40,11 @@ class Client
     protected \GuzzleHttp\Client $client;
 
     /**
-     * @param  \Overtrue\CosClient\Config|array  $config
+     * @param  array|\Overtrue\CosClient\Config  $config
      *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct($config)
+    public function __construct(array|Config $config)
     {
         if (!($config instanceof Config)) {
             $config = new Config($config);
@@ -83,7 +83,7 @@ class Client
         return $this->config->get('secret_key', '');
     }
 
-    public function getConfig()
+    public function getConfig(): array|Config
     {
         return $this->config;
     }
@@ -93,6 +93,11 @@ class Client
         return $this->client ?? $this->client = $this->createHttpClient();
     }
 
+    /**
+     * @throws ServerException
+     * @throws Exception
+     * @throws ClientException
+     */
     public function __call($method, $arguments)
     {
         try {
@@ -106,12 +111,12 @@ class Client
         }
     }
 
-    public static function spy()
+    public static function spy(): Client|\Mockery\MockInterface|\Mockery\LegacyMockInterface
     {
         return \Mockery::mock(static::class);
     }
 
-    public static function partialMock()
+    public static function partialMock(): \Mockery\MockInterface
     {
         $mock = \Mockery::mock(static::class)->makePartial();
         $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
@@ -119,8 +124,12 @@ class Client
         return $mock;
     }
 
-    public static function partialMockWithConfig(Config $config, array $methods)
+    public static function partialMockWithConfig(array|Config $config, array $methods = ['get', 'post', 'patch', 'put', 'delete']): \Mockery\MockInterface
     {
+        if (\is_array($config)) {
+            $config = new Config($config);
+        }
+
         $mock = \Mockery::mock(static::class.\sprintf('[%s]', \join(',', $methods)), [$config]);
         $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
 

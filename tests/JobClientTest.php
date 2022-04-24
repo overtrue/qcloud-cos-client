@@ -8,6 +8,46 @@ use Overtrue\CosClient\Support\XML;
 
 class JobClientTest extends TestCase
 {
+    public function testCustomDomain()
+    {
+        $object = JobClient::partialMockWithConfig([
+            'uin' => '12345600',
+            'app_id' => '12345600',
+            'region' => 'ap-guangzhou',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+        ]);
+
+        $this->assertSame('https://12345600.cos-control.ap-guangzhou.myqcloud.com/', $object->getConfig()['guzzle']['base_uri']);
+
+        $object = JobClient::partialMockWithConfig([
+            'uin' => '12345600',
+            'app_id' => '12345600',
+            'region' => 'ap-guangzhou',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'use_https' => false,
+            'domain' => 'example-12345600.abc.cos-control.test.com',
+        ]);
+
+        $this->assertSame('http://example-12345600.abc.cos-control.test.com/', $object->getConfig()['guzzle']['base_uri']);
+
+        $object = JobClient::partialMockWithConfig([
+            'uin' => '12345600',
+            'app_id' => '12345600',
+            'region' => 'ap-guangzhou',
+            'secret_id' => 'mock-secret_id',
+            'secret_key' => 'mock-secret_key',
+            'bucket' => 'example-12345600',
+            'use_https' => true,
+            'domain' => 'example-12345600.abc.cos-control.test.com',
+        ]);
+
+        $this->assertSame('https://example-12345600.abc.cos-control.test.com/', $object->getConfig()['guzzle']['base_uri']);
+    }
+
     public function testListJobs()
     {
         $job = JobClient::partialMock();

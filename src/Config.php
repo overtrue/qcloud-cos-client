@@ -3,34 +3,20 @@
 namespace Overtrue\CosClient;
 
 use ArrayAccess;
-use InvalidArgumentException;
 use JsonSerializable;
 
 class Config implements ArrayAccess, JsonSerializable
 {
     protected array $options;
 
-    /**
-     * @param array $options
-     */
     public function __construct(array $options)
     {
         $this->options = $options;
     }
 
-    /**
-     * @param string $key
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function get(string $key, $default = null)
+    public function get(string $key, mixed $default = null)
     {
         $config = $this->options;
-
-        if (is_null($key)) {
-            return $config;
-        }
 
         if (isset($config[$key])) {
             return $config[$key];
@@ -46,18 +32,8 @@ class Config implements ArrayAccess, JsonSerializable
         return $config;
     }
 
-    /**
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return array
-     */
-    public function set(string $key, $value)
+    public function set(string $key, $value): mixed
     {
-        if (is_null($key)) {
-            throw new InvalidArgumentException('Invalid config key.');
-        }
-
         $keys = explode('.', $key);
         $config = &$this->options;
 
@@ -74,11 +50,6 @@ class Config implements ArrayAccess, JsonSerializable
         return $config;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return bool
-     */
     public function has(string $key): bool
     {
         return (bool) $this->get($key);
@@ -89,7 +60,7 @@ class Config implements ArrayAccess, JsonSerializable
         return new Config(\array_merge($this->options, $options));
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->options);
     }

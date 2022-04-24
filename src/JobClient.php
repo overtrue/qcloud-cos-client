@@ -8,11 +8,9 @@ use Overtrue\CosClient\Support\XML;
 class JobClient extends Client
 {
     /**
-     * @param  \Overtrue\CosClient\Config|array  $config
-     *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
-    public function __construct($config)
+    public function __construct(array|Config $config)
     {
         if (!($config instanceof Config)) {
             $config = new Config($config);
@@ -20,61 +18,43 @@ class JobClient extends Client
 
         $this->validateConfig($config);
 
+        $schema = $config->get('use_https', true) ? 'https' : 'http';
+        $host = $config->get('domain', \sprintf(
+            '%s.cos-control.%s.myqcloud.com/',
+            $config->get('uin'),
+            $config->get('region')
+        ));
+
         parent::__construct($config->extend([
             'guzzle' => [
-                'base_uri' => \sprintf(
-                    'https://%s.cos-control.%s.myqcloud.com/',
-                    $config->get('uin'),
-                    $config->get('region')
-                ),
-                'headers' => [
-                    'x-cos-appid' => $config->get('app_id')
-                ]
+                'base_uri' => \sprintf('%s://%s/', $schema, rtrim($host, '/')),
+            ],
+            'headers' => [
+                'x-cos-appid' => $config->get('app_id')
             ]
         ]));
     }
 
-    /**
-     * @param array $query
-     *
-     * @return \Overtrue\CosClient\Http\Response
-     */
-    public function getJobs(array $query = [])
+    public function getJobs(array $query = []): Http\Response
     {
         return $this->get('/jobs', [
             'query' => $query,
         ]);
     }
 
-    /**
-     * @param array $body
-     *
-     * @return \Overtrue\CosClient\Http\Response
-     */
-    public function createJob(array $body)
+    public function createJob(array $body): Http\Response
     {
         return $this->post('/jobs', [
             'body' => XML::fromArray($body),
         ]);
     }
 
-    /**
-     * @param string $id
-     *
-     * @return \Overtrue\CosClient\Http\Response
-     */
-    public function describeJob(string $id)
+    public function describeJob(string $id): Http\Response
     {
         return $this->get(\sprintf('/jobs/%s', $id));
     }
 
-    /**
-     * @param string $id
-     * @param int    $priority
-     *
-     * @return \Overtrue\CosClient\Http\Response
-     */
-    public function updateJobPriority(string $id, int $priority)
+    public function updateJobPriority(string $id, int $priority): Http\Response
     {
         return $this->post(\sprintf('/jobs/%s/priority', $id), [
             'query' => [
@@ -83,20 +63,12 @@ class JobClient extends Client
         ]);
     }
 
-    /**
-     * @param string $id
-     * @param array  $query
-     *
-     * @return \Overtrue\CosClient\Http\Response
-     */
-    public function updateJobStatus(string $id, array $query)
+    public function updateJobStatus(string $id, array $query): Http\Response
     {
         return $this->post(\sprintf('/jobs/%s/status', $id), \compact('query'));
     }
 
     /**
-     * @param  \Overtrue\CosClient\Config  $config
-     *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     protected function validateConfig(Config $config)

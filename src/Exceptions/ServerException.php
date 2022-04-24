@@ -17,7 +17,7 @@ class ServerException extends Exception
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface|\Overtrue\CosClient\Http\Response|null
+     * @return ResponseInterface|null
      */
     public function getResponse(): ?ResponseInterface
     {

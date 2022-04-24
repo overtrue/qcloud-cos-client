@@ -54,7 +54,7 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         }
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return \array_key_exists($offset, $this->toArray());
     }
@@ -80,11 +80,11 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         $body = null,
         $version = '1.1',
         $reason = null
-    ) {
+    ): Response {
         return new self(new \GuzzleHttp\Psr7\Response($status, $headers, $body, $version, $reason));
     }
 
-    public function toString()
+    public function toString(): string
     {
         return $this->getContents();
     }
