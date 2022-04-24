@@ -6,12 +6,13 @@
 
 > :star: 官方文档：https://cloud.tencent.com/document/product/436
 
+[![Sponsor me](https://github.com/overtrue/overtrue/blob/master/sponsor-me-button-s.svg?raw=true)](https://github.com/sponsors/overtrue)
 
 ## 安装
 
 环境要求：
 
-- PHP >= 7.4
+- PHP >= 8.0
 - ext-libxml
 - ext-simplexml
 - ext-json
@@ -294,6 +295,19 @@ $service->shouldReceive('listBuckets')
 ```
 
 更多测试写法请阅读：[Mockery 官方文档](http://docs.mockery.io/en/latest/index.html)
+
+## :heart: Sponsor me 
+
+[![Sponsor me](https://github.com/overtrue/overtrue/blob/master/sponsor-me.svg?raw=true)](https://github.com/sponsors/overtrue)
+
+如果你喜欢我的项目并想支持它，[点击这里 :heart:](https://github.com/sponsors/overtrue)
+
+
+## Project supported by JetBrains
+
+Many thanks to Jetbrains for kindly providing a license for me to work on this and other open-source projects.
+
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/overtrue)
 
 ## Contributing
 

@@ -83,7 +83,7 @@ class Client
         return $this->config->get('secret_key', '');
     }
 
-    public function getConfig(): array|Config
+    public function getConfig(): Config
     {
         return $this->config;
     }
@@ -136,11 +136,6 @@ class Client
         return $mock;
     }
 
-    /**
-     * @param  \Overtrue\CosClient\Config  $config
-     *
-     * @return \Overtrue\CosClient\Client
-     */
     protected function configureUserAgent(Config $config): Client
     {
         $this->setHttpClientOptions(\array_replace_recursive([

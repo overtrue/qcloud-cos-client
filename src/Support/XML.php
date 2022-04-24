@@ -33,7 +33,7 @@ class XML
     /**
      * @throws \DOMException
      */
-    protected static function convertToXml($root, $data = [], ?\DOMDocument $xml = null): \DOMElement
+    protected static function convertToXml($root, string|array$data = [], ?\DOMDocument $xml = null): \DOMElement
     {
         $node = $xml->createElement($root);
 

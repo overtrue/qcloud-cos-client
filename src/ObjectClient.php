@@ -12,6 +12,9 @@ class ObjectClient extends Client
 {
     public ?string $baseUri = null;
 
+    /**
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
+     */
     public function __construct(array|Config $config)
     {
         if (!($config instanceof Config)) {

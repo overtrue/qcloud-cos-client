@@ -17,14 +17,8 @@ class Signature
         'range',
     ];
 
-    public string $accessKey;
-
-    public string $secretKey;
-
-    public function __construct(string $accessKey, string $secretKey)
+    public function __construct(public string $accessKey, public  string $secretKey)
     {
-        $this->accessKey = $accessKey;
-        $this->secretKey = $secretKey;
     }
 
     public function createAuthorizationHeader(RequestInterface $request, ?string $expires = null): string
