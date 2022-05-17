@@ -50,7 +50,7 @@ $config = [
     // 可选，是否使用 https，默认 false
     'use_https' => true, 
     
-    // 可选，自定义域名
+    // 可选，自定义上传域名（非 CDN 域名，目前仅内部使用）
     'domain' => 'emample-12340000.cos.test.com', 
     
     // 可选，guzzle 配置
