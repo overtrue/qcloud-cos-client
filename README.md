@@ -47,12 +47,6 @@ $config = [
     // 可选，签名有效期，默认 60 分钟
     'signature_expires' => '+60 minutes', 
     
-    // 可选，是否使用 https，默认 false
-    'use_https' => true, 
-    
-    // 可选，自定义上传域名（非 CDN 域名，目前仅内部使用）
-    'domain' => 'emample-12340000.cos.test.com', 
-    
     // 可选，guzzle 配置
     // 参考：https://docs.guzzlephp.org/en/7.0/request-options.html
     'guzzle' => [
