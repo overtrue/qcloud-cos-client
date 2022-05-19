@@ -9,3 +9,4 @@ composer.lock
 .subsplit
 .php-cs-fixer.cache
 .phpunit.result.cache
+index.php
