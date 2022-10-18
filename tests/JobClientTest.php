@@ -17,7 +17,7 @@ class JobClientTest extends TestCase
             'region' => 'ap-guangzhou',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
         ]);
 
         $this->assertSame('https://12345600.cos-control.ap-guangzhou.myqcloud.com/', $object->getBaseUri());
@@ -29,7 +29,7 @@ class JobClientTest extends TestCase
             'region' => 'ap-guangzhou',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
             'use_https' => false,
             'domain' => 'example-12345600.abc.cos-control.test.com',
         ]);
@@ -43,7 +43,7 @@ class JobClientTest extends TestCase
             'region' => 'ap-guangzhou',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
             'use_https' => true,
             'domain' => 'example-12345600.abc.cos-control.test.com',
         ]);

@@ -15,17 +15,17 @@ class BucketClientTest extends TestCase
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
         ]);
 
-        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $bucket->getBaseUri());
+        $this->assertSame('https://example-12345600.cos.ap-guangzhou.myqcloud.com/', $bucket->getBaseUri());
 
         /** @var BucketClient $bucket */
         $bucket = BucketClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
             'use_https' => false,
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);
@@ -37,7 +37,7 @@ class BucketClientTest extends TestCase
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
             'secret_key' => 'mock-secret_key',
-            'bucket' => 'example-12345600',
+            'bucket' => 'example',
             'use_https' => true,
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);

@@ -9,6 +9,7 @@ class ServiceClientTest extends TestCase
 {
     public function testListBuckets()
     {
+        /** @var ServiceClient $service */
         $service = ServiceClient::partialMock();
 
         $service->shouldReceive('get')

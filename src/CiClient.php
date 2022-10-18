@@ -6,7 +6,7 @@ use Overtrue\CosClient\Support\XML;
 
 class CiClient extends Client
 {
-    protected string $domain = '<bucket>-<app_id>.ci.<region>.mycloud.com';
+    protected string $domain = '<bucket>-<app_id>.ci.<region>.myqcloud.com';
 
     protected array $requiredConfigKeys = ['bucket'];
 
