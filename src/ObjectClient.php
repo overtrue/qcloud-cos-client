@@ -5,43 +5,10 @@ namespace Overtrue\CosClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Overtrue\CosClient\Exceptions\InvalidArgumentException;
-use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
 class ObjectClient extends Client
 {
-    public ?string $baseUri = null;
-
-    /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
-     */
-    public function __construct(array|Config $config)
-    {
-        if (!($config instanceof Config)) {
-            $config = new Config($config);
-        }
-
-        if (!$config->has('bucket')) {
-            throw new InvalidConfigException('No bucket configured.');
-        }
-
-        $schema = $config->get('use_https', true) ? 'https' : 'http';
-        $host = $config->get('domain', \sprintf(
-            '%s-%s.cos.%s.myqcloud.com',
-            $config->get('bucket'),
-            $config->get('app_id'),
-            $config->get('region', self::DEFAULT_REGION)
-        ));
-
-        $this->baseUri = \sprintf('%s://%s/', $schema, rtrim($host, '/'));
-
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => $this->baseUri,
-            ],
-        ]));
-    }
-
     public function putObject(string $key, string $body, array $headers = []): Http\Response
     {
         return $this->put(\urlencode($key), \compact('body', 'headers'));
@@ -253,7 +220,7 @@ class ObjectClient extends Client
 
     public function getObjectUrl(string $key): string
     {
-        return \sprintf('%s/%s', \rtrim($this->baseUri, '/'), \ltrim($key, '/'));
+        return \sprintf('%s/%s', \rtrim($this->getBaseUri(), '/'), \ltrim($key, '/'));
     }
 
     public function getObjectSignedUrl(string $key, ?string $expires = '+60 minutes'): string
@@ -263,5 +230,12 @@ class ObjectClient extends Client
         $request = new Request('GET', $objectUrl);
 
         return \strval((new Uri($objectUrl))->withQuery(\http_build_query(['sign' => $signature->createAuthorizationHeader($request, $expires)])));
+    }
+
+    public function detectImage(string $key, array $query = []): Http\Response
+    {
+        $query['ci-process'] = 'sensitive-content-recognition';
+
+        return $this->getObject($key, $query);
     }
 }

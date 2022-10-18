@@ -2,35 +2,11 @@
 
 namespace Overtrue\CosClient;
 
-use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
 class BucketClient extends Client
 {
-    public function __construct(Config | array $config)
-    {
-        if (!($config instanceof Config)) {
-            $config = new Config($config);
-        }
-
-        if (!$config->has('bucket')) {
-            throw new InvalidConfigException('No bucket configured.');
-        }
-
-        $schema = $config->get('use_https', true) ? 'https' : 'http';
-        $host = $config->get('domain', \sprintf(
-            '%s-%s.cos.%s.myqcloud.com',
-            $config->get('bucket'),
-            $config->get('app_id'),
-            $config->get('region', self::DEFAULT_REGION)
-        ));
-
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => \sprintf('%s://%s/', $schema, rtrim($host, '/')),
-            ]
-        ]));
-    }
+    protected array $requiredConfigKeys = ['bucket'];
 
     public function putBucket(array $body = []): Http\Response
     {

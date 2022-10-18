@@ -10,6 +10,7 @@ class JobClientTest extends TestCase
 {
     public function testCustomDomain()
     {
+        /** @var JobClient $object */
         $object = JobClient::partialMockWithConfig([
             'uin' => '12345600',
             'app_id' => '12345600',
@@ -19,8 +20,9 @@ class JobClientTest extends TestCase
             'bucket' => 'example-12345600',
         ]);
 
-        $this->assertSame('https://12345600.cos-control.ap-guangzhou.myqcloud.com/', $object->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://12345600.cos-control.ap-guangzhou.myqcloud.com/', $object->getBaseUri());
 
+        /** @var JobClient $object */
         $object = JobClient::partialMockWithConfig([
             'uin' => '12345600',
             'app_id' => '12345600',
@@ -32,8 +34,9 @@ class JobClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos-control.test.com',
         ]);
 
-        $this->assertSame('http://example-12345600.abc.cos-control.test.com/', $object->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('http://example-12345600.abc.cos-control.test.com/', $object->getBaseUri());
 
+        /** @var JobClient $object */
         $object = JobClient::partialMockWithConfig([
             'uin' => '12345600',
             'app_id' => '12345600',
@@ -45,7 +48,7 @@ class JobClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos-control.test.com',
         ]);
 
-        $this->assertSame('https://example-12345600.abc.cos-control.test.com/', $object->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://example-12345600.abc.cos-control.test.com/', $object->getBaseUri());
     }
 
     public function testListJobs()
@@ -58,12 +61,12 @@ class JobClientTest extends TestCase
                     'jobStatuses' => 'Active',
                     'maxResults' => 1,
                     'nextToken' => '086711ca-15da-4e89-7676-03f1a1346623',
-                ]
+                ],
             ])
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<ListJobsResult>
+                '<xml><ListJobsResult>
                         <Jobs>
                             <member>
                                 <CreationTime>2020-10-27T11:07:05Z</CreationTime>
@@ -95,7 +98,7 @@ class JobClientTest extends TestCase
                             </member>
                         </Jobs>
                         <NextToken>066d919e-49b9-429e-b844-e17ea7b16421</NextToken>
-                    </ListJobsResult>'
+                    </ListJobsResult></xml>'
             ));
 
         /* @var Response $response */
@@ -129,11 +132,11 @@ class JobClientTest extends TestCase
                         'Fields' => [
                             'member' => [
                                 'string',
-                                'string'
-                            ]
+                                'string',
+                            ],
                         ],
-                        'Format' => 'string'
-                    ]
+                        'Format' => 'string',
+                    ],
                 ],
             ],
             'Operation' => [
@@ -144,7 +147,7 @@ class JobClientTest extends TestCase
             'Report' => [
                 'Bucket' => 'string',
             ],
-            'RoleArn' => 'string'
+            'RoleArn' => 'string',
         ];
 
         $job->shouldReceive('post')
@@ -152,9 +155,9 @@ class JobClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<CreateJobResult>
+                '<xml><CreateJobResult>
                        <JobId>086711ca-15da-4e89-7676-03f1a1346623</JobId>
-                    </CreateJobResult>'
+                    </CreateJobResult></xml>'
             ));
 
         /* @var Response $response */
@@ -173,7 +176,7 @@ class JobClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<DescribeJobResult>
+                '<xml><DescribeJobResult>
                         <Job>
                             <ConfirmationRequired>false</ConfirmationRequired>
                             <CreationTime>2020-10-27T18:00:30Z</CreationTime>
@@ -199,7 +202,7 @@ class JobClientTest extends TestCase
                                 </Spec>
                             </Manifest>
                         </Job>
-                    </DescribeJobResult>'
+                    </DescribeJobResult></xml>'
             ));
 
         /* @var Response $response */
@@ -217,16 +220,16 @@ class JobClientTest extends TestCase
         $job->shouldReceive('post')
             ->with(\sprintf('/jobs/%s/priority', '086711ca-15da-4e89-7676-03f1a1346623'), [
                 'query' => [
-                    'priority' => 1
-                ]
+                    'priority' => 1,
+                ],
             ])
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<UpdateJobPriorityResult>
+                '<xml><UpdateJobPriorityResult>
                         <JobId>086711ca-15da-4e89-7676-03f1a1346623</JobId>
                         <Priority>1</Priority>
-                    </UpdateJobPriorityResult>'
+                    </UpdateJobPriorityResult></xml>'
             ));
 
         /* @var Response $response */
@@ -245,16 +248,16 @@ class JobClientTest extends TestCase
                 'query' => [
                     'requestedJobStatus' => 'Cancelled',
                     'statusUpdateReason' => '取消操作',
-                ]
+                ],
             ])
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<UpdateJobStatusResult>
+                '<xml><UpdateJobStatusResult>
                         <JobId>086711ca-15da-4e89-7676-03f1a1346623</JobId>
                         <Status>Cancelled</Status>
                         <StatusUpdateReason>取消操作</StatusUpdateReason>
-                    </UpdateJobStatusResult>'
+                    </UpdateJobStatusResult></xml>'
             ));
 
         /* @var Response $response */

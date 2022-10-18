@@ -88,6 +88,7 @@ class ClientTest extends TestCase
             'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
             'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
         ]));
+
         $this->assertSame(
             'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
             $client->getHttpClientOptions()['headers']['User-Agent']
@@ -103,6 +104,7 @@ class ClientTest extends TestCase
                 ],
             ],
         ]));
+
         $this->assertSame('custom-user-agent', $client->getHttpClientOptions()['headers']['User-Agent']);
     }
 }

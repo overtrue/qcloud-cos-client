@@ -8,7 +8,9 @@ use GuzzleHttp\HandlerStack;
 trait CreatesHttpClient
 {
     protected array $options = [];
+
     protected array $middlewares = [];
+
     protected ?HandlerStack $handlerStack = null;
 
     public function createHttpClient(array $options = []): Client
@@ -25,6 +27,45 @@ trait CreatesHttpClient
         return $this;
     }
 
+    public function mergeHttpClientOptions(array $options): static
+    {
+        $this->options = array_merge($this->options, $options);
+
+        return $this;
+    }
+
+    public function getBaseUri()
+    {
+        return $this->options['base_uri'];
+    }
+
+    public function setBaseUri(string $baseUri): self
+    {
+        $this->options['base_uri'] = $baseUri;
+
+        return $this;
+    }
+
+    public function setHeaders(array $headers): static
+    {
+        foreach ($headers as $name => $value) {
+            $this->setHeader($name, $value);
+        }
+
+        return $this;
+    }
+
+    public function setHeader(string $name, string $value): static
+    {
+        if (empty($this->options['headers'])) {
+            $this->options['headers'] = [];
+        }
+
+        $this->options['headers'][$name] = $value;
+
+        return $this;
+    }
+
     public function getHttpClientOptions(): array
     {
         return $this->options;
@@ -32,7 +73,7 @@ trait CreatesHttpClient
 
     public function pushMiddleware(callable $middleware, string $name = null): static
     {
-        if (!is_null($name)) {
+        if (! is_null($name)) {
             $this->middlewares[$name] = $middleware;
         } else {
             $this->middlewares[] = $middleware;

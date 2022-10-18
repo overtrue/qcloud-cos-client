@@ -29,7 +29,7 @@ class Signature
 
         $httpStringHashed = sha1(
             strtolower($request->getMethod())."\n".urldecode($request->getUri()->getPath())."\n".
-            join('&', array_values($queryToBeSigned)).
+            implode('&', array_values($queryToBeSigned)).
             "\n".\http_build_query($headersToBeSigned)."\n"
         );
 
@@ -41,8 +41,8 @@ class Signature
             $this->accessKey,
             $signTime,
             $signTime,
-            join(';', array_keys($headersToBeSigned)),
-            join(';', array_keys($queryToBeSigned)),
+            implode(';', array_keys($headersToBeSigned)),
+            implode(';', array_keys($queryToBeSigned)),
             $signature
         );
     }
@@ -67,13 +67,13 @@ class Signature
     {
         $query = [];
         foreach (explode('&', $request->getUri()->getQuery()) as $item) {
-            if (!empty($item)) {
+            if (! empty($item)) {
                 $tmpquery = explode('=', $item);
                 $key = strtolower($tmpquery[0]);
                 if (count($tmpquery) >= 2) {
                     $value = $tmpquery[1];
                 } else {
-                    $value = "";
+                    $value = '';
                 }
                 $query[$key] = $key.'='.$value;
             }

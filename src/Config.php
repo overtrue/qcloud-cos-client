@@ -21,7 +21,7 @@ class Config implements ArrayAccess, JsonSerializable
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($config) || !array_key_exists($segment, $config)) {
+            if (! is_array($config) || ! array_key_exists($segment, $config)) {
                 return $default;
             }
             $config = $config[$segment];
@@ -37,7 +37,7 @@ class Config implements ArrayAccess, JsonSerializable
 
         while (count($keys) > 1) {
             $key = array_shift($keys);
-            if (!isset($config[$key]) || !is_array($config[$key])) {
+            if (! isset($config[$key]) || ! is_array($config[$key])) {
                 $config[$key] = [];
             }
             $config = &$config[$key];
@@ -51,6 +51,11 @@ class Config implements ArrayAccess, JsonSerializable
     public function has(string $key): bool
     {
         return (bool) $this->get($key);
+    }
+
+    public function missing(string $key): bool
+    {
+        return ! $this->has($key);
     }
 
     #[Pure]

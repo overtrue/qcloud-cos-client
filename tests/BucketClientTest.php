@@ -10,6 +10,7 @@ class BucketClientTest extends TestCase
 {
     public function testCustomDomain()
     {
+        /** @var BucketClient $bucket */
         $bucket = BucketClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
@@ -17,8 +18,9 @@ class BucketClientTest extends TestCase
             'bucket' => 'example-12345600',
         ]);
 
-        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $bucket->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $bucket->getBaseUri());
 
+        /** @var BucketClient $bucket */
         $bucket = BucketClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
@@ -28,8 +30,9 @@ class BucketClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);
 
-        $this->assertSame('http://example-12345600.abc.cos.test.com/', $bucket->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('http://example-12345600.abc.cos.test.com/', $bucket->getBaseUri());
 
+        /** @var BucketClient $bucket */
         $bucket = BucketClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
@@ -39,7 +42,7 @@ class BucketClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);
 
-        $this->assertSame('https://example-12345600.abc.cos.test.com/', $bucket->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://example-12345600.abc.cos.test.com/', $bucket->getBaseUri());
     }
 
     public function testPutBucket()
@@ -101,10 +104,12 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<ListBucketResult>
+                '<xml>
+                        <ListBucketResult>
                         <Name>demo</Name>
                         <Prefix>images</Prefix>
-                    </ListBucketResult>'
+                    </ListBucketResult>
+                    </xml>'
             ));
 
         /* @var Response $response */
@@ -123,10 +128,10 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<ListVersionsResult>
+                '<xml><ListVersionsResult>
                         <Name>demo</Name>
                         <Prefix>images</Prefix>
-                    </ListVersionsResult>'
+                    </ListVersionsResult></xml>'
             ));
 
         /* @var Response $response */
@@ -171,7 +176,8 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<AccessControlPolicy>
+                '<xml>
+                    <AccessControlPolicy>
                         <Owner>
                             <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
                             <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
@@ -184,7 +190,8 @@ class BucketClientTest extends TestCase
                                 <Permission>READ</Permission>
                             </Grant>
                         </AccessControlList>
-                    </AccessControlPolicy>'
+                    </AccessControlPolicy>
+                    </xml>'
             ));
 
         /* @var Response $response */
@@ -228,7 +235,7 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<CORSConfiguration>
+                '<xml><CORSConfiguration>
                         <CORSRule>
                             <AllowedOrigin>*</AllowedOrigin>
                             <AllowedMethod>GET</AllowedMethod>
@@ -242,7 +249,8 @@ class BucketClientTest extends TestCase
                             <ExposeHeader>x-cos-meta-author</ExposeHeader>
                             <MaxAgeSeconds>600</MaxAgeSeconds>
                         </CORSRule>
-                      </CORSConfiguration>'
+                      </CORSConfiguration>
+                      </xml>'
             ));
 
         /* @var Response $response */
@@ -306,7 +314,8 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<LifecycleConfiguration>
+                '<xml>
+                        <LifecycleConfiguration>
                           <Rule>
                             <ID>id1</ID>
                             <Filter>
@@ -318,7 +327,8 @@ class BucketClientTest extends TestCase
                               <StorageClass>STANDARD_IA</StorageClass>
                             </Transition>
                           </Rule>
-                        </LifecycleConfiguration>'
+                        </LifecycleConfiguration>
+                       </xml>'
             ));
 
         /* @var Response $response */
@@ -352,14 +362,14 @@ class BucketClientTest extends TestCase
             'Statement' => [
                 'Principal' => [
                     'qcs' => [
-                        "qcs::cam::uin/100000000001:uin/100000000011",
+                        'qcs::cam::uin/100000000001:uin/100000000011',
                     ],
-                    "Effect" => "allow",
+                    'Effect' => 'allow',
                     'Action' => [
-                        "name/cos:GetBucket",
+                        'name/cos:GetBucket',
                     ],
-                    "Resource" => [
-                        "qcs::cos:ap-guangzhou:uid/1250000000:examplebucket-1250000000/*",
+                    'Resource' => [
+                        'qcs::cos:ap-guangzhou:uid/1250000000:examplebucket-1250000000/*',
                     ],
                 ],
             ],
@@ -412,15 +422,15 @@ class BucketClientTest extends TestCase
         $this->assertSame([
             'Principal' => [
                 'qcs' => [
-                    "qcs::cam::uin/100000000001:uin/100000000001",
+                    'qcs::cam::uin/100000000001:uin/100000000001',
                 ],
             ],
-            "Effect" => "allow",
+            'Effect' => 'allow',
             'Action' => [
-                "name/cos:GetBucket",
+                'name/cos:GetBucket',
             ],
-            "Resource" => [
-                "qcs::cos:ap-guangzhou:uid/1250000000:examplebucket-1250000000/*",
+            'Resource' => [
+                'qcs::cos:ap-guangzhou:uid/1250000000:examplebucket-1250000000/*',
             ],
         ], $response->toArray()['Statement'][0]);
     }
@@ -448,7 +458,7 @@ class BucketClientTest extends TestCase
             'RefererConfiguration' => [
                 'Status' => 'Enabled',
                 'RefererType' => 'White-List',
-                'DomainList' => ['Domain' => ['*.qq.com', '*.qcloud.com'],],
+                'DomainList' => ['Domain' => ['*.qq.com', '*.qcloud.com']],
                 'EmptyReferConfiguration' => 'allow',
             ],
         ];
@@ -471,7 +481,7 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<RefererConfiguration>
+                '<xml><RefererConfiguration>
                     <Status>Enabled</Status>
                     <RefererType>White-List</RefererType>
                     <DomainList>
@@ -479,7 +489,7 @@ class BucketClientTest extends TestCase
                         <Domain>*.qcloud.com</Domain>
                     </DomainList>
                     <EmptyReferConfiguration>Allow</EmptyReferConfiguration>
-                </RefererConfiguration>'
+                </RefererConfiguration></xml>'
             ));
 
         /* @var Response $response */
@@ -523,7 +533,7 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<Tagging>
+                '<xml><Tagging>
                     <TagSet>
                         <Tag>
                             <Key>age</Key>
@@ -534,7 +544,7 @@ class BucketClientTest extends TestCase
                             <Value>xiaoming</Value>
                         </Tag>
                     </TagSet>
-                </Tagging>'
+                </Tagging></xml>'
             ));
 
         /* @var Response $response */
@@ -618,7 +628,7 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<WebsiteConfiguration>
+                '<xml><WebsiteConfiguration>
                     <IndexDocument>
                         <Suffix>index.html</Suffix>
                     </IndexDocument>
@@ -664,7 +674,7 @@ class BucketClientTest extends TestCase
                             </Redirect>
                         </RoutingRule>
                     </RoutingRules>
-                </WebsiteConfiguration>'
+                </WebsiteConfiguration></xml>'
             ));
 
         /* @var Response $response */
@@ -695,30 +705,27 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'InventoryConfiguration' =>
-                [
-                    'Id' => 'list1',
-                    'IsEnabled' => 'true',
-                    'Destination' =>
-                        [
-                            'COSBucketDestination' =>
-                                [
-                                    'Format' => 'CSV',
-                                    'AccountId' => '100000000001',
-                                    'Bucket' => 'qcs::cos:ap-guangzhou::examplebucket-1250000000',
-                                    'Prefix' => 'list1',
-                                    'Encryption' => ['SSE-COS' => '',],
-                                ],
-                        ],
-                    'Schedule' => ['Frequency' => 'Daily',],
-                    'Filter' => ['Prefix' => 'myPrefix',],
-                    'IncludedObjectVersions' => 'All',
-                    'OptionalFields' => [
-                        'Field' => [
-                            'Size', 'LastModifiedDate', 'ETag', 'StorageClass', 'IsMultipartUploaded', 'ReplicationStatus',
-                        ],
+            'InventoryConfiguration' => [
+                'Id' => 'list1',
+                'IsEnabled' => 'true',
+                'Destination' => [
+                    'COSBucketDestination' => [
+                        'Format' => 'CSV',
+                        'AccountId' => '100000000001',
+                        'Bucket' => 'qcs::cos:ap-guangzhou::examplebucket-1250000000',
+                        'Prefix' => 'list1',
+                        'Encryption' => ['SSE-COS' => ''],
                     ],
                 ],
+                'Schedule' => ['Frequency' => 'Daily'],
+                'Filter' => ['Prefix' => 'myPrefix'],
+                'IncludedObjectVersions' => 'All',
+                'OptionalFields' => [
+                    'Field' => [
+                        'Size', 'LastModifiedDate', 'ETag', 'StorageClass', 'IsMultipartUploaded', 'ReplicationStatus',
+                    ],
+                ],
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?inventory&id=inventory-configuration-ID', ['body' => XML::fromArray($body)])
@@ -739,7 +746,7 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<InventoryConfiguration xmlns = "http://....">
+                '<xml><InventoryConfiguration xmlns = "http://....">
                     <Id>list1</Id>
                     <IsEnabled>true</IsEnabled>
                     <Destination>
@@ -768,7 +775,8 @@ class BucketClientTest extends TestCase
                         <Field>IsMultipartUploaded</Field>
                         <Field>ReplicationStatus</Field>
                     </OptionalFields>
-                </InventoryConfiguration>'
+                </InventoryConfiguration>
+                </xml>'
             ));
 
         /* @var Response $response */
@@ -799,10 +807,9 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'VersioningConfiguration' =>
-                [
-                    'Status' => 'Enabled',
-                ],
+            'VersioningConfiguration' => [
+                'Status' => 'Enabled',
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?versioning', ['body' => XML::fromArray($body)])
@@ -823,9 +830,9 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<VersioningConfiguration>
+                '<xml><VersioningConfiguration>
                   <Status>Suspended</Status>
-                </VersioningConfiguration>'
+                </VersioningConfiguration></xml>'
             ));
 
         /* @var Response $response */
@@ -841,10 +848,9 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'ReplicationConfiguration' =>
-                [
-                    'Status' => 'Enabled',
-                ],
+            'ReplicationConfiguration' => [
+                'Status' => 'Enabled',
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?replication', ['body' => XML::fromArray($body)])
@@ -865,9 +871,9 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<ReplicationConfiguration>
+                '<xml><ReplicationConfiguration>
                   <Status>Suspended</Status>
-                </ReplicationConfiguration>'
+                </ReplicationConfiguration></xml>'
             ));
 
         /* @var Response $response */
@@ -898,14 +904,12 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'BucketLoggingStatus' =>
-                [
-                    'LoggingEnabled' =>
-                        [
-                            'TargetBucket' => 'examplebucket-1250000000',
-                            'TargetPrefix' => 'prefix',
-                        ],
+            'BucketLoggingStatus' => [
+                'LoggingEnabled' => [
+                    'TargetBucket' => 'examplebucket-1250000000',
+                    'TargetPrefix' => 'prefix',
                 ],
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?logging', ['body' => XML::fromArray($body)])
@@ -926,12 +930,12 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<BucketLoggingStatus>
+                '<xml><BucketLoggingStatus>
                   <LoggingEnabled>
                     <TargetBucket>examplebucket-1250000000</TargetBucket>
                     <TargetPrefix>prefix</TargetPrefix>
                   </LoggingEnabled>
-                </BucketLoggingStatus>'
+                </BucketLoggingStatus></xml>'
             ));
 
         /* @var Response $response */
@@ -947,10 +951,9 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'AccelerateConfiguration' =>
-                [
-                    'Status' => 'Enabled',
-                ],
+            'AccelerateConfiguration' => [
+                'Status' => 'Enabled',
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?accelerate', ['body' => XML::fromArray($body)])
@@ -971,10 +974,10 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<AccelerateConfiguration>
+                '<xml><AccelerateConfiguration>
                   <Status>Disabled</Status>
                   <Type>COS</Type>
-                </AccelerateConfiguration>'
+                </AccelerateConfiguration></xml>'
             ));
 
         /* @var Response $response */
@@ -990,16 +993,13 @@ class BucketClientTest extends TestCase
         $bucket = BucketClient::partialMock();
 
         $body = [
-            'ServerSideEncryptionConfiguration' =>
-                [
-                    'Rule' =>
-                        [
-                            'ApplySideEncryptionConfiguration' =>
-                                [
-                                    'SSEAlgorithm' => 'AES256',
-                                ],
-                        ],
+            'ServerSideEncryptionConfiguration' => [
+                'Rule' => [
+                    'ApplySideEncryptionConfiguration' => [
+                        'SSEAlgorithm' => 'AES256',
+                    ],
                 ],
+            ],
         ];
         $bucket->shouldReceive('put')
             ->with('/?encryption', ['body' => XML::fromArray($body)])
@@ -1020,13 +1020,13 @@ class BucketClientTest extends TestCase
             ->andReturn(Response::create(
                 200,
                 ['Content-Type' => 'application/xml'],
-                '<ServerSideEncryptionConfiguration>
+                '<xml><ServerSideEncryptionConfiguration>
                    <Rule>
                       <ApplySideEncryptionConfiguration>
                          <SSEAlgorithm>AES256</SSEAlgorithm>
                       </ApplySideEncryptionConfiguration>
                    </Rule>
-                </ServerSideEncryptionConfiguration>'
+                </ServerSideEncryptionConfiguration></xml>'
             ));
 
         /* @var Response $response */

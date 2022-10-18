@@ -37,7 +37,11 @@ class Client
 
     protected Config $config;
 
+    protected string $domain = '<bucket>-<app_id>.cos.<region>.myqcloud.com';
+
     protected \GuzzleHttp\Client $client;
+
+    protected array $requiredConfigKeys = [];
 
     /**
      * @param  array|\Overtrue\CosClient\Config  $config
@@ -46,26 +50,16 @@ class Client
      */
     public function __construct(array|Config $config)
     {
-        if (!($config instanceof Config)) {
-            $config = new Config($config);
-        }
+        $this->config = $this->normalizeConfig($config);
 
-        if (!$config->has('app_id') || !$config->has('secret_id') || !$config->has('secret_key')) {
-            throw new InvalidConfigException('app_id, secret_id and secret_key was required.');
-        }
+        $this->configureDomain();
+        $this->configureMiddlewares();
+        $this->configureHttpClientOptions();
+    }
 
-        $this->config = $config;
-
-        $this->configureUserAgent($config);
-
-        $this->pushMiddleware(
-            new CreateRequestSignature(
-                $this->getSecretId(),
-                $this->getSecretKey(),
-                $this->config->get('signature_expires')
-            )
-        );
-        $this->pushMiddleware(new SetContentMd5());
+    public function getSchema(): string
+    {
+        return $this->config->get('use_https', true) ? 'https' : 'http';
     }
 
     public function getAppId(): int
@@ -111,6 +105,53 @@ class Client
         }
     }
 
+    protected function configureDomain(): static
+    {
+        $replacements = [
+            '<uin>' => $this->config->get('uin'),
+            '<app_id>' => $this->config->get('app_id'),
+            '<region>' => $this->config->get('region') ?? self::DEFAULT_REGION,
+            '<bucket>' => $this->config->get('bucket'),
+        ];
+
+        $this->domain = trim($this->config->get('domain', str_replace(array_keys($replacements), $replacements, $this->domain)), '/');
+
+        return $this;
+    }
+
+    /**
+     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
+     */
+    public function normalizeConfig(array|Config $config): Config
+    {
+        if (is_array($config)) {
+            $config = new Config($config);
+        }
+
+        $requiredKeys = ['app_id', 'secret_id', 'secret_key', ...$this->requiredConfigKeys];
+
+        foreach ($requiredKeys as $key) {
+            if ($config->missing($key)) {
+                throw new InvalidConfigException(sprintf('%s was required.', implode(', ', $requiredKeys)));
+            }
+        }
+
+        return $config;
+    }
+
+    public function configureMiddlewares(): void
+    {
+        $this->pushMiddleware(
+            new CreateRequestSignature(
+                $this->getSecretId(),
+                $this->getSecretKey(),
+                $this->config->get('signature_expires')
+            )
+        );
+
+        $this->pushMiddleware(new SetContentMd5());
+    }
+
     public static function spy(): Client|\Mockery\MockInterface|\Mockery\LegacyMockInterface
     {
         return \Mockery::mock(static::class);
@@ -130,20 +171,19 @@ class Client
             $config = new Config($config);
         }
 
-        $mock = \Mockery::mock(static::class.\sprintf('[%s]', \join(',', $methods)), [$config]);
+        $mock = \Mockery::mock(static::class.\sprintf('[%s]', \implode(',', $methods)), [$config]);
         $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
 
         return $mock;
     }
 
-    protected function configureUserAgent(Config $config): Client
+    protected function configureHttpClientOptions(): void
     {
-        $this->setHttpClientOptions(\array_replace_recursive([
+        $this->setBaseUri(\sprintf('%s://%s/', $this->getSchema(), $this->domain));
+        $this->mergeHttpClientOptions($this->config->get('guzzle', [
             'headers' => [
                 'User-Agent' => 'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
             ],
-        ], $config->get('guzzle', [])));
-
-        return $this;
+        ]));
     }
 }

@@ -23,7 +23,7 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
 
     public function toArray()
     {
-        if (!\is_null($this->arrayResult)) {
+        if (! \is_null($this->arrayResult)) {
             return $this->arrayResult;
         }
 

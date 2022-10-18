@@ -15,14 +15,16 @@
     "ext-libxml": "*",
     "ext-simplexml": "*",
     "ext-json": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "thenorthmemory/xml": "^1.0"
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.8",
     "friendsofphp/php-cs-fixer": "^3.5",
     "mockery/mockery": "^1.0",
     "phpunit/phpunit": "^9.5",
-    "monolog/monolog": "^2.5"
+    "monolog/monolog": "^2.5",
+    "laravel/pint": "^1.2"
   },
   "autoload": {
     "psr-4": {
@@ -56,8 +58,8 @@
       "cghooks update"
     ],
     "cghooks": "vendor/bin/cghooks",
-    "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run --ansi",
-    "fix-style": "php-cs-fixer fix --using-cache=no --ansi",
+    "check-style": "vendor/bin/pint --test",
+    "fix-style": "vendor/bin/pint",
     "test": "vendor/bin/phpunit"
   },
   "scripts-descriptions": {

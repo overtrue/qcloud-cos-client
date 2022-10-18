@@ -16,14 +16,12 @@ class ResponseTest extends TestCase
         $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'text/html'], '<html><body>contents</body></html>'));
         $this->assertSame(null, $response->toArray());
 
-        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<html><body>contents</body></html>'));
+        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<xml><body>contents</body></xml>'));
         $this->assertSame([
-            'html' => [
-                'body' => 'contents'
-            ],
+            'body' => 'contents',
         ], $response->toArray());
 
-        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<foo><bar>value1</bar><bar>value2</bar></foo>'));
+        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<xml><foo><bar>value1</bar><bar>value2</bar></foo></xml>'));
         $this->assertSame([
             'foo' => [
                 'bar' => ['value1', 'value2'],
@@ -47,11 +45,11 @@ class ResponseTest extends TestCase
         $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'text/html'], '<html><body>contents</body></html>'));
         $this->assertSame(null, $response->toObject());
 
-        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<html><body>contents</body></html>'));
+        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<xml><body>contents</body></xml>'));
         $this->assertInstanceOf(\stdClass::class, $response->toObject());
-        $this->assertSame('contents', $response->toObject()->html->body);
+        $this->assertSame('contents', $response->toObject()->body);
 
-        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<foo><bar>value1</bar><bar>value2</bar></foo>'));
+        $response = new Response(new \GuzzleHttp\Psr7\Response(200, ['content-type' => 'application/xml'], '<xml><foo><bar>value1</bar><bar>value2</bar></foo></xml>'));
         $this->assertInstanceOf(\stdClass::class, $response->toObject());
         $this->assertSame(['value1', 'value2'], $response->toObject()->foo->bar);
 

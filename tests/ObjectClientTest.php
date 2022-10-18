@@ -12,6 +12,7 @@ class ObjectClientTest extends TestCase
 {
     public function testCustomDomain()
     {
+        /** @var ObjectClient $object */
         $object = ObjectClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
@@ -19,8 +20,9 @@ class ObjectClientTest extends TestCase
             'bucket' => 'example-12345600',
         ]);
 
-        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $object->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://example-12345600-12345600.cos.ap-guangzhou.myqcloud.com/', $object->getBaseUri());
 
+        /** @var ObjectClient $object */
         $object = ObjectClient::partialMockWithConfig([
             'app_id' => '12345600',
             'secret_id' => 'mock-secret_id',
@@ -29,7 +31,7 @@ class ObjectClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);
 
-        $this->assertSame('https://example-12345600.abc.cos.test.com/', $object->getConfig()['guzzle']['base_uri']);
+        $this->assertSame('https://example-12345600.abc.cos.test.com/', $object->getBaseUri());
 
         $object = ObjectClient::partialMockWithConfig([
             'app_id' => '12345600',
@@ -40,7 +42,8 @@ class ObjectClientTest extends TestCase
             'domain' => 'example-12345600.abc.cos.test.com',
         ]);
 
-        $this->assertSame('http://example-12345600.abc.cos.test.com/', $object->getConfig()['guzzle']['base_uri']);
+        /** @var ObjectClient $object */
+        $this->assertSame('http://example-12345600.abc.cos.test.com/', $object->getBaseUri());
     }
 
     public function testPutObject()
@@ -116,7 +119,7 @@ class ObjectClientTest extends TestCase
         /* @var ObjectClient $object */
         $response = $object->getObject('example-key', ['versionId' => 'example-version-id'], ['Range' => 'bytes=5-9']);
 
-        $this->assertEmpty($response->toArray());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testHeadObject()
@@ -203,22 +206,18 @@ class ObjectClientTest extends TestCase
                 'ExpressionType' => 'SQL',
                 'InputSerialization' => [
                     'CompressionType' => 'GZIP',
-                    'JSON' =>
-                        [
-                            'Type' => 'DOCUMENT',
-                        ],
+                    'JSON' => [
+                        'Type' => 'DOCUMENT',
+                    ],
                 ],
-                'OutputSerialization' =>
-                    [
-                        'JSON' =>
-                            [
-                                'RecordDelimiter' => '\\n',
-                            ],
+                'OutputSerialization' => [
+                    'JSON' => [
+                        'RecordDelimiter' => '\\n',
                     ],
-                'RequestProgress' =>
-                    [
-                        'Enabled' => 'FALSE',
-                    ],
+                ],
+                'RequestProgress' => [
+                    'Enabled' => 'FALSE',
+                ],
             ],
         ];
         $object->shouldReceive('post')
@@ -240,33 +239,28 @@ class ObjectClientTest extends TestCase
                 'Owner' => [
                     'ID' => 'qcs::cam::uin/100000000001:uin/100000000001',
                 ],
-                'AccessControlList' =>
-                    [
-                        'Grant' => [
-                            [
-                                'Grantee' =>
-                                    [
-                                        'URI' => 'http://cam.qcloud.com/groups/global/AllUsers',
-                                        '@attributes' =>
-                                            [
-                                                'type' => 'Group',
-                                            ],
-                                    ],
-                                'Permission' => 'READ',
+                'AccessControlList' => [
+                    'Grant' => [
+                        [
+                            'Grantee' => [
+                                'URI' => 'http://cam.qcloud.com/groups/global/AllUsers',
+                                '@attributes' => [
+                                    'type' => 'Group',
+                                ],
                             ],
-                            [
-                                'Grantee' =>
-                                    [
-                                        'ID' => 'qcs::cam::uin/100000000002:uin/100000000002',
-                                        '@attributes' =>
-                                            [
-                                                'type' => 'CanonicalUser',
-                                            ],
-                                    ],
-                                'Permission' => 'READ_ACP',
+                            'Permission' => 'READ',
+                        ],
+                        [
+                            'Grantee' => [
+                                'ID' => 'qcs::cam::uin/100000000002:uin/100000000002',
+                                '@attributes' => [
+                                    'type' => 'CanonicalUser',
+                                ],
                             ],
+                            'Permission' => 'READ_ACP',
                         ],
                     ],
+                ],
             ],
         ];
 
@@ -367,7 +361,6 @@ class ObjectClientTest extends TestCase
         ]);
 
         $this->assertEmpty($response->toArray());
-
 
         // missing content-type
         $this->expectException(InvalidArgumentException::class);
@@ -495,6 +488,26 @@ class ObjectClientTest extends TestCase
         /* @var Response $response */
         /* @var ObjectClient $object */
         $response = $object->getUploadedParts('example-key', '1585130821cbb7df1d1xxx');
+        $this->assertEmpty($response->toArray());
+    }
+
+    public function testDetectImage()
+    {
+        $object = ObjectClient::partialMock();
+
+        $object->shouldReceive('getObject')
+            ->with('example-key', [
+                'ci-process' => 'sensitive-content-recognition',
+                'biz-type' => 'mock-biz-type',
+            ])
+            ->andReturn(Response::create(200));
+
+        /* @var Response $response */
+        /* @var ObjectClient $object */
+        $response = $object->detectImage('example-key', [
+            'biz-type' => 'mock-biz-type',
+        ]);
+
         $this->assertEmpty($response->toArray());
     }
 }

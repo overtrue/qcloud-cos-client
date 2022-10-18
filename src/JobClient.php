@@ -2,37 +2,19 @@
 
 namespace Overtrue\CosClient;
 
-use Overtrue\CosClient\Exceptions\InvalidConfigException;
 use Overtrue\CosClient\Support\XML;
 
 class JobClient extends Client
 {
-    /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
-     */
+    protected string $domain = '<uin>.cos-control.<region>.myqcloud.com';
+
+    protected array $requiredConfigKeys = ['uin', 'region'];
+
     public function __construct(array|Config $config)
     {
-        if (!($config instanceof Config)) {
-            $config = new Config($config);
-        }
+        parent::__construct($config);
 
-        $this->validateConfig($config);
-
-        $schema = $config->get('use_https', true) ? 'https' : 'http';
-        $host = $config->get('domain', \sprintf(
-            '%s.cos-control.%s.myqcloud.com/',
-            $config->get('uin'),
-            $config->get('region')
-        ));
-
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => \sprintf('%s://%s/', $schema, rtrim($host, '/')),
-            ],
-            'headers' => [
-                'x-cos-appid' => $config->get('app_id')
-            ]
-        ]));
+        $this->setHeader('x-cos-appid', $this->config->get('app_id'));
     }
 
     public function getJobs(array $query = []): Http\Response
@@ -66,19 +48,5 @@ class JobClient extends Client
     public function updateJobStatus(string $id, array $query): Http\Response
     {
         return $this->post(\sprintf('/jobs/%s/status', $id), \compact('query'));
-    }
-
-    /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
-     */
-    protected function validateConfig(Config $config)
-    {
-        if (!$config->has('uin')) {
-            throw new InvalidConfigException('Invalid config uin.');
-        }
-
-        if (!$config->has('region')) {
-            throw new InvalidConfigException('Invalid config region.');
-        }
     }
 }
