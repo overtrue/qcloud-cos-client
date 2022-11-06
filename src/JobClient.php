@@ -20,18 +20,13 @@ class JobClient extends Client
 
         $this->validateConfig($config);
 
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => \sprintf(
-                    'https://%s.cos-control.%s.myqcloud.com/',
-                    $config->get('uin'),
-                    $config->get('region')
-                ),
-                'headers' => [
-                    'x-cos-appid' => $config->get('app_id')
-                ]
-            ]
-        ]));
+        $this->setBaseUri(\sprintf(
+            'https://%s.cos-control.%s.myqcloud.com/',
+            $config->get('uin'),
+            $config->get('region')
+        ));
+
+        $this->setHeader('x-cos-appid', $config->get('app_id'));
     }
 
     /**

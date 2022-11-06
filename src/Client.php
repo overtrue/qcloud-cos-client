@@ -2,6 +2,7 @@
 
 namespace Overtrue\CosClient;
 
+use GuzzleHttp\ClientInterface;
 use Overtrue\CosClient\Exceptions\ClientException;
 use Overtrue\CosClient\Exceptions\Exception;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
@@ -56,6 +57,7 @@ class Client
 
         $this->config = $config;
 
+        $this->mergeHttpClientOptions($config->get('guzzle', []));
         $this->configureUserAgent($config);
 
         $this->pushMiddleware(
@@ -134,11 +136,7 @@ class Client
      */
     protected function configureUserAgent(Config $config): Client
     {
-        $this->setHttpClientOptions(\array_replace_recursive([
-            'headers' => [
-                'User-Agent' => 'overtrue/qcloud-cos-client:'.\GuzzleHttp\Client::MAJOR_VERSION,
-            ],
-        ], $config->get('guzzle', [])));
+        $this->setHeader('User-Agent', $config->get('guzzle.headers.User-Agent', 'overtrue/qcloud-cos-client:'.ClientInterface::MAJOR_VERSION));
 
         return $this;
     }

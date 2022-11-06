@@ -27,18 +27,12 @@ class ObjectClient extends Client
             throw new InvalidConfigException('No bucket configured.');
         }
 
-        $this->baseUri = \sprintf(
+        $this->setBaseUri(\sprintf(
             'https://%s-%s.cos.%s.myqcloud.com/',
             $config->get('bucket'),
             $config->get('app_id'),
             $config->get('region', self::DEFAULT_REGION)
-        );
-
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => $this->baseUri,
-            ],
-        ]));
+        ));
     }
 
     /**
@@ -399,7 +393,7 @@ class ObjectClient extends Client
      */
     public function getObjectUrl(string $key)
     {
-        return \sprintf('%s/%s', \rtrim($this->baseUri, '/'), \ltrim($key, '/'));
+        return \sprintf('%s/%s', \rtrim($this->getBaseUri(), '/'), \ltrim($key, '/'));
     }
 
     /**

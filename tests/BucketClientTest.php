@@ -8,6 +8,17 @@ use Overtrue\CosClient\Support\XML;
 
 class BucketClientTest extends TestCase
 {
+    public function testBaseUri()
+    {
+        $bucketClient = new BucketClient([
+            'bucket' => 'test',
+            'app_id' => '123456',
+            'region' => 'ap-guangzhou',
+        ]);
+
+        $this->assertSame('https://test-123456.cos.ap-guangzhou.myqcloud.com/', $bucketClient->getBaseUri());
+    }
+
     public function testPutBucket()
     {
         $bucket = BucketClient::partialMock();

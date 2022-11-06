@@ -22,16 +22,12 @@ class BucketClient extends Client
             throw new InvalidConfigException('No bucket configured.');
         }
 
-        parent::__construct($config->extend([
-            'guzzle' => [
-                'base_uri' => \sprintf(
-                    'https://%s-%s.cos.%s.myqcloud.com/',
-                    $config->get('bucket'),
-                    $config->get('app_id'),
-                    $config->get('region', self::DEFAULT_REGION)
-                ),
-            ]
-        ]));
+        $this->setBaseUri(\sprintf(
+            'https://%s-%s.cos.%s.myqcloud.com/',
+            $config->get('bucket'),
+            $config->get('app_id'),
+            $config->get('region', self::DEFAULT_REGION)
+        ));
     }
 
     /**

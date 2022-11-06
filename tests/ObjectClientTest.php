@@ -10,6 +10,16 @@ use PHPUnit\Framework\TestCase;
 
 class ObjectClientTest extends TestCase
 {
+    public function testBaseUri()
+    {
+        $client = new ObjectClient([
+            'bucket' => 'test',
+            'app_id' => '123456',
+        ]);
+
+        $this->assertSame('https://test-123456.cos.ap-guangzhou.myqcloud.com/', $client->getBaseUri());
+    }
+
     public function testPutObject()
     {
         $object = ObjectClient::partialMock();

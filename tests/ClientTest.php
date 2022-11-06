@@ -98,11 +98,18 @@ class ClientTest extends TestCase
             'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
             'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
             'guzzle' => [
+                'timeout' => 10,
+                'verify' => false,
                 'headers' => [
                     'User-Agent' => 'custom-user-agent',
+                    'X-Test' => 'test',
                 ],
             ],
         ]));
+
+        $this->assertFalse($client->getHttpClientOptions()['verify']);
+        $this->assertSame(10, $client->getHttpClientOptions()['timeout']);
         $this->assertSame('custom-user-agent', $client->getHttpClientOptions()['headers']['User-Agent']);
+        $this->assertSame('test', $client->getHttpClientOptions()['headers']['X-Test']);
     }
 }

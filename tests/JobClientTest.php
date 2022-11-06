@@ -8,6 +8,17 @@ use Overtrue\CosClient\Support\XML;
 
 class JobClientTest extends TestCase
 {
+    public function testBaseUri()
+    {
+        $client = new JobClient([
+            'app_id' => 1250000000,
+            'uin' => 1000000000,
+            'region' => 'ap-guangzhou',
+        ]);
+
+        $this->assertSame('https://1000000000.cos-control.ap-guangzhou.myqcloud.com/', $client->getBaseUri());
+    }
+
     public function testListJobs()
     {
         $job = JobClient::partialMock();
