@@ -14,6 +14,8 @@ class BucketClientTest extends TestCase
             'bucket' => 'test',
             'app_id' => '123456',
             'region' => 'ap-guangzhou',
+            'secret_id' => 'test',
+            'secret_key' => 'test',
         ]);
 
         $this->assertSame('https://test-123456.cos.ap-guangzhou.myqcloud.com/', $bucketClient->getBaseUri());

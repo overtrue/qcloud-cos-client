@@ -22,6 +22,8 @@ class BucketClient extends Client
             throw new InvalidConfigException('No bucket configured.');
         }
 
+        parent::__construct($config);
+
         $this->setBaseUri(\sprintf(
             'https://%s-%s.cos.%s.myqcloud.com/',
             $config->get('bucket'),

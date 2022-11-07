@@ -20,6 +20,8 @@ class JobClient extends Client
 
         $this->validateConfig($config);
 
+        parent::__construct($config);
+
         $this->setBaseUri(\sprintf(
             'https://%s.cos-control.%s.myqcloud.com/',
             $config->get('uin'),

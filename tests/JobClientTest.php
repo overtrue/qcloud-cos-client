@@ -14,6 +14,8 @@ class JobClientTest extends TestCase
             'app_id' => 1250000000,
             'uin' => 1000000000,
             'region' => 'ap-guangzhou',
+            'secret_id' => 'test',
+            'secret_key' => 'test',
         ]);
 
         $this->assertSame('https://1000000000.cos-control.ap-guangzhou.myqcloud.com/', $client->getBaseUri());

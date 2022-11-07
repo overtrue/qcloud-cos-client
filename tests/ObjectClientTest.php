@@ -15,6 +15,8 @@ class ObjectClientTest extends TestCase
         $client = new ObjectClient([
             'bucket' => 'test',
             'app_id' => '123456',
+            'secret_id' => 'test',
+            'secret_key' => 'test',
         ]);
 
         $this->assertSame('https://test-123456.cos.ap-guangzhou.myqcloud.com/', $client->getBaseUri());
