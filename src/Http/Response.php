@@ -45,7 +45,7 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         return \strpos($this->getHeaderLine('content-type'), 'xml') > 0;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         try {
             return $this->toArray();
@@ -54,24 +54,22 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
         }
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return \array_key_exists($offset, $this->toArray());
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->toArray()[$offset] ?? null;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        return null;
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        return null;
     }
 
     public static function create(
