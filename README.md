@@ -66,7 +66,7 @@ $config = [
 
 ### 返回值
 
-所有的接口调用都会返回 [`Overtrue\CosClient\Http\Response`](https://github.com/overtrue/qcloud-cos-client/blob/master/src/Http/Response.php) 对象，改对象提供了以下便捷方法：
+所有的接口调用都会返回 [`Overtrue\CosClient\Http\Response`](https://github.com/overtrue/qcloud-cos-client/blob/master/src/Http/Response.php) 对象，该对象提供了以下便捷方法：
 
 ```php
 array|null $response->toArray(); // 获取响应内容数组转换结果                                                
