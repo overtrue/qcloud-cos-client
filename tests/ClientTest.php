@@ -81,6 +81,47 @@ class ClientTest extends TestCase
         $this->assertSame($httpClient, $client->getHttpClient());
     }
 
+    public function testConfigureDomain()
+    {
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'bucket' => 'example',
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
+
+        $httpClient = $client->getHttpClient();
+
+        $this->assertInstanceOf(\GuzzleHttp\Client::class, $httpClient);
+        $this->assertSame('https://example-10020201024.cos.ap-guangzhou.myqcloud.com/', $client->getBaseUri());
+
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'bucket' => 'example',
+            'domain' => '',
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
+
+        $httpClient = $client->getHttpClient();
+
+        $this->assertInstanceOf(\GuzzleHttp\Client::class, $httpClient);
+        $this->assertSame('https://example-10020201024.cos.ap-guangzhou.myqcloud.com/', $client->getBaseUri());
+
+        $client = new Client(new Config([
+            'app_id' => 10020201024,
+            'bucket' => 'example',
+            'domain' => 'example.com',
+            'secret_id' => 'AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx',
+            'secret_key' => 'b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx',
+        ]));
+
+        $httpClient = $client->getHttpClient();
+
+        $this->assertInstanceOf(\GuzzleHttp\Client::class, $httpClient);
+        $this->assertSame('https://example.com/', $client->getBaseUri());
+    }
+
     public function testConfigureUserAgent()
     {
         $client = new Client(new Config([

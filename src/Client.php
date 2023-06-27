@@ -114,7 +114,9 @@ class Client
             '<bucket>' => $this->config->get('bucket'),
         ];
 
-        $this->domain = trim($this->config->get('domain', str_replace(array_keys($replacements), $replacements, $this->domain)), '/');
+        $domain = $this->config->get('domain');
+
+        $this->domain = trim($domain ?: str_replace(array_keys($replacements), $replacements, $this->domain), '/');
 
         return $this;
     }
