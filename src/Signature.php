@@ -17,13 +17,13 @@ class Signature
         'range',
     ];
 
-    public function __construct(public string $accessKey, public  string $secretKey)
+    public function __construct(public string $accessKey, public string $secretKey)
     {
     }
 
     public function createAuthorizationHeader(RequestInterface $request, int|string|\DateTimeInterface $expires = null): string
     {
-        $signTime = self::getTimeSegments($expires);
+        $signTime = self::getTimeSegments($expires ?? '+60 minutes');
         $queryToBeSigned = self::getQueryToBeSigned($request);
         $headersToBeSigned = self::getHeadersToBeSigned($request);
 

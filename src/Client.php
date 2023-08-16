@@ -44,8 +44,6 @@ class Client
     protected array $requiredConfigKeys = [];
 
     /**
-     * @param  array|\Overtrue\CosClient\Config  $config
-     *
      * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
      */
     public function __construct(array|Config $config)

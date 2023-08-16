@@ -41,4 +41,23 @@ class SignatureTest extends TestCase
 
         date_default_timezone_set($timezone);
     }
+
+    public function test_getTimeSegments_with_null()
+    {
+        $signature = new Signature('mock-access-key', 'mock-secret-key');
+
+        $request = new Request('GET', 'https://example.com');
+
+        $timezone = \date_default_timezone_get();
+
+        date_default_timezone_set('PRC');
+
+        $output = strtotime('+60 minutes');
+        $expect = sprintf('q-sign-time=%d;%d&q-key-time=%d;%d', time() - 60, $output, time() - 60, $output);
+
+        $this->assertStringContainsString($expect, $signature->createAuthorizationHeader($request));
+        $this->assertStringContainsString($expect, $signature->createAuthorizationHeader($request, null));
+
+        date_default_timezone_set($timezone);
+    }
 }

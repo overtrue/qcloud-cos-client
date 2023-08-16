@@ -6,7 +6,7 @@ use JetBrains\PhpStorm\Pure;
 use Overtrue\CosClient\Support\XML;
 use Psr\Http\Message\ResponseInterface;
 
-class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \ArrayAccess
+class Response extends \GuzzleHttp\Psr7\Response implements \ArrayAccess, \JsonSerializable
 {
     protected ?array $arrayResult = null;
 
@@ -128,19 +128,19 @@ class Response extends \GuzzleHttp\Psr7\Response implements \JsonSerializable, \
     #[Pure]
     final public function isOk(): bool
     {
-        return 200 === $this->getStatusCode();
+        return $this->getStatusCode() === 200;
     }
 
     #[Pure]
     final public function isForbidden(): bool
     {
-        return 403 === $this->getStatusCode();
+        return $this->getStatusCode() === 403;
     }
 
     #[Pure]
     final public function isNotFound(): bool
     {
-        return 404 === $this->getStatusCode();
+        return $this->getStatusCode() === 404;
     }
 
     #[Pure]
