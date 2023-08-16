@@ -15,7 +15,7 @@ class XML
     {
         if (empty($data)) {
             return ''
-        };
+        }
         
         return Transformer::toXml($data);
     }
