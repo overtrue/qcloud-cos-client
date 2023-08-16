@@ -21,7 +21,7 @@ class Signature
     {
     }
 
-    public function createAuthorizationHeader(RequestInterface $request, ?string $expires = null): string
+    public function createAuthorizationHeader(RequestInterface $request, int|string|\DateTimeInterface $expires = null): string
     {
         $signTime = self::getTimeSegments($expires);
         $queryToBeSigned = self::getQueryToBeSigned($request);
@@ -68,10 +68,10 @@ class Signature
         $query = [];
         foreach (explode('&', $request->getUri()->getQuery()) as $item) {
             if (! empty($item)) {
-                $tmpquery = explode('=', $item);
-                $key = strtolower($tmpquery[0]);
-                if (count($tmpquery) >= 2) {
-                    $value = $tmpquery[1];
+                $segments = explode('=', $item);
+                $key = strtolower($segments[0]);
+                if (count($segments) >= 2) {
+                    $value = $segments[1];
                 } else {
                     $value = '';
                 }
@@ -83,13 +83,28 @@ class Signature
         return $query;
     }
 
-    protected static function getTimeSegments(?string $expires): string
+    protected static function getTimeSegments(int|string|\DateTimeInterface $expires = '+60 minutes'): string
     {
         $timezone = \date_default_timezone_get();
 
         date_default_timezone_set('PRC');
 
-        $signTime = \sprintf('%s;%s', time() - 60, strtotime($expires ?? '+60 minutes'));
+        // '900'/900
+        if (is_numeric($expires)) {
+            $expires = abs($expires);
+        }
+
+        $expires = match (true) {
+            // 900/1700001234
+            is_int($expires) => $expires >= time() ? $expires : time() + $expires,
+            // '+60 minutes'/'2023-01-01 00:00:00'
+            is_string($expires) => strtotime($expires),
+            // new \DateTime('2023-01-01 00:00:00')
+            $expires instanceof \DateTimeInterface => $expires->getTimestamp(),
+            default => time() + 60,
+        };
+
+        $signTime = \sprintf('%s;%s', time() - 60, $expires);
 
         date_default_timezone_set($timezone);
 
