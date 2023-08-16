@@ -14,7 +14,7 @@ class XML
     public static function fromArray(array $data): bool|string
     {
         if (empty($data)) {
-            return ''
+            return '';
         }
         
         return Transformer::toXml($data);
