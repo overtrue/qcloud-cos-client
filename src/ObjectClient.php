@@ -193,7 +193,7 @@ class ObjectClient extends Client
             'query' => [
                 'uploadId' => $uploadId,
             ],
-            'body' => XML::fromArray($body),
+            'body' => XML::fromArray($body, 'CompleteMultipartUpload', 'Part'),
         ]);
     }
 

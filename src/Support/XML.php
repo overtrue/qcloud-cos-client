@@ -11,12 +11,12 @@ class XML
         return Transformer::toArray($xml);
     }
 
-    public static function fromArray(array $data): bool|string
+    public static function fromArray(array $data, string $root = 'xml', string $item = 'item'): bool|string
     {
         if (empty($data)) {
             return '';
         }
 
-        return Transformer::toXml($data);
+        return Transformer::toXml($data, root: $root, item: $item);
     }
 }
