@@ -165,7 +165,7 @@ class ObjectClientTest extends TestCase
             ],
         ];
         $object->shouldReceive('post')
-            ->with('/?delete', ['body' => XML::fromArray($body)])
+            ->with('/?delete', ['body' => XML::fromArray($body['Delete'], 'Delete')])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
@@ -187,7 +187,7 @@ class ObjectClientTest extends TestCase
             ],
         ];
         $object->shouldReceive('post')
-            ->with('example-key', ['query' => ['restore' => '', 'versionId' => 'example-version-id'], 'body' => XML::fromArray($body)])
+            ->with('example-key', ['query' => ['restore' => '', 'versionId' => 'example-version-id'], 'body' => XML::fromArray($body['RestoreRequest'], 'RestoreRequest')])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
@@ -221,7 +221,7 @@ class ObjectClientTest extends TestCase
             ],
         ];
         $object->shouldReceive('post')
-            ->with('example-key', ['query' => ['select' => '', 'select-type' => 2], 'body' => XML::fromArray($body)])
+            ->with('example-key', ['query' => ['select' => '', 'select-type' => 2], 'body' => XML::fromArray($body['SelectRequest'], 'SelectRequest')])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
@@ -265,7 +265,7 @@ class ObjectClientTest extends TestCase
         ];
 
         $object->shouldReceive('put')
-            ->with('example-key', ['query' => ['acl' => ''], 'body' => XML::fromArray($body), 'headers' => []])
+            ->with('example-key', ['query' => ['acl' => ''], 'body' => XML::fromArray($body['AccessControlPolicy'], 'AccessControlPolicy'), 'headers' => []])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
@@ -304,7 +304,7 @@ class ObjectClientTest extends TestCase
         ];
 
         $object->shouldReceive('put')
-            ->with('example-key', ['query' => ['tagging' => '', 'VersionId' => 'example-version-id'], 'body' => XML::fromArray($body)])
+            ->with('example-key', ['query' => ['tagging' => '', 'VersionId' => 'example-version-id'], 'body' => XML::fromArray($body['Tagging'], 'Tagging')])
             ->andReturn(Response::create(200));
 
         /* @var Response $response */
@@ -433,7 +433,7 @@ class ObjectClientTest extends TestCase
         $object->shouldReceive('post')
             ->with('example-key', [
                 'query' => ['uploadId' => '1585130821cbb7df1d1xxx'],
-                'body' => XML::fromArray($body),
+                'body' => XML::fromArray($body['CompleteMultipartUpload'], 'CompleteMultipartUpload', 'Part'),
             ])
             ->andReturn(Response::create(200));
 

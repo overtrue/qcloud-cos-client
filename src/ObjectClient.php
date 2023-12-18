@@ -60,7 +60,11 @@ class ObjectClient extends Client
 
     public function deleteObjects(array $body): Http\Response
     {
-        return $this->post('/?delete', ['body' => XML::fromArray($body)]);
+        if (key($body) == 'Delete') {
+            $body = $body['Delete'];
+        }
+
+        return $this->post('/?delete', ['body' => XML::fromArray($body, 'Delete')]);
     }
 
     public function optionsObject(string $key): Http\Response
@@ -70,33 +74,45 @@ class ObjectClient extends Client
 
     public function restoreObject(string $key, array $body, string $versionId = null): Http\Response
     {
+        if (key($body) == 'RestoreRequest') {
+            $body = $body['RestoreRequest'];
+        }
+
         return $this->post(\urlencode($key), [
             'query' => [
                 'restore' => '',
                 'versionId' => $versionId,
             ],
-            'body' => XML::fromArray($body),
+            'body' => XML::fromArray($body, 'RestoreRequest'),
         ]);
     }
 
     public function selectObjectContents(string $key, array $body): Http\Response
     {
+        if (key($body) == 'SelectRequest') {
+            $body = $body['SelectRequest'];
+        }
+
         return $this->post(\urlencode($key), [
             'query' => [
                 'select' => '',
                 'select-type' => 2,
             ],
-            'body' => XML::fromArray($body),
+            'body' => XML::fromArray($body, 'SelectRequest'),
         ]);
     }
 
     public function putObjectACL(string $key, array $body, array $headers = []): Http\Response
     {
+        if (key($body) == 'AccessControlPolicy') {
+            $body = $body['AccessControlPolicy'];
+        }
+
         return $this->put(\urlencode($key), [
             'query' => [
                 'acl' => '',
             ],
-            'body' => XML::fromArray($body),
+            'body' => XML::fromArray($body, 'AccessControlPolicy'),
             'headers' => $headers,
         ]);
     }
@@ -112,12 +128,16 @@ class ObjectClient extends Client
 
     public function putObjectTagging(string $key, array $body, string $versionId = null): Http\Response
     {
+        if (key($body) == 'Tagging') {
+            $body = $body['Tagging'];
+        }
+
         return $this->put(\urlencode($key), [
             'query' => [
                 'tagging' => '',
                 'VersionId' => $versionId,
             ],
-            'body' => XML::fromArray($body),
+            'body' => XML::fromArray($body, 'Tagging'),
         ]);
     }
 
@@ -189,6 +209,10 @@ class ObjectClient extends Client
 
     public function markUploadAsCompleted(string $key, string $uploadId, array $body): Http\Response
     {
+        if (key($body) == 'CompleteMultipartUpload') {
+            $body = $body['CompleteMultipartUpload'];
+        }
+
         return $this->post(\urlencode($key), [
             'query' => [
                 'uploadId' => $uploadId,
