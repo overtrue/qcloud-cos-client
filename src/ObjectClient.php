@@ -60,7 +60,7 @@ class ObjectClient extends Client
 
     public function deleteObjects(array $body): Http\Response
     {
-        if (key($body) == 'Delete') {
+        if (array_key_first($body) == 'Delete') {
             $body = $body['Delete'];
         }
 
@@ -74,7 +74,7 @@ class ObjectClient extends Client
 
     public function restoreObject(string $key, array $body, string $versionId = null): Http\Response
     {
-        if (key($body) == 'RestoreRequest') {
+        if (array_key_first($body) == 'RestoreRequest') {
             $body = $body['RestoreRequest'];
         }
 
@@ -89,7 +89,7 @@ class ObjectClient extends Client
 
     public function selectObjectContents(string $key, array $body): Http\Response
     {
-        if (key($body) == 'SelectRequest') {
+        if (array_key_first($body) == 'SelectRequest') {
             $body = $body['SelectRequest'];
         }
 
@@ -104,7 +104,7 @@ class ObjectClient extends Client
 
     public function putObjectACL(string $key, array $body, array $headers = []): Http\Response
     {
-        if (key($body) == 'AccessControlPolicy') {
+        if (array_key_first($body) == 'AccessControlPolicy') {
             $body = $body['AccessControlPolicy'];
         }
 
@@ -128,7 +128,7 @@ class ObjectClient extends Client
 
     public function putObjectTagging(string $key, array $body, string $versionId = null): Http\Response
     {
-        if (key($body) == 'Tagging') {
+        if (array_key_first($body) == 'Tagging') {
             $body = $body['Tagging'];
         }
 
@@ -209,7 +209,7 @@ class ObjectClient extends Client
 
     public function markUploadAsCompleted(string $key, string $uploadId, array $body): Http\Response
     {
-        if (key($body) == 'CompleteMultipartUpload') {
+        if (array_key_first($body) == 'CompleteMultipartUpload') {
             $body = $body['CompleteMultipartUpload'];
         }
 
