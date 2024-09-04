@@ -11,7 +11,7 @@ class ObjectClient extends Client
 {
     public function putObject(string $key, string $body, array $headers = []): Http\Response
     {
-        return $this->put(\urlencode($key), \compact('body', 'headers'));
+        return $this->put(\rawurlencode($key), \compact('body', 'headers'));
     }
 
     /**
@@ -27,7 +27,7 @@ class ObjectClient extends Client
             throw new InvalidArgumentException('Missing required header: Content-Type');
         }
 
-        return $this->put(\urlencode($key), array_filter(\compact('headers')));
+        return $this->put(\rawurlencode($key), array_filter(\compact('headers')));
     }
 
     /**
@@ -40,12 +40,12 @@ class ObjectClient extends Client
 
     public function getObject(string $key, array $query = [], array $headers = []): Http\Response
     {
-        return $this->get(\urlencode($key), \compact('query', 'headers'));
+        return $this->get(\rawurlencode($key), \compact('query', 'headers'));
     }
 
     public function headObject(string $key, string $versionId = null, array $headers = []): Http\Response
     {
-        return $this->head(\urlencode($key), [
+        return $this->head(\rawurlencode($key), [
             'query' => \compact('versionId'),
             'headers' => $headers,
         ]);
@@ -53,7 +53,7 @@ class ObjectClient extends Client
 
     public function deleteObject(string $key, string $versionId = null): Http\Response
     {
-        return $this->delete(\urlencode($key), [
+        return $this->delete(\rawurlencode($key), [
             'query' => \compact('versionId'),
         ]);
     }
@@ -69,7 +69,7 @@ class ObjectClient extends Client
 
     public function optionsObject(string $key): Http\Response
     {
-        return $this->options(\urlencode($key));
+        return $this->options(\rawurlencode($key));
     }
 
     public function restoreObject(string $key, array $body, string $versionId = null): Http\Response
@@ -78,7 +78,7 @@ class ObjectClient extends Client
             $body = $body['RestoreRequest'];
         }
 
-        return $this->post(\urlencode($key), [
+        return $this->post(\rawurlencode($key), [
             'query' => [
                 'restore' => '',
                 'versionId' => $versionId,
@@ -93,7 +93,7 @@ class ObjectClient extends Client
             $body = $body['SelectRequest'];
         }
 
-        return $this->post(\urlencode($key), [
+        return $this->post(\rawurlencode($key), [
             'query' => [
                 'select' => '',
                 'select-type' => 2,
@@ -108,7 +108,7 @@ class ObjectClient extends Client
             $body = $body['AccessControlPolicy'];
         }
 
-        return $this->put(\urlencode($key), [
+        return $this->put(\rawurlencode($key), [
             'query' => [
                 'acl' => '',
             ],
@@ -119,7 +119,7 @@ class ObjectClient extends Client
 
     public function getObjectACL(string $key): Http\Response
     {
-        return $this->get(\urlencode($key), [
+        return $this->get(\rawurlencode($key), [
             'query' => [
                 'acl' => '',
             ],
@@ -132,7 +132,7 @@ class ObjectClient extends Client
             $body = $body['Tagging'];
         }
 
-        return $this->put(\urlencode($key), [
+        return $this->put(\rawurlencode($key), [
             'query' => [
                 'tagging' => '',
                 'VersionId' => $versionId,
@@ -143,7 +143,7 @@ class ObjectClient extends Client
 
     public function getObjectTagging(string $key, string $versionId = null): Http\Response
     {
-        return $this->get(\urlencode($key), [
+        return $this->get(\rawurlencode($key), [
             'query' => [
                 'tagging' => '',
                 'VersionId' => $versionId,
@@ -153,7 +153,7 @@ class ObjectClient extends Client
 
     public function deleteObjectTagging(string $key, string $versionId = null): Http\Response
     {
-        return $this->delete(\urlencode($key), [
+        return $this->delete(\rawurlencode($key), [
             'query' => [
                 'tagging' => '',
                 'VersionId' => $versionId,
@@ -170,7 +170,7 @@ class ObjectClient extends Client
             throw new InvalidArgumentException('Missing required headers: Content-Type');
         }
 
-        return $this->post(\urlencode($key), [
+        return $this->post(\rawurlencode($key), [
             'query' => [
                 'uploads' => '',
             ],
@@ -185,7 +185,7 @@ class ObjectClient extends Client
 
     public function putPart(string $key, int $partNumber, string $uploadId, string $body, array $headers = []): Http\Response
     {
-        return $this->put(\urlencode($key), [
+        return $this->put(\rawurlencode($key), [
             'query' => \compact('partNumber', 'uploadId'),
             'headers' => $headers,
             'body' => $body,
@@ -201,7 +201,7 @@ class ObjectClient extends Client
             throw new InvalidArgumentException('Missing required header: x-cos-copy-source');
         }
 
-        return $this->put(\urlencode($key), [
+        return $this->put(\rawurlencode($key), [
             'query' => \compact('partNumber', 'uploadId'),
             'headers' => $headers,
         ]);
@@ -213,7 +213,7 @@ class ObjectClient extends Client
             $body = $body['CompleteMultipartUpload'];
         }
 
-        return $this->post(\urlencode($key), [
+        return $this->post(\rawurlencode($key), [
             'query' => [
                 'uploadId' => $uploadId,
             ],
@@ -223,7 +223,7 @@ class ObjectClient extends Client
 
     public function markUploadAsAborted(string $key, string $uploadId): Http\Response
     {
-        return $this->delete(\urlencode($key), [
+        return $this->delete(\rawurlencode($key), [
             'query' => [
                 'uploadId' => $uploadId,
             ],
@@ -239,7 +239,7 @@ class ObjectClient extends Client
     {
         $query['uploadId'] = $uploadId;
 
-        return $this->get(\urlencode($key), compact('query'));
+        return $this->get(\rawurlencode($key), compact('query'));
     }
 
     public function getObjectUrl(string $key): string
