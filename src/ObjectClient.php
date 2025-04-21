@@ -43,7 +43,7 @@ class ObjectClient extends Client
         return $this->get(\rawurlencode($key), \compact('query', 'headers'));
     }
 
-    public function headObject(string $key, string $versionId = null, array $headers = []): Http\Response
+    public function headObject(string $key, ?string $versionId = null, array $headers = []): Http\Response
     {
         return $this->head(\rawurlencode($key), [
             'query' => \compact('versionId'),
@@ -51,7 +51,7 @@ class ObjectClient extends Client
         ]);
     }
 
-    public function deleteObject(string $key, string $versionId = null): Http\Response
+    public function deleteObject(string $key, ?string $versionId = null): Http\Response
     {
         return $this->delete(\rawurlencode($key), [
             'query' => \compact('versionId'),
@@ -72,7 +72,7 @@ class ObjectClient extends Client
         return $this->options(\rawurlencode($key));
     }
 
-    public function restoreObject(string $key, array $body, string $versionId = null): Http\Response
+    public function restoreObject(string $key, array $body, ?string $versionId = null): Http\Response
     {
         if (array_key_first($body) == 'RestoreRequest') {
             $body = $body['RestoreRequest'];
@@ -126,7 +126,7 @@ class ObjectClient extends Client
         ]);
     }
 
-    public function putObjectTagging(string $key, array $body, string $versionId = null): Http\Response
+    public function putObjectTagging(string $key, array $body, ?string $versionId = null): Http\Response
     {
         if (array_key_first($body) == 'Tagging') {
             $body = $body['Tagging'];
@@ -141,7 +141,7 @@ class ObjectClient extends Client
         ]);
     }
 
-    public function getObjectTagging(string $key, string $versionId = null): Http\Response
+    public function getObjectTagging(string $key, ?string $versionId = null): Http\Response
     {
         return $this->get(\rawurlencode($key), [
             'query' => [
@@ -151,7 +151,7 @@ class ObjectClient extends Client
         ]);
     }
 
-    public function deleteObjectTagging(string $key, string $versionId = null): Http\Response
+    public function deleteObjectTagging(string $key, ?string $versionId = null): Http\Response
     {
         return $this->delete(\rawurlencode($key), [
             'query' => [

@@ -71,7 +71,7 @@ trait CreatesHttpClient
         return $this->options;
     }
 
-    public function pushMiddleware(callable $middleware, string $name = null): static
+    public function pushMiddleware(callable $middleware, ?string $name = null): static
     {
         if (! is_null($name)) {
             $this->middlewares[$name] = $middleware;

@@ -155,7 +155,7 @@ class BucketClient extends Client
         return $this->get(\sprintf('/?inventory&id=%s', $id));
     }
 
-    public function getInventoryConfigurations(string $nextContinuationToken = null): Http\Response
+    public function getInventoryConfigurations(?string $nextContinuationToken = null): Http\Response
     {
         return $this->get(\sprintf('/?inventory&continuation-token=%s', $nextContinuationToken));
     }

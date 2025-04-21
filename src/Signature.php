@@ -29,7 +29,7 @@ class Signature
     {
     }
 
-    public function createAuthorizationHeader(RequestInterface $request, int|string|\DateTimeInterface $expires = null): string
+    public function createAuthorizationHeader(RequestInterface $request, int|string|\DateTimeInterface|null $expires = null): string
     {
         $signTime = self::getTimeSegments($expires ?? '+60 minutes');
         $queryToBeSigned = self::getQueryToBeSigned($request);
