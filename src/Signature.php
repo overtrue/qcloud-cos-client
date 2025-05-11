@@ -95,7 +95,7 @@ class Signature
     {
         $timezone = \date_default_timezone_get();
 
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
 
         // '900'/900
         if (is_numeric($expires)) {
