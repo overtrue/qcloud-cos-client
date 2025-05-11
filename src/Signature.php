@@ -114,7 +114,7 @@ class Signature
     {
         $timezone = \date_default_timezone_get();
 
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
 
         $signTime = \sprintf('%s;%s', time() - 60, strtotime($expires ?? '+60 minutes'));
 
