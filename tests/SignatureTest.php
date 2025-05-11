@@ -15,7 +15,7 @@ class SignatureTest extends TestCase
 
         $timezone = \date_default_timezone_get();
 
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
 
         $asserts = [
             '900' => time() + 900,
@@ -50,7 +50,7 @@ class SignatureTest extends TestCase
 
         $timezone = \date_default_timezone_get();
 
-        date_default_timezone_set('PRC');
+        date_default_timezone_set('Asia/Shanghai');
 
         $output = strtotime('+60 minutes');
         $expect = sprintf('q-sign-time=%d;%d&q-key-time=%d;%d', time() - 60, $output, time() - 60, $output);
