@@ -117,4 +117,16 @@ class CiClient extends Client
     {
         return $this->get(\sprintf('/virus/detect/%s', $jobId));
     }
+
+    public function createMediaTranscodeJobs(array $body)
+    {
+        $body = XML::fromArray($body, 'Request');
+
+        return $this->post('/jobs', [
+            'headers' => [
+                'Content-Type' => 'application/xml',
+            ],
+            'body' => $body,
+        ]);
+    }
 }
