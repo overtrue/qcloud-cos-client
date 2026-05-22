@@ -228,7 +228,9 @@ class ObjectClient extends Client
         $root = $document->createElement('CompleteMultipartUpload');
         $document->appendChild($root);
 
-        foreach ($body['Part'] ?? [] as $part) {
+        $parts = $body['Part'] ?? $body;
+
+        foreach ($parts as $part) {
             $partElement = $document->createElement('Part');
 
             foreach ($part as $name => $value) {

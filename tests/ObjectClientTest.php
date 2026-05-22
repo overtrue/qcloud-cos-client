@@ -477,6 +477,34 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
+    public function test_mark_upload_as_completed_accepts_part_list_body()
+    {
+        $object = ObjectClient::partialMock();
+        $body = [
+            [
+                'PartNumber' => 1,
+                'ETag' => '"320953c6067ed71a7ec8bd7144d437b8"',
+            ],
+            [
+                'PartNumber' => 2,
+                'ETag' => '"6eb892067e717ef3498f17fe779e8605"',
+            ],
+        ];
+        $expectedBody = '<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>"320953c6067ed71a7ec8bd7144d437b8"</ETag></Part><Part><PartNumber>2</PartNumber><ETag>"6eb892067e717ef3498f17fe779e8605"</ETag></Part></CompleteMultipartUpload>';
+
+        $object->shouldReceive('post')
+            ->with('example-key', [
+                'query' => ['uploadId' => '1585130821cbb7df1d1xxx'],
+                'body' => $expectedBody,
+            ])
+            ->andReturn(Response::create(200));
+
+        /* @var Response $response */
+        /* @var ObjectClient $object */
+        $response = $object->markUploadAsCompleted('example-key', '1585130821cbb7df1d1xxx', $body);
+        $this->assertEmpty($response->toArray());
+    }
+
     public function test_mark_upload_as_aborted()
     {
         $object = ObjectClient::partialMock();
