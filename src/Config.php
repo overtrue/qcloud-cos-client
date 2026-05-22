@@ -8,9 +8,7 @@ use JsonSerializable;
 
 class Config implements ArrayAccess, JsonSerializable
 {
-    public function __construct(protected array $options)
-    {
-    }
+    public function __construct(protected array $options) {}
 
     public function get(string $key, mixed $default = null)
     {

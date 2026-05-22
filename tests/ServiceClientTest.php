@@ -7,7 +7,7 @@ use Overtrue\CosClient\ServiceClient;
 
 class ServiceClientTest extends TestCase
 {
-    public function testListBuckets()
+    public function test_list_buckets()
     {
         /** @var ServiceClient $service */
         $service = ServiceClient::partialMock();

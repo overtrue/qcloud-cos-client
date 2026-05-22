@@ -9,7 +9,7 @@ use Overtrue\CosClient\Middleware\SetContentMd5;
 
 class ClientTest extends TestCase
 {
-    public function testGetAppId()
+    public function test_get_app_id()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -20,7 +20,7 @@ class ClientTest extends TestCase
         $this->assertSame(10020201024, $client->getAppId());
     }
 
-    public function testGetSecretKey()
+    public function test_get_secret_key()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -31,7 +31,7 @@ class ClientTest extends TestCase
         $this->assertSame('b0GMH2c2NXWKxPhy77xhHgwxxxxxxxxxxx', $client->getSecretKey());
     }
 
-    public function testGetSecretId()
+    public function test_get_secret_id()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -42,7 +42,7 @@ class ClientTest extends TestCase
         $this->assertSame('AKIDsiQzQla780mQxLLU2GJCxxxxxxxxxxx', $client->getSecretId());
     }
 
-    public function testGetSignatureMiddleware()
+    public function test_get_signature_middleware()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -55,7 +55,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(SetContentMd5::class, $client->getMiddlewares()[1]);
     }
 
-    public function testGetConfig()
+    public function test_get_config()
     {
         $config = new Config([
             'app_id' => 10020201024,
@@ -67,7 +67,7 @@ class ClientTest extends TestCase
         $this->assertSame($config, $client->getConfig());
     }
 
-    public function testGetHttpClient()
+    public function test_get_http_client()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -81,7 +81,7 @@ class ClientTest extends TestCase
         $this->assertSame($httpClient, $client->getHttpClient());
     }
 
-    public function testConfigureDomain()
+    public function test_configure_domain()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,
@@ -122,7 +122,7 @@ class ClientTest extends TestCase
         $this->assertSame('https://example.com/', $client->getBaseUri());
     }
 
-    public function testConfigureUserAgent()
+    public function test_configure_user_agent()
     {
         $client = new Client(new Config([
             'app_id' => 10020201024,

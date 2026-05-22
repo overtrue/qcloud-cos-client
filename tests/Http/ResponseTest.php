@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ResponseTest extends TestCase
 {
-    public function testToArray()
+    public function test_to_array()
     {
         $response = new Response(new \GuzzleHttp\Psr7\Response(200));
 
@@ -36,7 +36,7 @@ class ResponseTest extends TestCase
         ], $response->toArray());
     }
 
-    public function testToObject()
+    public function test_to_object()
     {
         $response = new Response(new \GuzzleHttp\Psr7\Response(200));
 
@@ -58,7 +58,7 @@ class ResponseTest extends TestCase
         $this->assertSame(['value1', 'value2'], $response->toObject()->foo->bar);
     }
 
-    public function testIsXML()
+    public function test_is_xml()
     {
         $response = new Response(new \GuzzleHttp\Psr7\Response(200));
 
@@ -74,7 +74,7 @@ class ResponseTest extends TestCase
         $this->assertFalse($response->isXML());
     }
 
-    public function testGetContents()
+    public function test_get_contents()
     {
         $response = new Response(new \GuzzleHttp\Psr7\Response(200));
         $this->assertEmpty($response->getContents());

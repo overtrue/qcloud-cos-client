@@ -11,8 +11,7 @@ class CreateRequestSignature
         protected string $secretId,
         protected string $secretKey,
         protected ?string $signatureExpires = null
-    ) {
-    }
+    ) {}
 
     public function __invoke(callable $handler): \Closure
     {

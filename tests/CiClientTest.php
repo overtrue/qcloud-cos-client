@@ -8,7 +8,7 @@ use Overtrue\CosClient\Support\XML;
 
 class CiClientTest extends TestCase
 {
-    public function testCustomDomain()
+    public function test_custom_domain()
     {
         /** @var CiClient $bucket */
         $bucket = CiClient::partialMockWithConfig([
@@ -45,7 +45,7 @@ class CiClientTest extends TestCase
         $this->assertSame('https://example-12345600.abc.cos.test.com/', $bucket->getBaseUri());
     }
 
-    public function testDetectImage()
+    public function test_detect_image()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -70,7 +70,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetImageJob()
+    public function test_get_image_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -84,7 +84,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectVideo()
+    public function test_detect_video()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -108,7 +108,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetVideoJob()
+    public function test_get_video_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -122,7 +122,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectAudio()
+    public function test_detect_audio()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -146,7 +146,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetAudioJob()
+    public function test_get_audio_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -160,7 +160,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectText()
+    public function test_detect_text()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -184,7 +184,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetTextJob()
+    public function test_get_text_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -198,7 +198,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectDocument()
+    public function test_detect_document()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -222,7 +222,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetDocumentJob()
+    public function test_get_document_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -236,7 +236,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectWebPage()
+    public function test_detect_web_page()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -260,7 +260,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetWebPageJob()
+    public function test_get_web_page_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -274,7 +274,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testDetectLiveVideo()
+    public function test_detect_live_video()
     {
         $object = CiClient::partialMock();
         $body = [
@@ -298,7 +298,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testGetLiveVideoJob()
+    public function test_get_live_video_job()
     {
         $object = CiClient::partialMock();
         $object->shouldReceive('get')
@@ -312,7 +312,7 @@ class CiClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testReportBadcase()
+    public function test_report_badcase()
     {
         $object = CiClient::partialMock();
         $body = [

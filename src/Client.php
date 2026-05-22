@@ -2,6 +2,8 @@
 
 namespace Overtrue\CosClient;
 
+use Mockery\LegacyMockInterface;
+use Mockery\MockInterface;
 use Overtrue\CosClient\Exceptions\ClientException;
 use Overtrue\CosClient\Exceptions\Exception;
 use Overtrue\CosClient\Exceptions\InvalidConfigException;
@@ -44,7 +46,7 @@ class Client
     protected array $requiredConfigKeys = [];
 
     /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function __construct(array|Config $config)
     {
@@ -120,7 +122,7 @@ class Client
     }
 
     /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function normalizeConfig(array|Config $config): Config
     {
@@ -149,15 +151,15 @@ class Client
             )
         );
 
-        $this->pushMiddleware(new SetContentMd5());
+        $this->pushMiddleware(new SetContentMd5);
     }
 
-    public static function spy(): Client|\Mockery\MockInterface|\Mockery\LegacyMockInterface
+    public static function spy(): Client|MockInterface|LegacyMockInterface
     {
         return \Mockery::mock(static::class);
     }
 
-    public static function partialMock(): \Mockery\MockInterface
+    public static function partialMock(): MockInterface
     {
         $mock = \Mockery::mock(static::class)->makePartial();
         $mock->shouldReceive('getHttpClient')->andReturn(\Mockery::mock(\GuzzleHttp\Client::class));
@@ -165,7 +167,7 @@ class Client
         return $mock;
     }
 
-    public static function partialMockWithConfig(array|Config $config, array $methods = ['get', 'post', 'patch', 'put', 'delete']): \Mockery\MockInterface
+    public static function partialMockWithConfig(array|Config $config, array $methods = ['get', 'post', 'patch', 'put', 'delete']): MockInterface
     {
         if (\is_array($config)) {
             $config = new Config($config);

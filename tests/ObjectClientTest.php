@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ObjectClientTest extends TestCase
 {
-    public function testCustomDomain()
+    public function test_custom_domain()
     {
         /** @var ObjectClient $object */
         $object = ObjectClient::partialMockWithConfig([
@@ -46,7 +46,7 @@ class ObjectClientTest extends TestCase
         $this->assertSame('http://example-12345600.abc.cos.test.com/', $object->getBaseUri());
     }
 
-    public function testPutObject()
+    public function test_put_object()
     {
         $object = ObjectClient::partialMock();
 
@@ -62,7 +62,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testCopyObject()
+    public function test_copy_object()
     {
         $object = ObjectClient::partialMock();
 
@@ -82,7 +82,7 @@ class ObjectClientTest extends TestCase
         $object->copyObject('example-key', []);
     }
 
-    public function testPostObject()
+    public function test_post_object()
     {
         $object = ObjectClient::partialMock();
 
@@ -108,7 +108,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetObject()
+    public function test_get_object()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('get')
@@ -122,7 +122,7 @@ class ObjectClientTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testHeadObject()
+    public function test_head_object()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('head')
@@ -139,7 +139,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDeleteObject()
+    public function test_delete_object()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('delete')
@@ -153,7 +153,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDeleteObjects()
+    public function test_delete_objects()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -175,7 +175,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testRestoreObject()
+    public function test_restore_object()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -197,7 +197,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testSelectObjectContents()
+    public function test_select_object_contents()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -231,7 +231,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutObjectACL()
+    public function test_put_object_acl()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -275,7 +275,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetObjectAcl()
+    public function test_get_object_acl()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('get')
@@ -292,7 +292,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutObjectTagging()
+    public function test_put_object_tagging()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -314,7 +314,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetObjectTagging()
+    public function test_get_object_tagging()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('get')
@@ -328,7 +328,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDeleteObjectTagging()
+    public function test_delete_object_tagging()
     {
         $object = ObjectClient::partialMock();
         $object->shouldReceive('delete')
@@ -342,7 +342,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testCreateUploadId()
+    public function test_create_upload_id()
     {
         $object = ObjectClient::partialMock();
 
@@ -370,7 +370,7 @@ class ObjectClientTest extends TestCase
         ]);
     }
 
-    public function testPutPart()
+    public function test_put_part()
     {
         $object = ObjectClient::partialMock();
 
@@ -390,7 +390,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testCopyPart()
+    public function test_copy_part()
     {
         $object = ObjectClient::partialMock();
 
@@ -413,7 +413,7 @@ class ObjectClientTest extends TestCase
         $object->copyPart('example-key', 1, '1585130821cbb7df1d1xxx', []);
     }
 
-    public function testMarkUploadAsCompleted()
+    public function test_mark_upload_as_completed()
     {
         $object = ObjectClient::partialMock();
         $body = [
@@ -430,10 +430,12 @@ class ObjectClientTest extends TestCase
                 ],
             ],
         ];
+        $expectedBody = '<CompleteMultipartUpload><Part><PartNumber>integer</PartNumber><ETag>string</ETag></Part><Part><PartNumber>integer</PartNumber><ETag>string</ETag></Part></CompleteMultipartUpload>';
+
         $object->shouldReceive('post')
             ->with('example-key', [
                 'query' => ['uploadId' => '1585130821cbb7df1d1xxx'],
-                'body' => XML::fromArray($body['CompleteMultipartUpload'], 'CompleteMultipartUpload', 'Part'),
+                'body' => $expectedBody,
             ])
             ->andReturn(Response::create(200));
 
@@ -443,7 +445,39 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testMarkUploadAsAborted()
+    public function test_mark_upload_as_completed_keeps_quoted_etags_as_text()
+    {
+        $object = ObjectClient::partialMock();
+        $body = [
+            'CompleteMultipartUpload' => [
+                'Part' => [
+                    [
+                        'PartNumber' => 1,
+                        'ETag' => '"320953c6067ed71a7ec8bd7144d437b8"',
+                    ],
+                    [
+                        'PartNumber' => 2,
+                        'ETag' => '"6eb892067e717ef3498f17fe779e8605"',
+                    ],
+                ],
+            ],
+        ];
+        $expectedBody = '<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>"320953c6067ed71a7ec8bd7144d437b8"</ETag></Part><Part><PartNumber>2</PartNumber><ETag>"6eb892067e717ef3498f17fe779e8605"</ETag></Part></CompleteMultipartUpload>';
+
+        $object->shouldReceive('post')
+            ->with('example-key', [
+                'query' => ['uploadId' => '1585130821cbb7df1d1xxx'],
+                'body' => $expectedBody,
+            ])
+            ->andReturn(Response::create(200));
+
+        /* @var Response $response */
+        /* @var ObjectClient $object */
+        $response = $object->markUploadAsCompleted('example-key', '1585130821cbb7df1d1xxx', $body);
+        $this->assertEmpty($response->toArray());
+    }
+
+    public function test_mark_upload_as_aborted()
     {
         $object = ObjectClient::partialMock();
 
@@ -459,7 +493,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetUploadJobs()
+    public function test_get_upload_jobs()
     {
         $object = ObjectClient::partialMock();
 
@@ -475,7 +509,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetUploadedParts()
+    public function test_get_uploaded_parts()
     {
         $object = ObjectClient::partialMock();
 
@@ -491,7 +525,7 @@ class ObjectClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDetectImage()
+    public function test_detect_image()
     {
         $object = ObjectClient::partialMock();
 

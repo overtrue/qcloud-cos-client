@@ -7,7 +7,7 @@ use Overtrue\CosClient\Signature;
 
 class SignatureTest extends TestCase
 {
-    public function test_getTimeSegments()
+    public function test_get_time_segments()
     {
         $signature = new Signature('mock-access-key', 'mock-secret-key');
 
@@ -42,7 +42,7 @@ class SignatureTest extends TestCase
         date_default_timezone_set($timezone);
     }
 
-    public function test_getTimeSegments_with_null()
+    public function test_get_time_segments_with_null()
     {
         $signature = new Signature('mock-access-key', 'mock-secret-key');
 

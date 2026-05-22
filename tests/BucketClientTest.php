@@ -8,7 +8,7 @@ use Overtrue\CosClient\Support\XML;
 
 class BucketClientTest extends TestCase
 {
-    public function testCustomDomain()
+    public function test_custom_domain()
     {
         /** @var BucketClient $bucket */
         $bucket = BucketClient::partialMockWithConfig([
@@ -45,7 +45,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('https://example-12345600.abc.cos.test.com/', $bucket->getBaseUri());
     }
 
-    public function testPutBucket()
+    public function test_put_bucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -65,7 +65,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testDeleteBucket()
+    public function test_delete_bucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -80,7 +80,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testHeadBucket()
+    public function test_head_bucket()
     {
         $bucket = BucketClient::partialMock();
 
@@ -96,7 +96,7 @@ class BucketClientTest extends TestCase
         $this->assertArrayHasKey('x-cos-bucket-az-type', $response->getHeaders());
     }
 
-    public function testGetObjects()
+    public function test_get_objects()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -120,7 +120,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('demo', $response->toArray()['ListBucketResult']['Name']);
     }
 
-    public function testGetObjectVersions()
+    public function test_get_object_versions()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -142,7 +142,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('demo', $response->toArray()['ListVersionsResult']['Name']);
     }
 
-    public function testPutAcl()
+    public function test_put_acl()
     {
         $bucket = BucketClient::partialMock();
 
@@ -168,7 +168,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetAcl()
+    public function test_get_acl()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -202,7 +202,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('qcs::cam::uin/100000000001:uin/100000000001', $response->toArray()['AccessControlPolicy']['Owner']['ID']);
     }
 
-    public function testPutCors()
+    public function test_put_cors()
     {
         $bucket = BucketClient::partialMock();
 
@@ -227,7 +227,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetCors()
+    public function test_get_cors()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -263,7 +263,7 @@ class BucketClientTest extends TestCase
         ], $response->toArray()['CORSConfiguration']['CORSRule']['AllowedMethod']);
     }
 
-    public function testDeleteCors()
+    public function test_delete_cors()
     {
         $bucket = BucketClient::partialMock();
 
@@ -278,7 +278,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutLifecycle()
+    public function test_put_lifecycle()
     {
         $bucket = BucketClient::partialMock();
 
@@ -306,7 +306,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetLifecycle()
+    public function test_get_lifecycle()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -339,7 +339,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('documents/', $response->toArray()['LifecycleConfiguration']['Rule']['Filter']['Prefix']);
     }
 
-    public function testDeleteLifecycle()
+    public function test_delete_lifecycle()
     {
         $bucket = BucketClient::partialMock();
 
@@ -354,7 +354,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutPolicy()
+    public function test_put_policy()
     {
         $bucket = BucketClient::partialMock();
 
@@ -385,7 +385,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetPolicy()
+    public function test_get_policy()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -435,7 +435,7 @@ class BucketClientTest extends TestCase
         ], $response->toArray()['Statement'][0]);
     }
 
-    public function testDeletePolicy()
+    public function test_delete_policy()
     {
         $bucket = BucketClient::partialMock();
 
@@ -450,7 +450,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutReferer()
+    public function test_put_referer()
     {
         $bucket = BucketClient::partialMock();
 
@@ -473,7 +473,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetReferer()
+    public function test_get_referer()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -500,7 +500,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('Enabled', $response->toArray()['RefererConfiguration']['Status']);
     }
 
-    public function testPutTagging()
+    public function test_put_tagging()
     {
         $bucket = BucketClient::partialMock();
 
@@ -525,7 +525,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetTagging()
+    public function test_get_tagging()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -555,7 +555,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('age', $response->toArray()['Tagging']['TagSet']['Tag'][0]['Key']);
     }
 
-    public function testDeleteTagging()
+    public function test_delete_tagging()
     {
         $bucket = BucketClient::partialMock();
 
@@ -570,7 +570,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutWebsite()
+    public function test_put_website()
     {
         $bucket = BucketClient::partialMock();
 
@@ -620,7 +620,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetWebsite()
+    public function test_get_website()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -685,7 +685,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('index.html', $response->toArray()['WebsiteConfiguration']['IndexDocument']['Suffix']);
     }
 
-    public function testDeleteWebsite()
+    public function test_delete_website()
     {
         $bucket = BucketClient::partialMock();
 
@@ -700,7 +700,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutInventory()
+    public function test_put_inventory()
     {
         $bucket = BucketClient::partialMock();
 
@@ -738,7 +738,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetInventory()
+    public function test_get_inventory()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -787,7 +787,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('list1', $response->toArray()['InventoryConfiguration']['Id']);
     }
 
-    public function testDeleteInventory()
+    public function test_delete_inventory()
     {
         $bucket = BucketClient::partialMock();
 
@@ -802,7 +802,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutVersioning()
+    public function test_put_versioning()
     {
         $bucket = BucketClient::partialMock();
 
@@ -822,7 +822,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetVersioning()
+    public function test_get_versioning()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -843,7 +843,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('Suspended', $response->toArray()['VersioningConfiguration']['Status']);
     }
 
-    public function testPutReplication()
+    public function test_put_replication()
     {
         $bucket = BucketClient::partialMock();
 
@@ -863,7 +863,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetReplication()
+    public function test_get_replication()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -884,7 +884,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('Suspended', $response->toArray()['ReplicationConfiguration']['Status']);
     }
 
-    public function testDeleteReplication()
+    public function test_delete_replication()
     {
         $bucket = BucketClient::partialMock();
 
@@ -899,7 +899,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testPutLogging()
+    public function test_put_logging()
     {
         $bucket = BucketClient::partialMock();
 
@@ -922,7 +922,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetLogging()
+    public function test_get_logging()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -946,7 +946,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('examplebucket-1250000000', $response->toArray()['BucketLoggingStatus']['LoggingEnabled']['TargetBucket']);
     }
 
-    public function testPutAccelerate()
+    public function test_put_accelerate()
     {
         $bucket = BucketClient::partialMock();
 
@@ -966,7 +966,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetAccelerate()
+    public function test_get_accelerate()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -988,7 +988,7 @@ class BucketClientTest extends TestCase
         $this->assertSame('Disabled', $response->toArray()['AccelerateConfiguration']['Status']);
     }
 
-    public function testPutEncryption()
+    public function test_put_encryption()
     {
         $bucket = BucketClient::partialMock();
 
@@ -1012,7 +1012,7 @@ class BucketClientTest extends TestCase
         $this->assertEmpty($response->toArray());
     }
 
-    public function testGetEncryption()
+    public function test_get_encryption()
     {
         $bucket = BucketClient::partialMock();
         $bucket->shouldReceive('get')
@@ -1040,7 +1040,7 @@ class BucketClientTest extends TestCase
         );
     }
 
-    public function testDeleteEncryption()
+    public function test_delete_encryption()
     {
         $bucket = BucketClient::partialMock();
 
