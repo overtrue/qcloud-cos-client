@@ -8,7 +8,7 @@ use Overtrue\CosClient\Support\XML;
 
 class JobClientTest extends TestCase
 {
-    public function testCustomDomain()
+    public function test_custom_domain()
     {
         /** @var JobClient $object */
         $object = JobClient::partialMockWithConfig([
@@ -51,7 +51,7 @@ class JobClientTest extends TestCase
         $this->assertSame('https://example-12345600.abc.cos-control.test.com/', $object->getBaseUri());
     }
 
-    public function testListJobs()
+    public function test_list_jobs()
     {
         $job = JobClient::partialMock();
 
@@ -113,7 +113,7 @@ class JobClientTest extends TestCase
         $this->assertSame('066d919e-49b9-429e-b844-e17ea7b16421', $response->toArray()['ListJobsResult']['NextToken']);
     }
 
-    public function testCreateJob()
+    public function test_create_job()
     {
         $job = JobClient::partialMock();
 
@@ -167,7 +167,7 @@ class JobClientTest extends TestCase
         $this->assertSame('086711ca-15da-4e89-7676-03f1a1346623', $response->toArray()['CreateJobResult']['JobId']);
     }
 
-    public function testDescribeJob()
+    public function test_describe_job()
     {
         $job = JobClient::partialMock();
 
@@ -213,7 +213,7 @@ class JobClientTest extends TestCase
         $this->assertSame('086711ca-15da-4e89-7676-03f1a1346623', $response->toArray()['DescribeJobResult']['Job']['JobId']);
     }
 
-    public function testUpdateJobPriority()
+    public function test_update_job_priority()
     {
         $job = JobClient::partialMock();
 

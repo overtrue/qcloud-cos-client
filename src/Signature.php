@@ -25,9 +25,7 @@ class Signature
         'pic-operations',
     ];
 
-    public function __construct(public string $accessKey, public string $secretKey)
-    {
-    }
+    public function __construct(public string $accessKey, public string $secretKey) {}
 
     public function createAuthorizationHeader(RequestInterface $request, int|string|\DateTimeInterface|null $expires = null): string
     {

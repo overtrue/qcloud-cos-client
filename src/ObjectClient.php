@@ -2,6 +2,7 @@
 
 namespace Overtrue\CosClient;
 
+use DOMDocument;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Overtrue\CosClient\Exceptions\InvalidArgumentException;
@@ -15,7 +16,7 @@ class ObjectClient extends Client
     }
 
     /**
-     * @throws \Overtrue\CosClient\Exceptions\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function copyObject(string $key, array $headers): Http\Response
     {
@@ -209,16 +210,39 @@ class ObjectClient extends Client
 
     public function markUploadAsCompleted(string $key, string $uploadId, array $body): Http\Response
     {
-        if (array_key_first($body) == 'CompleteMultipartUpload') {
-            $body = $body['CompleteMultipartUpload'];
-        }
-
         return $this->post(\rawurlencode($key), [
             'query' => [
                 'uploadId' => $uploadId,
             ],
-            'body' => XML::fromArray($body, 'CompleteMultipartUpload', 'Part'),
+            'body' => $this->buildCompleteMultipartUploadXml($body),
         ]);
+    }
+
+    private function buildCompleteMultipartUploadXml(array $body): string
+    {
+        if (array_key_first($body) === 'CompleteMultipartUpload') {
+            $body = $body['CompleteMultipartUpload'];
+        }
+
+        $document = new DOMDocument('1.0', 'UTF-8');
+        $root = $document->createElement('CompleteMultipartUpload');
+        $document->appendChild($root);
+
+        $parts = $body['Part'] ?? $body;
+
+        foreach ($parts as $part) {
+            $partElement = $document->createElement('Part');
+
+            foreach ($part as $name => $value) {
+                $element = $document->createElement((string) $name);
+                $element->appendChild($document->createTextNode((string) $value));
+                $partElement->appendChild($element);
+            }
+
+            $root->appendChild($partElement);
+        }
+
+        return (string) $document->saveXML($document->documentElement);
     }
 
     public function markUploadAsAborted(string $key, string $uploadId): Http\Response

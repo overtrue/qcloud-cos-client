@@ -6,7 +6,7 @@ use Overtrue\CosClient\Config;
 
 class ConfigTest extends TestCase
 {
-    public function testGet()
+    public function test_get()
     {
         $config = new Config(['option' => 'value']);
 
@@ -14,7 +14,7 @@ class ConfigTest extends TestCase
         $this->assertSame('value', $config['option']);
     }
 
-    public function testSet()
+    public function test_set()
     {
         $config = new Config(['option' => 'value']);
 
@@ -25,7 +25,7 @@ class ConfigTest extends TestCase
         $this->assertSame('updated_value', $config->get('option'));
     }
 
-    public function testHas()
+    public function test_has()
     {
         $config = new Config(['option' => 'value']);
 
@@ -33,7 +33,7 @@ class ConfigTest extends TestCase
         $this->assertFalse($config->has('non-exist-option'));
     }
 
-    public function testExtend()
+    public function test_extend()
     {
         $config = (new Config(['option' => 'value']))->extend(['foo' => 'bar']);
 
