@@ -60,4 +60,39 @@ class SignatureTest extends TestCase
 
         date_default_timezone_set($timezone);
     }
+
+    public function headerValueProvider(): array
+    {
+        return [
+            'space' => ['attachment; filename="a b.pdf"'],
+            'tilde' => ['v1~beta'],
+            'multibyte' => ['海报 1.md'],
+            'rawurlencoded' => ['bucket.cos.ap-guangzhou.myqcloud.com/dir/a%20b~c.md'],
+            'urlencoded' => ['bucket.cos.ap-guangzhou.myqcloud.com/dir/a+b%7Ec.md'],
+        ];
+    }
+
+    /**
+     * @dataProvider headerValueProvider
+     */
+    public function test_header_values_are_encoded_as_rfc3986(string $value)
+    {
+        $signature = new Signature('mock-access-key', 'mock-secret-key');
+        $request = new Request('PUT', 'https://example.com/dir/target.md', [
+            'Content-Disposition' => $value,
+            'x-cos-copy-source' => $value,
+        ]);
+
+        $authorization = $signature->createAuthorizationHeader($request);
+        \parse_str($authorization, $parts);
+
+        // Independent implementation of the COS spec: header values are encoded per RFC 3986.
+        $headers = \sprintf('content-disposition=%1$s&host=example.com&x-cos-copy-source=%1$s', \rawurlencode($value));
+        $httpString = "put\n/dir/target.md\n\n{$headers}\n";
+        $stringToSign = "sha1\n{$parts['q-sign-time']}\n".\sha1($httpString)."\n";
+        $signKey = \hash_hmac('sha1', $parts['q-key-time'], 'mock-secret-key');
+
+        $this->assertSame('content-disposition;host;x-cos-copy-source', $parts['q-header-list']);
+        $this->assertSame(\hash_hmac('sha1', $stringToSign, $signKey), $parts['q-signature']);
+    }
 }
