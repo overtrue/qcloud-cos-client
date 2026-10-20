@@ -36,7 +36,7 @@ class Signature
         $httpStringHashed = sha1(
             strtolower($request->getMethod())."\n".urldecode($request->getUri()->getPath())."\n".
             implode('&', array_values($queryToBeSigned)).
-            "\n".\http_build_query($headersToBeSigned)."\n"
+            "\n".\http_build_query($headersToBeSigned, '', '&', PHP_QUERY_RFC3986)."\n"
         );
 
         $stringToSign = \sprintf("sha1\n%s\n%s\n", $signTime, $httpStringHashed);
